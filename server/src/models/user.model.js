@@ -51,6 +51,9 @@ const userSchema = new Schema(
       default: "user",
     },
     addresses: [addressSchema],
+    refreshToken: {
+      type: String,
+    },
   },
   {
     timestamps: true,
