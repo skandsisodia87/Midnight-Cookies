@@ -51,6 +51,9 @@ const userSchema = new Schema(
       default: "user",
     },
     addresses: [addressSchema],
+    accessToken: {
+      type: String,
+    },
     refreshToken: {
       type: String,
     },

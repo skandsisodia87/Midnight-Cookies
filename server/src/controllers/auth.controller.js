@@ -70,6 +70,7 @@ export const loginUser = async (req, res) => {
 
     const refreshToken = await user.generateRefreshToken();
 
+    user.accessToken = accessToken;
     user.refreshToken = refreshToken;
 
     await user.save({ validateBeforeSave: false });
@@ -108,6 +109,7 @@ export const logoutUser = async (req, res) => {
       req.user._id,
       {
         $unset: {
+          accessToken: 1,
           refreshToken: 1,
         },
       },

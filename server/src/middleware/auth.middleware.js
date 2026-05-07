@@ -28,6 +28,13 @@ const verifyToken = async (req, res, next) => {
       });
     }
 
+    if (user.accessToken !== token) {
+      return res.status(401).json({
+        success: false,
+        message: "Token expired or logged out",
+      });
+    }
+
     req.user = user;
     next();
   } catch (error) {
