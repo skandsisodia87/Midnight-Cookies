@@ -1,5 +1,7 @@
 import { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import env from "../config/env.js";
 
 const addressSchema = new Schema({
   fullAddress: {
@@ -55,6 +57,7 @@ const userSchema = new Schema(
   },
 );
 
+// hash password before save
 userSchema.pre("save", async function (next) {
   try {
     if (!this.isModified("password")) {
@@ -68,8 +71,35 @@ userSchema.pre("save", async function (next) {
   }
 });
 
+// compare password
 userSchema.methods.comparePassword = async function (password) {
   return bcrypt.compare(password, this.password);
+};
+
+// generate access token
+userSchema.method.generateAccessToken = async function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+      email: this.email,
+      role: this.role,
+    },
+    env.ACCESS_TOKEN_SECRET,
+    { expiresIn: env.ACCESS_TOKEN_EXPIRY },
+  );
+};
+
+// generate refresh token
+userSchema.method.generateRefreshToken = async function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+    },
+    env.REFRESH_TOKEN_SECRET,
+    {
+      expiresIn: env.REFRESH_TOKEN_EXPIRY,
+    },
+  );
 };
 
 export default model("User", userSchema);
