@@ -9,7 +9,7 @@ connectDB()
       console.log("Error", error);
       throw error;
     });
-    app.listen(env.PORT, "0.0.0.0/0", () => {
+    app.listen(env.PORT, "0.0.0.0", () => {
       console.log(`Server is ruunig at port ${env.PORT}`);
     });
   })
