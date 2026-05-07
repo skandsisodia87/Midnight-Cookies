@@ -1,4 +1,6 @@
 import User from "../models/user.model.js";
+import { sendEmail } from "../services/email.service.js";
+import { welcomeEmailTemplate } from "../templates/emailTemplates.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -23,6 +25,12 @@ export const registerUser = async (req, res) => {
     const createdUser = await User.findById(user._id).select(
       "-password -refreshToken",
     );
+
+    await sendEmail({
+      to: createdUser.email,
+      subject: "Welcome to Midnight Cookies 🍪",
+      html: welcomeEmailTemplate(createdUser.name),
+    });
 
     return res.status(201).json({
       success: true,
