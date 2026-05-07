@@ -75,7 +75,7 @@ userSchema.methods.comparePassword = async function (password) {
 };
 
 // generate access token
-userSchema.method.generateAccessToken = async function () {
+userSchema.methods.generateAccessToken = async function () {
   return jwt.sign(
     {
       _id: this._id,
@@ -88,7 +88,7 @@ userSchema.method.generateAccessToken = async function () {
 };
 
 // generate refresh token
-userSchema.method.generateRefreshToken = async function () {
+userSchema.methods.generateRefreshToken = async function () {
   return jwt.sign(
     {
       _id: this._id,
