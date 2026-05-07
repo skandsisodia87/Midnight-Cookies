@@ -23,10 +23,7 @@ app.get("/api/health", async (req, res) => {
   res.status(200).json({
     success: true,
 
-    database:
-      dbState === 1
-        ? "connected"
-        : "disconnected",
+    database: dbState === 1 ? "connected" : "disconnected",
 
     uptime: process.uptime(),
 
@@ -36,8 +33,10 @@ app.get("/api/health", async (req, res) => {
   });
 });
 
-import authRoutes from "./routes/auth.route.js";
+import authRoutes from "./routes/auth.routes.js";
+import cookieRoutes from "./routes/cookie.routes.js";
 
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/cookie", cookieRoutes);
 
 export { app };

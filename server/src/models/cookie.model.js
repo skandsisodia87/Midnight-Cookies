@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import slugify from "slugify";
 
 const cookieSchema = new Schema(
   {
@@ -9,8 +10,9 @@ const cookieSchema = new Schema(
     },
     slug: {
       type: String,
-      required: true,
+      unique: true,
       trim: true,
+      index: true,
     },
     description: {
       type: String,
@@ -60,4 +62,13 @@ const cookieSchema = new Schema(
   { timestamps: true },
 );
 
-export default mongoose.model("Cookie", cookieSchema);
+cookieSchema.pre("save", function () {
+  if (this.isModified("name")) {
+    this.slug = slugify(this.name, {
+      lower: true,
+      strict: true,
+    });
+  }
+});
+
+export default model("Cookie", cookieSchema);
