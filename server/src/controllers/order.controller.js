@@ -6,9 +6,6 @@ import { orderStatusEmailTemplate } from "../templates/orderEmailTemplate.js";
 import { sendEmail } from "../services/email.service.js";
 
 export const createOrder = async (req, res) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
-
   try {
     const { items, shippingAddress, paymentMethod, notes } = req.body;
 
@@ -18,6 +15,9 @@ export const createOrder = async (req, res) => {
         message: "Order items are required",
       });
     }
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
     let totalAmount = 0;
     const orderItems = [];
@@ -50,7 +50,7 @@ export const createOrder = async (req, res) => {
         },
       );
 
-      totalAmount += cookie.discountPrice * item.quantity;
+      totalAmount += (cookie.discountPrice || cookie.price) * item.quantity;
 
       orderItems.push({
         cookieId: cookie._id,
