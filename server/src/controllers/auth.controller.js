@@ -1,4 +1,8 @@
+import env from "../config/env.js";
+import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
+import { sendEmail } from "../services/email.service.js";
+import { welcomeEmailTemplate } from "../templates/emailTemplates.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -23,6 +27,12 @@ export const registerUser = async (req, res) => {
     const createdUser = await User.findById(user._id).select(
       "-password -refreshToken",
     );
+
+    await sendEmail({
+      to: createdUser.email,
+      subject: "Welcome to Midnight Cookies 🍪",
+      html: welcomeEmailTemplate(createdUser.name),
+    });
 
     return res.status(201).json({
       success: true,
@@ -76,7 +86,7 @@ export const loginUser = async (req, res) => {
     await user.save({ validateBeforeSave: false });
 
     const loggedInUser = await User.findById(user._id).select(
-      "-password -refreshToken",
+      "-password -refreshToken -accessToken",
     );
 
     const cookieOptions = {
@@ -140,6 +150,55 @@ export const getCurrentUser = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: error.message,
+    });
+  }
+};
+
+export const refreshAccessToken = async (req, res) => {
+  try {
+    const incomingRefreshToken = req.cookies.refreshToken;
+
+    if (!incomingRefreshToken) {
+      return res.status(401).json({
+        success: false,
+        message: "Refresh token missing",
+      });
+    }
+
+    const decodedToken = jwt.verify(
+      incomingRefreshToken,
+      env.REFRESH_TOKEN_SECRET,
+    );
+
+    const user = await User.findById(decodedToken._id);
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid refresh token",
+      });
+    }
+
+    if (user.refreshToken !== incomingRefreshToken) {
+      return res.status(401).json({
+        success: false,
+        message: "Refresh token expired or used",
+      });
+    }
+
+    const accessToken = await user.generateAccessToken();
+
+    user.accessToken = accessToken;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      accessToken,
+    });
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: error.message || "Invalid refresh token",
     });
   }
 };

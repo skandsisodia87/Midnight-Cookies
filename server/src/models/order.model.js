@@ -18,7 +18,11 @@ const orderItemSchema = new Schema(
       type: Number,
       required: true,
     },
-    price: {
+    originalPrice: {
+      type: Number,
+      required: true,
+    },
+    discountPrice: {
       type: Number,
       required: true,
     },
@@ -67,7 +71,14 @@ const orderSchema = new Schema(
       ref: "User",
     },
 
-    item: [orderItemSchema],
+    orderId: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
+    },
+
+    items: [orderItemSchema],
 
     totalAmount: {
       type: Number,
