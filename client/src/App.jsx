@@ -1,14 +1,20 @@
-import HeroSection from "./components/home/HeroSection";
-import Navbar from "./components/layout/Navbar";
-import "./index.css";
+import { Routes, Route } from "react-router-dom";
+import Home from "./components/pages/Home";
+import Login from "./components/pages/Login";
+import Register from "./components/pages/Register";
+import ForgotPassword from "./components/pages/ForgotPassword";
+import VerifyEmail from "./components/pages/VerifyEmail";
 
-function App() {
+const App = () => {
   return (
-    <div className='bg-[#FFF6EC] min-h-screen'>
-      <Navbar />
-      <HeroSection />
-    </div>
+    <Routes>
+      <Route path='/' element={<Home />} />
+      <Route path='/login' element={<Login />} />
+      <Route path='/register' element={<Register />} />
+      <Route path='/forgot-password' element={<ForgotPassword />} />
+      <Route path='/verify-email' element={<VerifyEmail />} />
+    </Routes>
   );
-}
+};
 
 export default App;
