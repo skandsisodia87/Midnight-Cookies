@@ -84,7 +84,7 @@ export const loginUser = async (req, res) => {
     await user.save({ validateBeforeSave: false });
 
     const loggedInUser = await User.findById(user._id).select(
-      "-password -refreshToken",
+      "-password -refreshToken -accessToken",
     );
 
     const cookieOptions = {

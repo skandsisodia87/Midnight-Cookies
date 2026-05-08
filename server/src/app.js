@@ -35,8 +35,10 @@ app.get("/api/health", async (req, res) => {
 
 import authRoutes from "./routes/auth.routes.js";
 import cookieRoutes from "./routes/cookie.routes.js";
+import orderRoutes from "./routes/order.routes.js";
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/cookie", cookieRoutes);
+app.use("/api/v1/orders", orderRoutes);
 
 export { app };
