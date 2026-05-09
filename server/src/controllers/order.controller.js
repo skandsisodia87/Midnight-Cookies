@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import Order from "../models/order.model.js";
 import Cookie from "../models/cookie.model.js";
-import { generateOrderId } from "../services/generateOrderId.js";
+import { generateOrderId } from "../utils/generateOrderId.js";
 import { orderStatusEmailTemplate } from "../templates/orderEmailTemplate.js";
 import { sendEmail } from "../services/email.service.js";
 

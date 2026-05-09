@@ -37,10 +37,12 @@ import authRoutes from "./routes/auth.routes.js";
 import cookieRoutes from "./routes/cookie.routes.js";
 import orderRoutes from "./routes/order.routes.js";
 import reviewRoutes from "./routes/review.routes.js";
+import cartRoutes from "./routes/cart.routes.js";
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/cookie", cookieRoutes);
 app.use("/api/v1/orders", orderRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
+app.use("/api/v1/cart", cartRoutes);
 
 export { app };
