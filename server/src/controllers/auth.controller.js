@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import { sendEmail } from "../services/email.service.js";
 import { welcomeEmailTemplate } from "../templates/emailTemplates.js";
+import generateOtp from "../utils/generateOtp.js";
+import verifyEmailTemplate from "../templates/verifyEmailTemplate.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -199,6 +201,104 @@ export const refreshAccessToken = async (req, res) => {
     return res.status(401).json({
       success: false,
       message: error.message || "Invalid refresh token",
+    });
+  }
+};
+
+export const sendVerificationOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
+    }
+
+    const user = await User.findOne({
+      email,
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (user.isEmailVerified) {
+      return res.status(400).json({
+        success: false,
+        message: "Email already verified",
+      });
+    }
+
+    const otp = generateOtp();
+
+    user.emailVerificationCode = otp;
+    user.emailVerificationExpires = new Date(Date.now() + 10 * 60 * 1000); // valid for 10 minutes
+
+    await user.save({ validateBeforeSave: false });
+
+    await sendEmail({
+      to: user.email,
+      subject: "Verify Your Email 🍪",
+      html: verifyEmailTemplate({
+        name: user.name,
+        otp,
+      }),
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Verification OTP sent successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const verifyEmailOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Email and OTP are required" });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "No user found" });
+    }
+
+    if (user.emailVerificationCode !== otp) {
+      return res.status(400).json({ success: false, message: "Invalid OTP" });
+    }
+
+    if (user.emailVerificationExpires < new Date()) {
+      return res.status(400).json({ success: false, message: "Otp expired" });
+    }
+
+    user.isEmailVerified = true;
+    user.emailVerificationCode = null;
+    user.emailVerificationExpires = null;
+
+    await user.save({ validateBeforeSave: false });
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Email verified successfully" });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
     });
   }
 };
