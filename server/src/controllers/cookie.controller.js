@@ -51,6 +51,60 @@ export const createCookie = async (req, res) => {
   }
 };
 
+export const bulkCreateCookies = async (req, res) => {
+  try {
+    const cookies = req.body;
+
+    if (!Array.isArray(cookies) || cookies.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Cookies array is required",
+      });
+    }
+
+    const cookiesWithSlug = cookies.map((cookie) => ({
+      ...cookie,
+
+      slug: slugify(cookie.name, {
+        lower: true,
+        strict: true,
+      }),
+    }));
+
+    const cookieNames = cookiesWithSlug.map((cookie) => cookie.name);
+
+    const existingCookies = await Cookie.find({
+      name: {
+        $in: cookieNames,
+      },
+    }).select("name");
+
+    const existingCookieNames = new Set(
+      existingCookies.map((cookie) => cookie.name),
+    );
+
+    const newCookies = cookiesWithSlug.filter(
+      (cookie) => !existingCookieNames.has(cookie.name),
+    );
+
+    const insertedCookies = await Cookie.insertMany(newCookies);
+
+    return res.status(201).json({
+      success: true,
+      message: "Cookies created successfully",
+      totalReceived: cookies.length,
+      insertedCount: insertedCookies.length,
+      skippedCount: existingCookies.length,
+      insertedCookies,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 export const getAllCookies = async (req, res) => {
   try {
     const cookies = await Cookie.find().limit(30).sort({ createdAt: -1 });

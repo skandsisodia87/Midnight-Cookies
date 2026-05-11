@@ -6,6 +6,7 @@ import {
   getSingleCookie,
   updateCookie,
   deleteCookie,
+  bulkCreateCookies,
 } from "../controllers/cookie.controller.js";
 import verifyAdmin from "../middleware/admin.middleware.js";
 
@@ -16,6 +17,8 @@ router.get("/", getAllCookies);
 router.get("/:id", getSingleCookie);
 
 router.post("/", verifyJWT, verifyAdmin, createCookie);
+
+router.post("/bulk", verifyJWT, verifyAdmin, bulkCreateCookies);
 
 router.put("/:id", verifyJWT, verifyAdmin, updateCookie);
 
