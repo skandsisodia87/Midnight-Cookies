@@ -1,7 +1,45 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FiMail, FiLock } from "react-icons/fi";
+import { useState } from "react";
+import useAuthStore from "../../store/authStore";
+import { loginUser } from "../services/auth.service";
+import { toast } from "sonner";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { login } = useAuthStore();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmmit = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+
+    loginUser({
+      email,
+      password,
+    })
+      .then((data) => {
+        login({
+          user: data.user,
+          accessToken: data.accessToken,
+        });
+        toast.success("Login successful 🍪");
+        navigate("/", {
+          replace: true,
+        });
+      })
+      .catch((error) => {
+        console.log(error.response?.data?.message || error.message);
+        toast.error(error.response?.data?.message || "Login failed");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   return (
     <div className='min-h-screen bg-[#FFF6EC] flex items-center justify-center px-6 py-12'>
       <div
@@ -24,7 +62,7 @@ const Login = () => {
         </div>
 
         {/* Form */}
-        <form className='mt-10 space-y-6'>
+        <form className='mt-10 space-y-6' onSubmit={handleSubmmit}>
           {/* Email */}
           <div>
             <label className='block mb-2 font-medium text-[#2B1D16]'>
@@ -54,6 +92,8 @@ const Login = () => {
                   outline-none
                   bg-transparent
                 '
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
           </div>
@@ -87,6 +127,8 @@ const Login = () => {
                   outline-none
                   bg-transparent
                 '
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
           </div>
@@ -98,7 +140,8 @@ const Login = () => {
               className='
                 text-sm
                 text-[#D98B2B]
-                hover:underline'
+                hover:underline
+              '
             >
               Forgot Password?
             </Link>
@@ -107,6 +150,7 @@ const Login = () => {
           {/* Submit */}
           <button
             type='submit'
+            disabled={loading}
             className='
               w-full
               bg-[#D98B2B]
@@ -116,9 +160,10 @@ const Login = () => {
               rounded-full
               font-semibold
               transition
+              disabled:opacity-50
             '
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
