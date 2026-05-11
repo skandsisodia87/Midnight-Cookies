@@ -1,6 +1,7 @@
 import { FiShoppingCart } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import placeholderCookie from "../../assets/images/placeholder-cookie.png";
 
 const CookieCard = ({ cookie }) => {
   return (
@@ -22,7 +23,7 @@ const CookieCard = ({ cookie }) => {
       {/* Image */}
       <div className='overflow-hidden h-64'>
         <img
-          src={cookie.image}
+          src={cookie.images?.[0] || placeholderCookie}
           alt={cookie.name}
           className='
             w-full

@@ -124,9 +124,9 @@ export const getAllCookies = async (req, res) => {
 
 export const getSingleCookie = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { slug } = req.params;
 
-    const cookie = await Cookie.findById(id);
+    const cookie = await Cookie.findOne({ slug }, "-__v -updatedAt");
 
     if (!cookie) {
       return res.status(404).json({

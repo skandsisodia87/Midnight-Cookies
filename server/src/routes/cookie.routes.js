@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.get("/", getAllCookies);
 
-router.get("/:id", getSingleCookie);
+router.get("/:slug", getSingleCookie);
 
 router.post("/", verifyJWT, verifyAdmin, createCookie);
 

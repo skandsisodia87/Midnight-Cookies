@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import HeroCookie from "../../assets/images/hero-cookie.png";
 
 const HeroSection = () => {
   return (
@@ -40,9 +41,9 @@ const HeroSection = () => {
           className='flex justify-center'
         >
           <img
-            src='https://images.unsplash.com/photo-1499636136210-6f4ee915583e'
+            src={HeroCookie}
             alt='cookies'
-            className='w-full max-w-md rounded-[40px] shadow-2xl object-cover'
+            className='w-full max-w-md rounded-[40px] shadow-2xl object-cover h-150'
           />
         </motion.div>
       </div>

@@ -1,67 +1,85 @@
-// src/pages/CookieDetails.jsx
-
 import { FiShoppingCart, FiMinus, FiPlus, FiStar } from "react-icons/fi";
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-
-const cookie = {
-  name: "Oreo Dream",
-
-  slug: "oreo-dream",
-
-  description:
-    "Loaded with crunchy Oreo pieces, creamy texture and rich chocolate flavor. Freshly baked every day for the perfect cookie experience.",
-
-  image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35",
-
-  category: "Oreo",
-
-  price: 249,
-
-  discountPrice: 179,
-
-  stock: 12,
-
-  weight: "250g",
-
-  rating: 4.8,
-
-  totalReviews: 124,
-
-  ingredients: [
-    "Oreo Crumbs",
-    "Dark Chocolate",
-    "Butter",
-    "Vanilla",
-    "Premium Flour",
-  ],
-
-  reviews: [
-    {
-      name: "Aarav Sharma",
-      rating: 5,
-      comment: "Absolutely delicious and super soft cookies!",
-    },
-
-    {
-      name: "Priya Verma",
-      rating: 4,
-      comment: "Loved the Oreo crunch and chocolate flavor.",
-    },
-  ],
-};
+import { toast } from "sonner";
+import { getSingleCookie } from "../services/cookie.service";
+import CookieDetailsSkeleton from "../skeletons/CookieDetailsSkeleton";
+import placeholderCookie from "../../assets/images/placeholder-cookie.png";
 
 const CookieDetails = () => {
   const { slug } = useParams();
-
+  const [cookie, setCookie] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
 
+  useEffect(() => {
+    const fetchCookie = async () => {
+      try {
+        setLoading(true);
+        const data = await getSingleCookie(slug);
+        setCookie(data.cookie);
+      } catch (error) {
+        toast.error(error.response?.data?.message || error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCookie();
+  }, [slug]);
+
+  if (loading) {
+    return <CookieDetailsSkeleton />;
+  }
+
+  if (!cookie) {
+    return (
+      <div
+        className='
+          min-h-screen
+          bg-[#FFF6EC]
+          flex
+          items-center
+          justify-center
+        '
+      >
+        <h2
+          className='
+            text-3xl
+            font-bold
+            text-[#2B1D16]
+          '
+        >
+          Cookie not found 🍪
+        </h2>
+      </div>
+    );
+  }
+
   return (
-    <div className='min-h-screen bg-[#FFF6EC] px-6 py-12'>
-      <div className='max-w-7xl mx-auto'>
+    <div
+      className='
+        min-h-screen
+        bg-[#FFF6EC]
+        px-6
+        py-12
+      '
+    >
+      <div
+        className='
+          max-w-7xl
+          mx-auto
+        '
+      >
         {/* Main Section */}
-        <div className='grid lg:grid-cols-2 gap-12 items-start'>
+        <div
+          className='
+            grid
+            lg:grid-cols-2
+            gap-12
+            items-start
+          '
+        >
           {/* Left */}
           <div>
             <div
@@ -73,8 +91,8 @@ const CookieDetails = () => {
               '
             >
               <img
-                src={cookie.image}
-                alt={cookie.name}
+                src={cookie?.images?.[0] || placeholderCookie}
+                alt={cookie?.name}
                 className='
                   w-full
                   h-137.5
@@ -98,46 +116,112 @@ const CookieDetails = () => {
                 font-semibold
               '
             >
-              {cookie.category}
+              {cookie?.category}
             </span>
 
             {/* Title */}
-            <h1 className='text-5xl font-bold text-[#2B1D16] mt-6 leading-tight'>
-              {cookie.name}
+            <h1
+              className='
+                text-5xl
+                font-bold
+                text-[#2B1D16]
+                mt-6
+                leading-tight
+              '
+            >
+              {cookie?.name}
             </h1>
 
             {/* Rating */}
-            <div className='flex items-center gap-3 mt-5'>
-              <div className='flex items-center text-[#D98B2B]'>
+            <div
+              className='
+                flex
+                items-center
+                gap-3
+                mt-5
+              '
+            >
+              <div
+                className='
+                  flex
+                  items-center
+                  text-[#D98B2B]
+                '
+              >
                 <FiStar fill='#D98B2B' />
 
-                <span className='ml-2 font-semibold'>{cookie.rating}</span>
+                <span
+                  className='
+                    ml-2
+                    font-semibold
+                  '
+                >
+                  {cookie?.ratings}
+                </span>
               </div>
 
-              <span className='text-gray-500'>
-                ({cookie.totalReviews} reviews)
+              <span
+                className='
+                  text-gray-500
+                '
+              >
+                ({cookie?.totalReviews} reviews)
               </span>
             </div>
 
             {/* Description */}
-            <p className='mt-8 text-gray-600 leading-8 text-lg'>
-              {cookie.description}
+            <p
+              className='
+                mt-8
+                text-gray-600
+                leading-8
+                text-lg
+              '
+            >
+              {cookie?.description}
             </p>
 
             {/* Price */}
-            <div className='mt-8 flex items-center gap-4'>
-              <span className='text-5xl font-bold text-[#D98B2B]'>
-                ₹{cookie.discountPrice}
+            <div
+              className='
+                mt-8
+                flex
+                items-center
+                gap-4
+              '
+            >
+              <span
+                className='
+                  text-5xl
+                  font-bold
+                  text-[#D98B2B]
+                '
+              >
+                ₹{cookie?.discountPrice}
               </span>
 
-              <span className='text-2xl text-gray-400 line-through'>
-                ₹{cookie.price}
+              <span
+                className='
+                  text-2xl
+                  text-gray-400
+                  line-through
+                '
+              >
+                ₹{cookie?.price}
               </span>
             </div>
 
             {/* Weight */}
             <div className='mt-8'>
-              <h3 className='font-bold text-[#2B1D16] mb-3'>Weight</h3>
+              <h3
+                className='
+                  font-bold
+                  text-[#2B1D16]
+                  mb-3
+                '
+              >
+                Weight
+              </h3>
 
               <div
                 className='
@@ -150,16 +234,30 @@ const CookieDetails = () => {
                   shadow
                 '
               >
-                {cookie.weight}
+                {cookie?.weight}
               </div>
             </div>
 
             {/* Ingredients */}
             <div className='mt-8'>
-              <h3 className='font-bold text-[#2B1D16] mb-4'>Ingredients</h3>
+              <h3
+                className='
+                  font-bold
+                  text-[#2B1D16]
+                  mb-4
+                '
+              >
+                Ingredients
+              </h3>
 
-              <div className='flex flex-wrap gap-3'>
-                {cookie.ingredients.map((ingredient, index) => (
+              <div
+                className='
+                  flex
+                  flex-wrap
+                  gap-3
+                '
+              >
+                {cookie?.ingredients?.map((ingredient, index) => (
                   <span
                     key={index}
                     className='
@@ -179,7 +277,15 @@ const CookieDetails = () => {
 
             {/* Quantity */}
             <div className='mt-10'>
-              <h3 className='font-bold text-[#2B1D16] mb-4'>Quantity</h3>
+              <h3
+                className='
+                  font-bold
+                  text-[#2B1D16]
+                  mb-4
+                '
+              >
+                Quantity
+              </h3>
 
               <div
                 className='
@@ -206,7 +312,15 @@ const CookieDetails = () => {
                   <FiMinus />
                 </button>
 
-                <span className='px-6 text-xl font-semibold'>{quantity}</span>
+                <span
+                  className='
+                    px-6
+                    text-xl
+                    font-semibold
+                  '
+                >
+                  {quantity}
+                </span>
 
                 <button
                   onClick={() => setQuantity(quantity + 1)}
@@ -227,7 +341,15 @@ const CookieDetails = () => {
             </div>
 
             {/* Buttons */}
-            <div className='mt-10 flex flex-col sm:flex-row gap-5'>
+            <div
+              className='
+                mt-10
+                flex
+                flex-col
+                sm:flex-row
+                gap-5
+              '
+            >
               <button
                 className='
                   flex-1
@@ -269,45 +391,107 @@ const CookieDetails = () => {
             </div>
 
             {/* Stock */}
-            <p className='mt-6 text-green-600 font-semibold'>
-              {cookie.stock} items available
+            <p
+              className='
+                mt-6
+                text-green-600
+                font-semibold
+              '
+            >
+              {cookie?.stock} items available
             </p>
           </div>
         </div>
 
         {/* Reviews */}
         <div className='mt-24'>
-          <h2 className='text-4xl font-bold text-[#2B1D16] mb-10'>
+          <h2
+            className='
+              text-4xl
+              font-bold
+              text-[#2B1D16]
+              mb-10
+            '
+          >
             Customer Reviews
           </h2>
 
-          <div className='grid md:grid-cols-2 gap-8'>
-            {cookie.reviews.map((review, index) => (
-              <div
-                key={index}
-                className='
-                    bg-white
-                    rounded-[28px]
-                    shadow-lg
-                    p-8
-                  '
-              >
-                <div className='flex items-center justify-between'>
-                  <h3 className='text-xl font-bold text-[#2B1D16]'>
-                    {review.name}
-                  </h3>
+          {cookie?.reviews?.length > 0 ? (
+            <div
+              className='
+                grid
+                md:grid-cols-2
+                gap-8
+              '
+            >
+              {cookie?.reviews?.map((review, index) => (
+                <div
+                  key={index}
+                  className='
+                      bg-white
+                      rounded-[28px]
+                      shadow-lg
+                      p-8
+                    '
+                >
+                  <div
+                    className='
+                        flex
+                        items-center
+                        justify-between
+                      '
+                  >
+                    <h3
+                      className='
+                          text-xl
+                          font-bold
+                          text-[#2B1D16]
+                        '
+                    >
+                      {review.name}
+                    </h3>
 
-                  <div className='flex items-center text-[#D98B2B]'>
-                    <FiStar fill='#D98B2B' />
+                    <div
+                      className='
+                          flex
+                          items-center
+                          text-[#D98B2B]
+                        '
+                    >
+                      <FiStar fill='#D98B2B' />
 
-                    <span className='ml-2'>{review.rating}</span>
+                      <span
+                        className='
+                            ml-2
+                          '
+                      >
+                        {review.rating}
+                      </span>
+                    </div>
                   </div>
-                </div>
 
-                <p className='mt-5 text-gray-600 leading-8'>{review.comment}</p>
-              </div>
-            ))}
-          </div>
+                  <p
+                    className='
+                        mt-5
+                        text-gray-600
+                        leading-8
+                      '
+                  >
+                    {review?.comment}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p
+              className='
+                text-gray-500
+                text-lg
+              '
+            >
+              No reviews yet 🍪
+            </p>
+          )}
         </div>
       </div>
     </div>
