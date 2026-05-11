@@ -1,19 +1,26 @@
+import mongoose from "mongoose";
 import Cookie from "../models/cookie.model.js";
 import slugify from "slugify";
+import CookieVariant from "../models/cookieVariant.model.js";
 
 export const createCookie = async (req, res) => {
   try {
-    const {
-      name,
-      description,
-      price,
-      discountPrice,
-      images,
-      category,
-      ingredients,
-      stock,
-      weight,
-    } = req.body;
+    const { name, description, images, category, ingredients, variants } =
+      req.body;
+
+    if (!name || !description || !category) {
+      return res.status(400).json({
+        success: false,
+        message: "Required fields are missing",
+      });
+    }
+
+    if (!Array.isArray(variants) || variants.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "At least one variant is required",
+      });
+    }
 
     const existingCookie = await Cookie.findOne({
       name,
@@ -29,19 +36,28 @@ export const createCookie = async (req, res) => {
     const cookie = await Cookie.create({
       name,
       description,
-      price,
-      discountPrice,
       images,
       category,
       ingredients,
-      stock,
-      weight,
     });
+
+    const variantsToInsert = variants.map((variant) => ({
+      cookieId: cookie._id,
+      weight: variant.weight,
+      price: variant.price,
+      discountPrice: variant.discountPrice,
+      stock: variant.stock,
+      isAvailable: variant.isAvailable ?? true,
+      sku: `${cookie.name}-${variant.weight}`
+        .replace(/\s+/g, "-")
+        .toUpperCase(),
+    }));
+
+    await CookieVariant.insertMany(variantsToInsert);
 
     return res.status(201).json({
       success: true,
       message: "Cookie created successfully",
-      cookie,
     });
   } catch (error) {
     return res.status(500).json({
@@ -52,42 +68,97 @@ export const createCookie = async (req, res) => {
 };
 
 export const bulkCreateCookies = async (req, res) => {
+  const session = await mongoose.startSession();
+
+  session.startTransaction();
+
   try {
     const cookies = req.body;
 
     if (!Array.isArray(cookies) || cookies.length === 0) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(400).json({
         success: false,
         message: "Cookies array is required",
       });
     }
 
+    // Generate slugs
     const cookiesWithSlug = cookies.map((cookie) => ({
       ...cookie,
-
       slug: slugify(cookie.name, {
         lower: true,
         strict: true,
       }),
     }));
 
+    // Extract names
     const cookieNames = cookiesWithSlug.map((cookie) => cookie.name);
 
+    // Existing cookies
     const existingCookies = await Cookie.find({
       name: {
         $in: cookieNames,
       },
-    }).select("name");
+    })
+      .select("name")
+      .lean();
 
     const existingCookieNames = new Set(
       existingCookies.map((cookie) => cookie.name),
     );
 
+    // Only new cookies
     const newCookies = cookiesWithSlug.filter(
       (cookie) => !existingCookieNames.has(cookie.name),
     );
 
-    const insertedCookies = await Cookie.insertMany(newCookies);
+    if (newCookies.length === 0) {
+      await session.abortTransaction();
+      session.endSession();
+      return res.status(400).json({
+        success: false,
+        message: "All cookies already exist",
+      });
+    }
+
+    // Prepare cookie docs
+    const cookiesToInsert = newCookies.map(({ variants, ...cookie }) => cookie);
+
+    // Insert cookies
+    const insertedCookies = await Cookie.insertMany(cookiesToInsert, {
+      session,
+    });
+
+    // Prepare variants
+    const variantsToInsert = [];
+
+    insertedCookies.forEach((insertedCookie, index) => {
+      const originalCookie = newCookies[index];
+
+      originalCookie.variants.forEach((variant) => {
+        variantsToInsert.push({
+          cookieId: insertedCookie._id,
+          weight: variant.weight,
+          price: variant.price,
+          discountPrice: variant.discountPrice,
+          stock: variant.stock,
+          isAvailable: variant.isAvailable,
+          sku: `${insertedCookie.name}-${variant.weight}`
+            .replace(/\s+/g, "-")
+            .toUpperCase(),
+        });
+      });
+    });
+
+    // Insert variants
+    const insertedVariants = await CookieVariant.insertMany(variantsToInsert, {
+      session,
+    });
+
+    await session.commitTransaction();
+    session.endSession();
 
     return res.status(201).json({
       success: true,
@@ -96,8 +167,12 @@ export const bulkCreateCookies = async (req, res) => {
       insertedCount: insertedCookies.length,
       skippedCount: existingCookies.length,
       insertedCookies,
+      insertedVariants,
     });
   } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+
     return res.status(500).json({
       success: false,
       message: error.message,
@@ -107,7 +182,24 @@ export const bulkCreateCookies = async (req, res) => {
 
 export const getAllCookies = async (req, res) => {
   try {
-    const cookies = await Cookie.find().limit(30).sort({ createdAt: -1 });
+    const cookies = await Cookie.aggregate([
+      {
+        $sort: {
+          createdAt: -1,
+        },
+      },
+      {
+        $limit: 30,
+      },
+      {
+        $lookup: {
+          from: "cookievariants",
+          localField: "_id",
+          foreignField: "cookieId",
+          as: "variants",
+        },
+      },
+    ]);
 
     return res.status(200).json({
       success: true,
@@ -126,7 +218,7 @@ export const getSingleCookie = async (req, res) => {
   try {
     const { slug } = req.params;
 
-    const cookie = await Cookie.findOne({ slug }, "-__v -updatedAt");
+    const cookie = await Cookie.findOne({ slug }, "-__v -updatedAt").lean();
 
     if (!cookie) {
       return res.status(404).json({
@@ -135,9 +227,16 @@ export const getSingleCookie = async (req, res) => {
       });
     }
 
+    const variants = await CookieVariant.find({
+      cookieId: cookie._id,
+    });
+
     return res.status(200).json({
       success: true,
-      cookie,
+      cookie: {
+        ...cookie,
+        variants,
+      },
     });
   } catch (error) {
     return res.status(500).json({
@@ -180,16 +279,28 @@ export const deleteCookie = async (req, res) => {
   try {
     const { id } = req.params;
     const cookie = await Cookie.findById(id);
+
     if (!cookie) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Cookie not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Cookie not found",
+      });
     }
+
+    await CookieVariant.deleteMany({
+      cookieId: cookie._id,
+    });
+
     await cookie.deleteOne();
-    return res
-      .status(200)
-      .json({ success: true, message: "Cookie deleted successfully" });
+
+    return res.status(200).json({
+      success: true,
+      message: "Cookie deleted successfully",
+    });
   } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };

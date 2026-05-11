@@ -92,8 +92,6 @@ export const updateCartItemQuantity = async (req, res) => {
 
     const { quantity } = req.body;
 
-    console.log(quantity);
-
     if (!quantity) {
       return res.status(400).json({
         success: false,
