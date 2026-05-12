@@ -11,6 +11,7 @@ const CookieDetails = () => {
   const [cookie, setCookie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const [variantIdx, setVariantIdx] = useState(0);
 
   useEffect(() => {
     const fetchCookie = async () => {
@@ -27,6 +28,10 @@ const CookieDetails = () => {
 
     fetchCookie();
   }, [slug]);
+
+  useEffect(() => {
+    setVariantIdx(0);
+  }, [cookie]);
 
   if (loading) {
     return <CookieDetailsSkeleton />;
@@ -55,6 +60,8 @@ const CookieDetails = () => {
       </div>
     );
   }
+
+  const selectedVariant = cookie?.variants?.[variantIdx];
 
   return (
     <div
@@ -197,7 +204,7 @@ const CookieDetails = () => {
                   text-[#D98B2B]
                 '
               >
-                ₹{cookie?.discountPrice}
+                ₹{selectedVariant?.discountPrice}
               </span>
 
               <span
@@ -207,7 +214,7 @@ const CookieDetails = () => {
                   line-through
                 '
               >
-                ₹{cookie?.price}
+                ₹{selectedVariant?.price}
               </span>
             </div>
 
@@ -222,20 +229,55 @@ const CookieDetails = () => {
               >
                 Weight
               </h3>
-
-              <div
-                className='
-                  inline-flex
-                  items-center
-                  bg-white
-                  px-5
-                  py-3
-                  rounded-full
-                  shadow
-                '
-              >
-                {cookie?.weight}
-              </div>
+              {!cookie.variants || cookie.variants.length === 0 ? (
+                <div
+                  className='
+                    inline-flex
+                    items-center
+                    bg-white
+                    px-5
+                    py-3
+                    rounded-full
+                    shadow
+                  '
+                >
+                  500g
+                </div>
+              ) : (
+                <div className='flex gap-3 items-center flex-wrap'>
+                  {cookie.variants.map((variant, index) => (
+                    <div
+                      key={variant._id}
+                      onClick={() => setVariantIdx(index)}
+                      className={`
+                        inline-flex
+                        items-center
+                        px-5
+                        py-3
+                        rounded-full
+                        shadow
+                        cursor-pointer
+                        ${
+                          index === variantIdx
+                            ? `
+                              bg-[#D98B2B]
+                              text-white
+                              ring-4
+                              ring-[#F5D2A0]
+                              scale-105
+                            `
+                            : `
+                              bg-white
+                              hover:bg-[#FFF6EC]
+                            `
+                        }
+                      `}
+                    >
+                      {variant.weight}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Ingredients */}
@@ -398,7 +440,7 @@ const CookieDetails = () => {
                 font-semibold
               '
             >
-              {cookie?.stock} items available
+              {selectedVariant?.stock} items available
             </p>
           </div>
         </div>

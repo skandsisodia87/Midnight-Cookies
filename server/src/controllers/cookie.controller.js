@@ -199,6 +199,31 @@ export const getAllCookies = async (req, res) => {
           as: "variants",
         },
       },
+      {
+        $project: {
+          name: 1,
+          slug: 1,
+          description: 1,
+          images: 1,
+          category: 1,
+          defaultVariant: {
+            $arrayElemAt: [
+              {
+                $filter: {
+                  input: "$variants",
+
+                  as: "variant",
+
+                  cond: {
+                    $eq: ["$$variant.weight", "500g"],
+                  },
+                },
+              },
+              0,
+            ],
+          },
+        },
+      },
     ]);
 
     return res.status(200).json({

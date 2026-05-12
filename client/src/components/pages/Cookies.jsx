@@ -27,7 +27,7 @@ const Cookies = () => {
 
     fetchCookies();
   }, []);
-  
+
   return (
     <div className='min-h-screen bg-[#FFF6EC] px-6 py-12'>
       <div className='max-w-7xl mx-auto'>

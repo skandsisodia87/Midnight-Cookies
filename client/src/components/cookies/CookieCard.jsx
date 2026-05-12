@@ -86,10 +86,16 @@ const CookieCard = ({ cookie }) => {
           {/* Price */}
           <div className='mt-4 flex items-center gap-3'>
             <span className='text-2xl font-bold text-[#D98B2B]'>
-              ₹{cookie.discountPrice}
+              ₹{cookie.defaultVariant?.discountPrice}
             </span>
 
-            <span className='text-gray-400 line-through'>₹{cookie.price}</span>
+            <div className='flex items-center text-gray-400 text-sm'>
+              <span className='line-through'>
+                ₹{cookie.defaultVariant?.price}
+              </span>
+
+              <span className='ml-1'>/{cookie.defaultVariant?.weight}</span>
+            </div>
           </div>
         </div>
 
