@@ -10,14 +10,12 @@ import Navbar from "../layout/Navbar";
 function Home() {
   return (
     <div className='bg-[#FFF6EC] min-h-screen overflow-hidden'>
-      <Navbar />
       <HeroSection />
       <FeaturedCookies />
       <Categories />
       <WhyChooseUs />
       <Testimonials />
       <Newsletter />
-      <Footer />
     </div>
   );
 }

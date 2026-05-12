@@ -18,13 +18,6 @@ const cookieSchema = new Schema(
       type: String,
       required: true,
     },
-    price: {
-      type: Number,
-      required: true,
-    },
-    discountPrice: {
-      type: Number,
-    },
     images: [
       {
         type: String,
@@ -39,17 +32,6 @@ const cookieSchema = new Schema(
         type: String,
       },
     ],
-    stock: {
-      type: Number,
-      default: 0,
-    },
-    isAvailable: {
-      type: Boolean,
-      default: true,
-    },
-    weight: {
-      type: String,
-    },
     ratings: {
       type: Number,
       default: 0,
@@ -59,7 +41,9 @@ const cookieSchema = new Schema(
       default: 0,
     },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+  },
 );
 
 cookieSchema.pre("save", function () {
