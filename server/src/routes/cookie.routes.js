@@ -7,12 +7,15 @@ import {
   updateCookie,
   deleteCookie,
   bulkCreateCookies,
+  getFeaturedCookies,
 } from "../controllers/cookie.controller.js";
 import verifyAdmin from "../middleware/admin.middleware.js";
 
 const router = express.Router();
 
 router.get("/", getAllCookies);
+
+router.get("/featured", getFeaturedCookies);
 
 router.get("/:slug", getSingleCookie);
 
