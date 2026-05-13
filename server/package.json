@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "server": "nodemon src/server.js",
+    "client": "npm run dev --prefix ../client",
+    "dev": "concurrently --names \"server,client\" --prefix-colors \"yellow,blue\" \"npm run server\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
@@ -23,6 +24,7 @@
     "slugify": "^1.6.9"
   },
   "devDependencies": {
+    "concurrently": "^9.2.1",
     "nodemon": "^3.1.14"
   }
 }

@@ -7,24 +7,49 @@ const orderItemSchema = new Schema(
       ref: "Cookie",
       required: true,
     },
+    variantId: {
+      type: Schema.Types.ObjectId,
+      ref: "CookieVariant",
+      required: true,
+    },
+    sku: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     name: {
       type: String,
       required: true,
+      trim: true,
     },
     image: {
       type: String,
+      default: null,
     },
     quantity: {
       type: Number,
       required: true,
+      min: 1,
+    },
+    weight: {
+      type: String,
+      required: true,
+      trim: true,
     },
     originalPrice: {
       type: Number,
       required: true,
+      min: 0,
     },
     discountPrice: {
       type: Number,
+      default: null,
+      min: 0,
+    },
+    finalPrice: {
+      type: Number,
       required: true,
+      min: 0,
     },
   },
   { _id: false },

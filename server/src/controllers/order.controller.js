@@ -1,23 +1,25 @@
 import mongoose from "mongoose";
 import Order from "../models/order.model.js";
 import Cookie from "../models/cookie.model.js";
+import CookieVariant from "../models/cookieVariant.model.js";
 import { generateOrderId } from "../utils/generateOrderId.js";
 import { orderStatusEmailTemplate } from "../templates/orderEmailTemplate.js";
 import { sendEmail } from "../services/email.service.js";
 
 export const createOrder = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
   try {
     const { items, shippingAddress, paymentMethod, notes } = req.body;
 
     if (!items || items.length === 0) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(400).json({
         success: false,
         message: "Order items are required",
       });
     }
-
-    const session = await mongoose.startSession();
-    session.startTransaction();
 
     let totalAmount = 0;
     const orderItems = [];
@@ -27,38 +29,52 @@ export const createOrder = async (req, res) => {
         throw new Error("Invalid quantity");
       }
 
-      const cookie = await Cookie.findById(item.cookieId).session(session);
+      const cookie = await Cookie.findById(item.cookieId)
+        .select("name images")
+        .session(session);
 
       if (!cookie) {
         throw new Error("Cookie not found");
       }
 
-      if (cookie.stock < item.quantity) {
-        throw new Error(`${cookie.name} is out of stock`);
-      }
-
-      // update stock
-      await Cookie.findByIdAndUpdate(
-        cookie._id,
+      const updatedVariant = await CookieVariant.findOneAndUpdate(
+        {
+          _id: item.variantId,
+          cookieId: item.cookieId,
+          isAvailable: true,
+          stock: {
+            $gte: item.quantity,
+          },
+        },
         {
           $inc: {
             stock: -item.quantity,
           },
         },
         {
+          new: true,
           session,
         },
       );
 
-      totalAmount += (cookie.discountPrice || cookie.price) * item.quantity;
+      if (!updatedVariant) {
+        throw new Error(`${cookie.name} is unavailable or out of stock`);
+      }
+
+      const finalPrice = updatedVariant.discountPrice || updatedVariant.price;
+      totalAmount += finalPrice * item.quantity;
 
       orderItems.push({
         cookieId: cookie._id,
+        variantId: updatedVariant._id,
+        sku: updatedVariant.sku,
         name: cookie.name,
-        image: cookie.images?.[0],
+        image: cookie.images?.[0] || null,
         quantity: item.quantity,
-        originalPrice: cookie.price,
-        discountPrice: cookie.discountPrice || null,
+        weight: updatedVariant.weight,
+        originalPrice: updatedVariant.price,
+        discountPrice: updatedVariant.discountPrice,
+        finalPrice,
       });
     }
 
