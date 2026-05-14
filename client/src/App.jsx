@@ -14,6 +14,7 @@ import useAuthStore from "./store/authStore";
 import VerifyEmailRoute from "./routes/VerifyEmailRoute";
 import ProtectedRoute from "./routes/ProtectedRoutes";
 import PublicRoute from "./routes/PublicRoutes";
+import ResetPassword from "./components/pages/ResetPassword";
 
 const App = () => {
   const { isAuthenticated } = useAuthStore();
@@ -29,6 +30,7 @@ const App = () => {
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route path='/forgot-password' element={<ForgotPassword />} />
+        <Route path='/reset-password/:token' element={<ResetPassword />} />
       </Route>
 
       <Route element={<VerifyEmailRoute />}>

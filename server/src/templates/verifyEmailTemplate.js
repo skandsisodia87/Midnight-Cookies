@@ -19,11 +19,32 @@ const verifyEmailTemplate = ({ name, otp }) => {
         "
       >
         <!-- Header -->
-        <div style="background: #1f140f; padding: 30px; text-align: center">
-          <h1 style="color: #f5c16c; margin: 0; font-size: 32px">
-            Midnight Cookies 🍪
-          </h1>
-        </div>
+        <div
+        style="
+          background: #2b1d16;
+          padding: 30px;
+          text-align: center;
+        "
+      >
+        <h1
+          style="
+            color: #fff;
+            margin: 0;
+            font-size: 32px;
+          "
+        >
+          Midnight Cookies 🍪
+        </h1>
+
+        <p
+          style="
+            color: #f3d7b6;
+            margin-top: 10px;
+          "
+        >
+          Freshly Baked Happiness
+        </p>
+      </div>
 
         <!-- Body -->
         <div style="padding: 20px">

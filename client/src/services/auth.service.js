@@ -2,7 +2,6 @@ import api from "./axios";
 
 export const loginUser = async (payload) => {
   const response = await api.post("/auth/login", payload);
-
   return response.data;
 };
 
@@ -11,10 +10,14 @@ export const logoutUser = async () => {
   return response.data;
 };
 
-export const forgotPassword = async () => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+export const forgotPassword = async (body) => {
+  const response = await api.post("/auth/forgot-password", body);
+  return response.data;
+};
 
-  return {};
+export const resetPassword = async (body, token) => {
+  const response = await api.post(`/auth/reset-password/${token}`, body);
+  return response.data;
 };
 
 export const registerUser = async (body) => {

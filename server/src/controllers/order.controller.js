@@ -106,7 +106,7 @@ export const createOrder = async (req, res) => {
     try {
       await sendEmail({
         to: req.user.email,
-        subject: "Order Placed 🍪",
+        subject: "Order Placed",
         html: orderStatusEmailTemplate({
           customerName: req.user.name,
           orderId: order.orderId,

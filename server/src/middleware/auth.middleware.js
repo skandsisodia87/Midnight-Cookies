@@ -38,6 +38,14 @@ const verifyToken = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        success: false,
+        message: "Access token expired",
+        code: "TOKEN_EXPIRED",
+      });
+    }
+
     return res.status(401).json({
       success: false,
       message: error.message || "Invalid access token",
