@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Cookie from "../models/cookie.model.js";
+import Order from "../models/order.model.js";
 import slugify from "slugify";
 import CookieVariant from "../models/cookieVariant.model.js";
 
@@ -321,6 +322,154 @@ export const deleteCookie = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Cookie deleted successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getFeaturedCookies = async (req, res) => {
+  try {
+    let featuredCookies = await Order.aggregate([
+      // only successful orders
+      {
+        $match: {
+          orderStatus: {
+            $in: ["confirmed", "processing", "shipped", "delivered"],
+          },
+        },
+      },
+
+      // explode items
+      {
+        $unwind: "$items",
+      },
+
+      // group by cookie
+      {
+        $group: {
+          _id: "$items.cookieId",
+
+          totalOrdered: {
+            $sum: "$items.quantity",
+          },
+        },
+      },
+
+      // top ordered first
+      {
+        $sort: {
+          totalOrdered: -1,
+        },
+      },
+
+      // limit results
+      {
+        $limit: 3,
+      },
+
+      // fetch cookie
+      {
+        $lookup: {
+          from: "cookies",
+          localField: "_id",
+          foreignField: "_id",
+          as: "cookie",
+        },
+      },
+
+      {
+        $unwind: "$cookie",
+      },
+
+      // fetch variants
+      {
+        $lookup: {
+          from: "cookievariants",
+          localField: "_id",
+          foreignField: "cookieId",
+          as: "variants",
+        },
+      },
+      {
+        $project: {
+          _id: "$cookie._id",
+          name: "$cookie.name",
+          slug: "$cookie.slug",
+          description: "$cookie.description",
+          images: "$cookie.images",
+          category: "$cookie.category",
+          variants: "$variants",
+          defaultVariant: {
+            $arrayElemAt: [
+              {
+                $filter: {
+                  input: "$variants",
+                  as: "variant",
+                  cond: {
+                    $eq: ["$$variant.weight", "500g"],
+                  },
+                },
+              },
+              0,
+            ],
+          },
+        },
+      },
+    ]);
+
+    if (featuredCookies.length < 3) {
+      featuredCookies = await Cookie.aggregate([
+        {
+          $match: {
+            category: {
+              $in: ["Classic", "Chocolate", "Premium"],
+            },
+          },
+        },
+        {
+          $limit: 3,
+        },
+        {
+          $lookup: {
+            from: "cookievariants",
+            localField: "_id",
+            foreignField: "cookieId",
+            as: "variants",
+          },
+        },
+        {
+          $project: {
+            name: 1,
+            slug: 1,
+            description: 1,
+            images: 1,
+            category: 1,
+            defaultVariant: {
+              $arrayElemAt: [
+                {
+                  $filter: {
+                    input: "$variants",
+                    as: "variant",
+                    cond: {
+                      $eq: ["$$variant.weight", "500g"],
+                    },
+                  },
+                },
+                0,
+              ],
+            },
+          },
+        },
+      ]);
+    }
+
+    return res.status(200).json({
+      success: true,
+      cookies: featuredCookies,
     });
   } catch (error) {
     return res.status(500).json({

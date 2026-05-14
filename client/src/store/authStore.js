@@ -10,6 +10,7 @@ const useAuthStore = create(
       isAuthenticated: false,
       pendingVerificationEmail: null,
       isLoading: false,
+      isRegistering: false,
 
       // Actions
       login: ({ user, accessToken }) =>
@@ -25,6 +26,7 @@ const useAuthStore = create(
           accessToken: null,
           isAuthenticated: false,
           pendingVerificationEmail: null,
+          isRegistering: false,
         }),
 
       setUser: (user) =>
@@ -40,6 +42,11 @@ const useAuthStore = create(
       setLoading: (loading) =>
         set({
           isLoading: loading,
+        }),
+
+      setRegistering: (value) =>
+        set({
+          isRegistering: value,
         }),
 
       setPendingVerificationEmail: (email) =>
