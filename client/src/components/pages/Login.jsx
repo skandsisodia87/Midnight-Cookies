@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiMail, FiLock } from "react-icons/fi";
 import { useState } from "react";
 import useAuthStore from "../../store/authStore";
-import { loginUser } from "../services/auth.service";
+import { loginUser } from "../../services/auth.service";
 import { toast } from "sonner";
 
 const Login = () => {

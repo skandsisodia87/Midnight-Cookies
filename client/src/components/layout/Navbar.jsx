@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { FiShoppingCart } from "react-icons/fi";
 import useAuthStore from "../../store/authStore";
-import { logoutUser } from "../services/auth.service";
+import { logoutUser } from "../../services/auth.service";
 import { toast } from "sonner";
 import { useState } from "react";
 
@@ -81,10 +81,11 @@ const Navbar = () => {
 
           <Link to='/cart' className='relative'>
             <FiShoppingCart size={24} />
-
-            <span className='absolute -top-2 -right-2 bg-[#D98B2B] text-xs w-5 h-5 flex items-center justify-center rounded-full'>
-              2
-            </span>
+            {isAuthenticated && (
+              <span className='absolute -top-2 -right-2 bg-[#D98B2B] text-xs w-5 h-5 flex items-center justify-center rounded-full'>
+                2
+              </span>
+            )}
           </Link>
         </div>
       </div>

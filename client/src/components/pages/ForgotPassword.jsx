@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { forgotPassword } from "../services/auth.service";
+import { forgotPassword } from "../../services/auth.service";
 import { toast } from "sonner";
 
 const forgotPasswordSchema = z.object({

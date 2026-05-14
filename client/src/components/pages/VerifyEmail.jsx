@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { verifyEmailOtp } from "../services/auth.service";
+import { verifyEmailOtp } from "../../services/auth.service";
 import useAuthStore from "../../store/authStore";
 
 const VerifyEmail = () => {
