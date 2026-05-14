@@ -1,11 +1,16 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { verifyEmailOtp } from "../services/auth.service";
 
 const VerifyEmail = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [code, setCode] = useState(["", "", "", "", "", ""]);
+  const [loading, setLoading] = useState(false);
 
-  // Handle input change
+  const email = location.state?.email;
+
   const handleChange = (value, index) => {
     if (!/^[0-9]?$/.test(value)) {
       return;
@@ -20,6 +25,34 @@ const VerifyEmail = () => {
     // Auto focus next input
     if (value && index < code.length - 1) {
       document.getElementById(`otp-${index + 1}`)?.focus();
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+
+      const otp = code.join("");
+      if (otp.length !== 6) {
+        toast.error("Please enter complete OTP");
+        return;
+      }
+
+      const response = await verifyEmailOtp(email, otp);
+
+      if (response.success) {
+        setCode(["", "", "", "", "", ""]);
+
+        toast.success("Email verified successfully");
+
+        navigate("/login", {
+          replace: true,
+        });
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to verify email");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,6 +123,8 @@ const VerifyEmail = () => {
 
         {/* Verify Button */}
         <button
+          onClick={handleSubmit}
+          disabled={loading}
           className='
             w-full
             mt-10
@@ -100,9 +135,11 @@ const VerifyEmail = () => {
             rounded-full
             font-semibold
             transition
+            disabled:opacity-50
+            disabled:cursor-not-allowed
           '
         >
-          Verify Email
+          {loading ? "Verifying..." : "Verify Email"}
         </button>
 
         {/* Resend */}

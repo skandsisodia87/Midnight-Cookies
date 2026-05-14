@@ -1,8 +1,83 @@
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 import { FiMail, FiLock, FiUser, FiPhone } from "react-icons/fi";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { registerUser, sendVerificationOtp } from "../services/auth.service";
+
+export const registrationSchema = z.object({
+  name: z.string().trim().min(2, "Name should be at least 2 characters long"),
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address"),
+  password: z.string().min(6, "Password should be at least 6 characters long"),
+  password: z
+    .string()
+    .min(6, "Password should be at least 6 characters long")
+    .regex(
+      /^(?=.*[A-Za-z])(?=.*\d).+$/,
+      "Password must contain at least one letter and one number",
+    ),
+});
 
 const Register = () => {
+  const navigate = useNavigate();
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    reset,
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      number: "",
+    },
+    resolver: zodResolver(registrationSchema),
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: registerUser,
+    onSuccess: async (data) => {
+      reset();
+      toast.success("Verification OTP sent successfully");
+      await new Promise((res) => setTimeout(res, 1000));
+      await toast.promise(
+        sendVerificationOtp({
+          email: data.user.email,
+        }),
+        {
+          loading: "Sending verification otp...",
+          success: () => {
+            return "Verification OTP sent successfully";
+          },
+          error: (error) => error.response?.data?.message || "Logout failed",
+        },
+      );
+      navigate("/verify-email", {
+        state: {
+          email: data.user.email,
+        },
+      });
+    },
+    onError: (error) => {
+      toast.error(
+        error.response?.data?.message ||
+          "Something went wrong while sending verification code",
+      );
+    },
+  });
+
+  const onSubmit = (data) => {
+    mutate(data);
+  };
+
   return (
     <div className='min-h-screen bg-[#FFF6EC] flex items-center justify-center px-6 py-12'>
       <div
@@ -25,7 +100,7 @@ const Register = () => {
         </div>
 
         {/* Form */}
-        <form className='mt-10 space-y-6'>
+        <form className='mt-10 space-y-4' onSubmit={handleSubmit(onSubmit)}>
           {/* Name */}
           <div>
             <label className='block mb-2 font-medium text-[#2B1D16]'>
@@ -33,22 +108,26 @@ const Register = () => {
             </label>
 
             <div
-              className='
+              className={`
                 flex
                 items-center
                 border
-                border-gray-300
                 rounded-full
                 px-5
                 py-4
-                focus-within:border-[#D98B2B]
-              '
+                ${
+                  errors.name
+                    ? "border-red-500"
+                    : "border-gray-300 focus-within:border-[#D98B2B]"
+                }
+              `}
             >
               <FiUser className='text-gray-400' />
 
               <input
                 type='text'
                 placeholder='Enter your full name'
+                {...register("name")}
                 className='
                   w-full
                   ml-3
@@ -57,6 +136,9 @@ const Register = () => {
                 '
               />
             </div>
+            {errors.name && (
+              <p className='text-red-500 text-sm mt-2'>{errors.name.message}</p>
+            )}
           </div>
 
           {/* Email */}
@@ -66,22 +148,26 @@ const Register = () => {
             </label>
 
             <div
-              className='
+              className={`
                 flex
                 items-center
                 border
-                border-gray-300
                 rounded-full
                 px-5
                 py-4
-                focus-within:border-[#D98B2B]
-              '
+                ${
+                  errors.email
+                    ? "border-red-500"
+                    : "border-gray-300 focus-within:border-[#D98B2B]"
+                }
+              `}
             >
               <FiMail className='text-gray-400' />
 
               <input
                 type='email'
                 placeholder='Enter your email'
+                {...register("email")}
                 className='
                   w-full
                   ml-3
@@ -90,6 +176,11 @@ const Register = () => {
                 '
               />
             </div>
+            {errors.email && (
+              <p className='text-red-500 text-sm mt-2'>
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
           {/* Phone */}
@@ -99,22 +190,26 @@ const Register = () => {
             </label>
 
             <div
-              className='
+              className={`
                 flex
                 items-center
                 border
-                border-gray-300
                 rounded-full
                 px-5
                 py-4
-                focus-within:border-[#D98B2B]
-              '
+                ${
+                  errors.number
+                    ? "border-red-500"
+                    : "border-gray-300 focus-within:border-[#D98B2B]"
+                }
+              `}
             >
               <FiPhone className='text-gray-400' />
 
               <input
                 type='text'
                 placeholder='Enter your phone number'
+                {...register("number")}
                 className='
                   w-full
                   ml-3
@@ -123,6 +218,11 @@ const Register = () => {
                 '
               />
             </div>
+            {errors.number && (
+              <p className='text-red-500 text-sm mt-2'>
+                {errors.number.message}
+              </p>
+            )}
           </div>
 
           {/* Password */}
@@ -132,21 +232,25 @@ const Register = () => {
             </label>
 
             <div
-              className='
+              className={`
                 flex
                 items-center
                 border
-                border-gray-300
                 rounded-full
                 px-5
                 py-4
-                focus-within:border-[#D98B2B]
-              '
+                ${
+                  errors.password
+                    ? "border-red-500"
+                    : "border-gray-300 focus-within:border-[#D98B2B]"
+                }
+              `}
             >
               <FiLock className='text-gray-400' />
 
               <input
                 type='password'
+                {...register("password")}
                 placeholder='Create password'
                 className='
                   w-full
@@ -156,11 +260,17 @@ const Register = () => {
                 '
               />
             </div>
+            {errors.password && (
+              <p className='text-red-500 text-sm mt-2'>
+                {errors.password.message}
+              </p>
+            )}
           </div>
 
           {/* Submit */}
           <button
             type='submit'
+            disabled={isPending}
             className='
               w-full
               bg-[#D98B2B]
@@ -170,9 +280,11 @@ const Register = () => {
               rounded-full
               font-semibold
               transition
+              disabled:opacity-50
+              disabled:cursor-not-allowed
             '
           >
-            Create Account
+            {isPending ? "Creating..." : "Create Account"}
           </button>
         </form>
 

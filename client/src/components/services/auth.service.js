@@ -16,3 +16,18 @@ export const forgotPassword = async () => {
 
   return {};
 };
+
+export const registerUser = async (body) => {
+  const response = await api.post("/auth/register", body);
+  return response.data;
+};
+
+export const sendVerificationOtp = async (body) => {
+  const response = await api.post("/auth/send-verification-otp", body);
+  return response.data;
+};
+
+export const verifyEmailOtp = async (email, otp) => {
+  const response = await api.post("/auth/verify-email-otp", { email, otp });
+  return response.data;
+};

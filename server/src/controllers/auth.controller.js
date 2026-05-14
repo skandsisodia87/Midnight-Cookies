@@ -30,12 +30,6 @@ export const registerUser = async (req, res) => {
       "-password -refreshToken",
     );
 
-    await sendEmail({
-      to: createdUser.email,
-      subject: "Welcome to Midnight Cookies 🍪",
-      html: welcomeEmailTemplate(createdUser.name),
-    });
-
     return res.status(201).json({
       success: true,
       message: "User registered successfully",
@@ -291,6 +285,12 @@ export const verifyEmailOtp = async (req, res) => {
     user.emailVerificationExpires = null;
 
     await user.save({ validateBeforeSave: false });
+
+    await sendEmail({
+      to: user.email,
+      subject: "Welcome to Midnight Cookies 🍪",
+      html: welcomeEmailTemplate(user.name),
+    });
 
     return res
       .status(200)

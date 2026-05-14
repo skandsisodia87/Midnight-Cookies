@@ -17,13 +17,14 @@ const ForgotPassword = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
+    mode: "onChange",
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
       email: "",
     },
   });
 
-  const { mutate, isPending, isSuccess, error } = useMutation({
+  const { mutate, isPending, error } = useMutation({
     mutationFn: forgotPassword,
 
     onSuccess: (data) => {
