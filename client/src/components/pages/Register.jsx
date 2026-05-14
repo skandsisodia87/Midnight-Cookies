@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { registerUser, sendVerificationOtp } from "../services/auth.service";
+import useAuthStore from "../../store/authStore";
 
 export const registrationSchema = z.object({
   name: z.string().trim().min(2, "Name should be at least 2 characters long"),
@@ -25,6 +26,7 @@ export const registrationSchema = z.object({
 
 const Register = () => {
   const navigate = useNavigate();
+  const { setRegistering } = useAuthStore.getState();
 
   const {
     register,
@@ -60,6 +62,7 @@ const Register = () => {
           error: (error) => error.response?.data?.message || "Logout failed",
         },
       );
+      setRegistering(true);
       navigate("/verify-email", {
         state: {
           email: data.user.email,

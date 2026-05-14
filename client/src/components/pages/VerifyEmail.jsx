@@ -2,10 +2,12 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { verifyEmailOtp } from "../services/auth.service";
+import useAuthStore from "../../store/authStore";
 
 const VerifyEmail = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { setRegistering } = useAuthStore.getState();
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
 
@@ -44,7 +46,7 @@ const VerifyEmail = () => {
         setCode(["", "", "", "", "", ""]);
 
         toast.success("Email verified successfully");
-
+        setRegistering(false);
         navigate("/login", {
           replace: true,
         });

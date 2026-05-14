@@ -10,22 +10,38 @@ import OrderDetails from "./components/pages/OrderDetails";
 import Cart from "./components/pages/Cart";
 import Cookies from "./components/pages/Cookies";
 import CookieDetails from "./components/pages/CookiesDetails";
+import useAuthStore from "./store/authStore";
+import VerifyEmailRoute from "./routes/VerifyEmailRoute";
+import ProtectedRoute from "./routes/ProtectedRoutes";
+import PublicRoute from "./routes/PublicRoutes";
 
 const App = () => {
+  const { isAuthenticated } = useAuthStore();
   return (
     <Routes>
       <Route element={<MainLayout />}>
         <Route path='/' element={<Home />} />
-        <Route path='/cart' element={<Cart />} />
         <Route path='/cookies' element={<Cookies />} />
-        <Route path='/orders' element={<Orders />} />
-        <Route path='/orders/:id' element={<OrderDetails />} />
         <Route path='/cookies/:slug' element={<CookieDetails />} />
       </Route>
-      <Route path='/login' element={<Login />} />
-      <Route path='/register' element={<Register />} />
-      <Route path='/forgot-password' element={<ForgotPassword />} />
-      <Route path='/verify-email' element={<VerifyEmail />} />
+
+      <Route element={<PublicRoute />}>
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
+        <Route path='/forgot-password' element={<ForgotPassword />} />
+      </Route>
+
+      <Route element={<VerifyEmailRoute />}>
+        <Route path='/verify-email' element={<VerifyEmail />} />
+      </Route>
+
+      <Route element={<ProtectedRoute />}>
+        <Route element={<MainLayout />}>
+          <Route path='/cart' element={<Cart />} />
+          <Route path='/orders' element={<Orders />} />
+          <Route path='/orders/:id' element={<OrderDetails />} />
+        </Route>
+      </Route>
     </Routes>
   );
 };
