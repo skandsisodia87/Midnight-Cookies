@@ -1,75 +1,65 @@
-import { FiCheckCircle, FiClock, FiTruck, FiPackage } from "react-icons/fi";
-
 import { useParams } from "react-router-dom";
-
-const order = {
-  id: "MC-XA82KD5521",
-
-  status: "shipped",
-
-  createdAt: "08 May 2026",
-
-  totalAmount: 599,
-
-  paymentMethod: "COD",
-
-  shippingAddress: {
-    fullName: "Skand Sisodia",
-    phone: "+91 9999999999",
-    address: "Sector 62",
-    city: "Noida",
-    state: "Uttar Pradesh",
-    pincode: "201309",
-  },
-
-  items: [
-    {
-      name: "Chocolate Blast",
-      quantity: 2,
-      finalPrice: 199,
-      image: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e",
-    },
-
-    {
-      name: "Oreo Dream",
-      quantity: 1,
-      finalPrice: 149,
-      image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35",
-    },
-  ],
-};
-
-// Status Config
-const statusConfig = {
-  placed: {
-    icon: <FiClock />,
-    color: "bg-yellow-100 text-yellow-700",
-    text: "Placed",
-  },
-
-  shipped: {
-    icon: <FiTruck />,
-    color: "bg-blue-100 text-blue-700",
-    text: "Shipped",
-  },
-
-  delivered: {
-    icon: <FiCheckCircle />,
-    color: "bg-green-100 text-green-700",
-    text: "Delivered",
-  },
-
-  cancelled: {
-    icon: <FiPackage />,
-    color: "bg-red-100 text-red-700",
-    text: "Cancelled",
-  },
-};
+import { useEffect, useState } from "react";
+import StatusConfig from "../../common/StatusConfig";
+import { getSingleOrder } from "../../services/order.service";
+import ErrorPage from "../../common/ErrorPage";
+import OrderDetailsSkeleton from "../skeletons/OrderDetailsSkeleton";
 
 const OrderDetails = () => {
-  const { id } = useParams();
+  const { orderId } = useParams();
 
-  const currentStatus = statusConfig[order.status];
+  const [order, setOrder] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        const data = await getSingleOrder(orderId);
+
+        if (data?.success) {
+          setOrder(data.order);
+        } else {
+          setError(true);
+        }
+      } catch (error) {
+        console.error(error);
+
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrder();
+  }, [orderId]);
+
+  if (loading) {
+    return (
+      <div className='min-h-screen px-6 py-12 bg-[#FFF6EC]'>
+        <div className='max-w-6xl mx-auto'>
+          <OrderDetailsSkeleton />
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !order) {
+    return (
+      <div className='min-h-screen px-6 py-12 bg-[#FFF6EC]'>
+        <div className='max-w-4xl mx-auto'>
+          <ErrorPage
+            title='Order Not Found'
+            message='We could not find the order you are looking for.'
+            buttonText='Back To Orders'
+            redirectLink='/orders'
+          />
+        </div>
+      </div>
+    );
+  }
+
+  const currentStatus = StatusConfig[order.orderStatus] || StatusConfig.placed;
 
   return (
     <div className='min-h-screen px-6 py-12 bg-[#FFF6EC]'>
@@ -89,7 +79,7 @@ const OrderDetails = () => {
           <div>
             <h1 className='text-5xl font-bold text-[#2B1D16]'>Order Details</h1>
 
-            <p className='mt-4 text-gray-600'>Order ID: {order.id}</p>
+            <p className='mt-4 text-gray-600'>Order ID: {orderId}</p>
           </div>
 
           {/* Status */}
@@ -113,11 +103,8 @@ const OrderDetails = () => {
           </div>
         </div>
 
-        {/* Main Grid */}
         <div className='grid lg:grid-cols-3 gap-8'>
-          {/* Left */}
           <div className='lg:col-span-2 space-y-8'>
-            {/* Ordered Items */}
             <div
               className='
                 bg-white
@@ -144,7 +131,6 @@ const OrderDetails = () => {
                         pb-6
                       '
                   >
-                    {/* Image */}
                     <img
                       src={item.image}
                       alt={item.name}
@@ -156,26 +142,53 @@ const OrderDetails = () => {
                         '
                     />
 
-                    {/* Details */}
                     <div className='flex-1'>
-                      <h3 className='text-2xl font-bold text-[#2B1D16]'>
-                        {item.name}
-                      </h3>
+                      <div
+                        className='
+                          flex
+                          flex-col
+                          md:flex-row
+                          md:items-start
+                          md:justify-between
+                          gap-4
+                        '
+                      >
+                        {/* Left */}
+                        <div>
+                          <h3 className='text-2xl font-bold text-[#2B1D16]'>
+                            {item.name}
+                          </h3>
 
-                      <p className='mt-2 text-gray-500'>
-                        Quantity: {item.quantity}
-                      </p>
+                          <p className='mt-2 text-sm text-gray-400'>
+                            {item.sku}
+                          </p>
 
-                      <p className='mt-2 text-[#D98B2B] font-bold text-xl'>
-                        ₹{item.finalPrice}
-                      </p>
+                          <p className='mt-1 text-sm text-gray-500'>
+                            Weight: {item.weight}
+                          </p>
+
+                          <p className='mt-1 text-sm text-gray-500'>
+                            Quantity: {item.quantity}
+                          </p>
+                        </div>
+
+                        {/* Right */}
+                        <div className='text-right'>
+                          <p className='text-sm text-gray-500'>
+                            ₹{item.discountPrice} × {item.quantity}
+                          </p>
+
+                          <p className='mt-2 text-2xl font-bold text-[#D98B2B]'>
+                            ₹{item.finalPrice}
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Shipping Address */}
             <div
               className='
                 bg-white
@@ -206,9 +219,7 @@ const OrderDetails = () => {
             </div>
           </div>
 
-          {/* Right */}
           <div className='space-y-8'>
-            {/* Order Summary */}
             <div
               className='
                 bg-white
@@ -242,7 +253,6 @@ const OrderDetails = () => {
               </div>
             </div>
 
-            {/* Support */}
             <div
               className='
                 bg-[#1F140F]

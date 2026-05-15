@@ -74,7 +74,7 @@ export const createOrder = async (req, res) => {
         weight: updatedVariant.weight,
         originalPrice: updatedVariant.price,
         discountPrice: updatedVariant.discountPrice,
-        finalPrice,
+        finalPrice: finalPrice * item.quantity,
       });
     }
 
@@ -137,7 +137,10 @@ export const createOrder = async (req, res) => {
 
 export const getMyOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ userId: req.user._id }).sort({
+    const orders = await Order.find(
+      { userId: req.user._id },
+      "-_id -userId",
+    ).sort({
       createdAt: -1,
     });
 
@@ -156,9 +159,9 @@ export const getMyOrders = async (req, res) => {
 
 export const getSingleOrder = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { orderId } = req.params;
 
-    const order = await Order.findById(id);
+    const order = await Order.findOne({ orderId });
 
     if (!order) {
       return res.status(404).json({
