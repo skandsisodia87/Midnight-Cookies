@@ -2,7 +2,7 @@ import { FiShoppingCart, FiMinus, FiPlus, FiStar } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
-import { getSingleCookie } from "../services/cookie.service";
+import { getSingleCookie } from "../../services/cookie.service";
 import CookieDetailsSkeleton from "../skeletons/CookieDetailsSkeleton";
 import placeholderCookie from "../../assets/images/placeholder-cookie.png";
 

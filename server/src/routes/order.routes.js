@@ -16,7 +16,7 @@ router.post("/", verifyJWT, createOrder);
 
 router.get("/my-orders", verifyJWT, getMyOrders);
 
-router.get("/:id", verifyJWT, getSingleOrder);
+router.get("/:orderId", verifyJWT, getSingleOrder);
 
 router.get("/admin/all", verifyJWT, verifyAdmin, getAllOrders);
 

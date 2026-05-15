@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiMail, FiLock } from "react-icons/fi";
 import { useState } from "react";
 import useAuthStore from "../../store/authStore";
-import { loginUser } from "../services/auth.service";
+import { loginUser } from "../../services/auth.service";
 import { toast } from "sonner";
 
 const Login = () => {
@@ -12,31 +12,37 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!email || !password) {
+      toast.error("All fields are required");
+      return;
+    }
 
     setLoading(true);
 
-    loginUser({
-      email,
-      password,
-    })
-      .then((data) => {
-        login({
-          user: data.user,
-          accessToken: data.accessToken,
-        });
-        toast.success("Login successful 🍪");
-        navigate("/", {
-          replace: true,
-        });
-      })
-      .catch((error) => {
-        toast.error(error.response?.data?.message || "Login failed");
-      })
-      .finally(() => {
-        setLoading(false);
+    try {
+      const data = await loginUser({
+        email,
+        password,
       });
+
+      login({
+        user: data.user,
+        accessToken: data.accessToken,
+      });
+
+      toast.success("Login successful 🍪");
+
+      navigate("/", {
+        replace: true,
+      });
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -61,7 +67,7 @@ const Login = () => {
         </div>
 
         {/* Form */}
-        <form className='mt-10 space-y-6' onSubmit={handleSubmmit}>
+        <form className='mt-10 space-y-6' onSubmit={handleSubmit}>
           {/* Email */}
           <div>
             <label className='block mb-2 font-medium text-[#2B1D16]'>

@@ -1,10 +1,13 @@
 import env from "../config/env.js";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 import User from "../models/user.model.js";
 import { sendEmail } from "../services/email.service.js";
-import { welcomeEmailTemplate } from "../templates/emailTemplates.js";
+import { welcomeEmailTemplate } from "../templates/welcomeEmailTemplates.js";
 import generateOtp from "../utils/generateOtp.js";
 import verifyEmailTemplate from "../templates/verifyEmailTemplate.js";
+import bcrypt from "bcrypt";
+import { forgotPasswordTemplate } from "../templates/forgotPasswordTemplate.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -237,7 +240,7 @@ export const sendVerificationOtp = async (req, res) => {
 
     await sendEmail({
       to: user.email,
-      subject: "Verify Your Email 🍪",
+      subject: "Verify Your Email",
       html: verifyEmailTemplate({
         name: user.name,
         otp,
@@ -288,13 +291,116 @@ export const verifyEmailOtp = async (req, res) => {
 
     await sendEmail({
       to: user.email,
-      subject: "Welcome to Midnight Cookies 🍪",
+      subject: "Welcome to Midnight Cookies",
       html: welcomeEmailTemplate(user.name),
     });
 
     return res
       .status(200)
       .json({ success: true, message: "Email verified successfully" });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase() });
+
+    if (!user) {
+      return res.status(200).json({
+        success: true,
+        message:
+          "If an account exists with this email, a reset link has been sent.",
+      });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+
+    user.resetPasswordToken = hashedToken;
+    user.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
+
+    await user.save({ validateBeforeSave: false });
+
+    const resetUrl = `${env.CLIENT_URL}/reset-password/${resetToken}`;
+
+    await sendEmail({
+      to: user.email,
+      subject: "Reset Your Password",
+      html: forgotPasswordTemplate(user.name, resetUrl),
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Password reset link sent successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password, confirmPassword } = req.body;
+
+    if (!password || !confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Password and confirm password are required",
+      });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Passwords do not match",
+      });
+    }
+
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired reset token",
+      });
+    }
+
+    user.password = password;
+    user.resetPasswordToken = null;
+    user.resetPasswordExpire = null;
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Password reset successful",
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,

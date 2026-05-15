@@ -1,10 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FiMail } from "react-icons/fi";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { forgotPassword } from "../services/auth.service";
+import { forgotPassword } from "../../services/auth.service";
 import { toast } from "sonner";
 
 const forgotPasswordSchema = z.object({
@@ -12,10 +12,12 @@ const forgotPasswordSchema = z.object({
 });
 
 const ForgotPassword = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     mode: "onChange",
     resolver: zodResolver(forgotPasswordSchema),
@@ -28,8 +30,11 @@ const ForgotPassword = () => {
     mutationFn: forgotPassword,
 
     onSuccess: (data) => {
-      console.log(data);
+      reset();
       toast.success("Reset link sent successfully");
+      navigate("/login", {
+        replace: true,
+      });
     },
 
     onError: (error) => {

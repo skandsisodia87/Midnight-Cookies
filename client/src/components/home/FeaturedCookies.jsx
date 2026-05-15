@@ -1,9 +1,9 @@
 import { useState } from "react";
 import CookieCard from "../cookies/CookieCard.jsx";
 import { useEffect } from "react";
-import { getFeaturedCookie } from "../services/cookie.service.js";
 import { toast } from "sonner";
 import CookieCardSkeleton from "../skeletons/CookieCardSkeleton.jsx";
+import { getFeaturedCookie } from "../../services/cookie.service.js";
 
 const FeaturedCookies = () => {
   const [cookies, setCookies] = useState([]);

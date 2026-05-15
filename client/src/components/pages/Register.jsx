@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { registerUser, sendVerificationOtp } from "../services/auth.service";
+import { registerUser, sendVerificationOtp } from "../../services/auth.service";
 import useAuthStore from "../../store/authStore";
 
 export const registrationSchema = z.object({
