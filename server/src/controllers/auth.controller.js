@@ -79,7 +79,6 @@ export const loginUser = async (req, res) => {
 
     const refreshToken = await user.generateRefreshToken();
 
-    user.accessToken = accessToken;
     user.refreshToken = refreshToken;
 
     await user.save({ validateBeforeSave: false });
@@ -90,19 +89,24 @@ export const loginUser = async (req, res) => {
 
     const cookieOptions = {
       httpOnly: true,
-      secure: false, // true on production
+      secure: env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     };
 
     return res
       .status(200)
-      .cookie("refreshToken", refreshToken, cookieOptions)
+      .cookie("accessToken", accessToken, {
+        ...cookieOptions,
+        maxAge: 15 * 60 * 1000,
+      })
+      .cookie("refreshToken", refreshToken, {
+        ...cookieOptions,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      })
       .json({
         success: true,
         message: "Login successful",
         user: loggedInUser,
-        accessToken,
       });
   } catch (error) {
     return res.status(500).json({
@@ -118,7 +122,6 @@ export const logoutUser = async (req, res) => {
       req.user._id,
       {
         $unset: {
-          accessToken: 1,
           refreshToken: 1,
         },
       },
@@ -127,7 +130,10 @@ export const logoutUser = async (req, res) => {
       },
     );
 
-    return res.clearCookie("refreshToken").status(200).json({
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+
+    return res.status(200).json({
       success: true,
       message: "Logout successful",
     });

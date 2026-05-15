@@ -14,7 +14,10 @@ export const registrationSchema = z.object({
     .string()
     .min(1, "Email is required")
     .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address"),
-  password: z.string().min(6, "Password should be at least 6 characters long"),
+  number: z
+    .string()
+    .min(1, "Phone number is required")
+    .regex(/^[0-9]{10}$/, "Phone number must be 10 digits"),
   password: z
     .string()
     .min(6, "Password should be at least 6 characters long")
@@ -33,6 +36,7 @@ const Register = () => {
     formState: { errors },
     handleSubmit,
     reset,
+    watch,
   } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -48,31 +52,30 @@ const Register = () => {
     mutationFn: registerUser,
     onSuccess: async (data) => {
       reset();
-      toast.success("Verification OTP sent successfully");
-      await new Promise((res) => setTimeout(res, 1000));
       await toast.promise(
         sendVerificationOtp({
           email: data.user.email,
         }),
         {
-          loading: "Sending verification otp...",
-          success: () => {
-            return "Verification OTP sent successfully";
-          },
-          error: (error) => error.response?.data?.message || "Logout failed",
+          loading: "Sending verification OTP...",
+          success: "Verification OTP sent successfully!",
+          error: (error) =>
+            error.response?.data?.message || "Failed to send OTP",
         },
       );
-      setRegistering(true);
-      navigate("/verify-email", {
-        state: {
-          email: data.user.email,
-        },
-      });
+      setTimeout(() => {
+        useAuthStore.getState().setRegistering(true);
+        navigate("/verify-email", {
+          state: {
+            email: data.user.email,
+          },
+        });
+      }, 1000);
     },
     onError: (error) => {
       toast.error(
         error.response?.data?.message ||
-          "Something went wrong while sending verification code",
+          "Something went wrong while creating your account",
       );
     },
   });
@@ -210,8 +213,8 @@ const Register = () => {
               <FiPhone className='text-gray-400' />
 
               <input
-                type='text'
-                placeholder='Enter your phone number'
+                type='tel'
+                placeholder='Enter your 10-digit phone number'
                 {...register("number")}
                 className='
                   w-full

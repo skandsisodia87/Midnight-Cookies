@@ -30,7 +30,6 @@ const Login = () => {
 
       login({
         user: data.user,
-        accessToken: data.accessToken,
       });
 
       toast.success("Login successful 🍪");
@@ -39,7 +38,21 @@ const Login = () => {
         replace: true,
       });
     } catch (error) {
-      toast.error(error.response?.data?.message || "Login failed");
+      let errorMessage = "Login failed";
+
+      if (error.response?.status === 401) {
+        errorMessage = "Invalid email or password";
+      } else if (error.response?.status === 429) {
+        errorMessage = "Too many login attempts. Please try again later.";
+      } else if (error.response?.status === 500) {
+        errorMessage = "Server error. Please try again later.";
+      } else if (!error.response) {
+        errorMessage = "Network error. Please check your connection.";
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

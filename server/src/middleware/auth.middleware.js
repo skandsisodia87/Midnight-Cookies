@@ -4,51 +4,89 @@ import env from "../config/env.js";
 
 const verifyToken = async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
+    const accessToken = req.cookies.accessToken;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!accessToken) {
       return res.status(401).json({
         success: false,
         message: "Unauthorized request",
+        code: "LOGOUT_USER",
       });
     }
 
-    const token = authHeader.split(" ")[1];
+    try {
+      // Verify access token
+      const decoded = jwt.verify(accessToken, env.ACCESS_TOKEN_SECRET);
 
-    const decodedToken = jwt.verify(token, env.ACCESS_TOKEN_SECRET);
+      const user = await User.findById(decoded._id).select(
+        "-password -refreshToken",
+      );
 
-    const user = await User.findById(decodedToken._id).select(
-      "-password -refreshToken",
-    );
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          message: "User not found",
+          code: "LOGOUT_USER",
+        });
+      }
 
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid access token",
+      req.user = user;
+
+      return next();
+    } catch (error) {
+      // Only handle expired access token
+      if (error.name !== "TokenExpiredError") {
+        throw error;
+      }
+
+      const refreshToken = req.cookies.refreshToken;
+
+      if (!refreshToken) {
+        return res.status(401).json({
+          success: false,
+          message: "Session expired",
+          code: "LOGOUT_USER",
+        });
+      }
+
+      const decodedRefresh = jwt.verify(refreshToken, env.REFRESH_TOKEN_SECRET);
+
+      const user = await User.findById(decodedRefresh._id);
+
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          message: "Invalid refresh token",
+          code: "LOGOUT_USER",
+        });
+      }
+
+      if (user.refreshToken !== refreshToken) {
+        return res.status(401).json({
+          success: false,
+          message: "Refresh token mismatch",
+          code: "LOGOUT_USER",
+        });
+      }
+
+      const newAccessToken = await user.generateAccessToken();
+
+      res.cookie("accessToken", newAccessToken, {
+        httpOnly: true,
+        secure: env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 15 * 60 * 1000,
       });
-    }
 
-    if (user.accessToken !== token) {
-      return res.status(401).json({
-        success: false,
-        message: "Token expired or logged out",
-      });
-    }
+      req.user = user;
 
-    req.user = user;
-    next();
+      next();
+    }
   } catch (error) {
-    if (error.name === "TokenExpiredError") {
-      return res.status(401).json({
-        success: false,
-        message: "Access token expired",
-        code: "TOKEN_EXPIRED",
-      });
-    }
-
     return res.status(401).json({
       success: false,
-      message: error.message || "Invalid access token",
+      message: error.message || "Unauthorized",
+      code: "LOGOUT_USER",
     });
   }
 };

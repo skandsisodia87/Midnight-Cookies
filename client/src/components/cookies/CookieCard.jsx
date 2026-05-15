@@ -38,7 +38,6 @@ const CookieCard = ({ cookie }) => {
         }
       }
     } catch (error) {
-      console.log(error.message);
       toast.error(
         error.response?.data?.message || "Failed to add item to the cart",
       );
@@ -47,6 +46,7 @@ const CookieCard = ({ cookie }) => {
       setLoading(false);
     }
   };
+
   return (
     <motion.div
       whileHover={{ y: -8 }}
