@@ -1,9 +1,10 @@
+import mongoose from "mongoose";
 import Cart from "../models/cart.model.js";
 import Cookie from "../models/cookie.model.js";
 
 export const addToCart = async (req, res) => {
   try {
-    const { cookieId, quantity = 1 } = req.body;
+    const { cookieId, quantity = 1, variantId } = req.body;
 
     if (!cookieId) {
       return res.status(400).json({
@@ -32,6 +33,7 @@ export const addToCart = async (req, res) => {
           {
             cookieId,
             quantity,
+            variantId,
           },
         ],
       });
@@ -46,6 +48,7 @@ export const addToCart = async (req, res) => {
         cart.items.push({
           cookieId,
           quantity,
+          variantId,
         });
       }
       await cart.save();
@@ -66,13 +69,95 @@ export const addToCart = async (req, res) => {
 
 export const getCart = async (req, res) => {
   try {
-    const cart = await Cart.findOne({
-      userId: req.user._id,
-    }).populate({
-      path: "items.cookieId",
-      model: "Cookie",
-      select: "name slug price discountPrice images stock category",
-    });
+    const cart = await Cart.aggregate([
+      {
+        $match: {
+          userId: new mongoose.Types.ObjectId(req.user._id),
+        },
+      },
+      {
+        $unwind: "$items",
+      },
+      {
+        $lookup: {
+          from: "cookies",
+          localField: "items.cookieId",
+          foreignField: "_id",
+          as: "cookie",
+          pipeline: [
+            {
+              $project: {
+                name: 1,
+                images: 1,
+                category: 1,
+                slug: 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: "cookievariants",
+          localField: "items.variantId",
+          foreignField: "_id",
+          as: "variant",
+          pipeline: [
+            {
+              $project: {
+                weight: 1,
+                sku: 1,
+                price: 1,
+                discountPrice: 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $unwind: {
+          path: "$cookie",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unwind: {
+          path: "$variant",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          cookieId: "$items.cookieId",
+          variantId: "$items.variantId",
+          quantity: "$items.quantity",
+          name: "$cookie.name",
+          slug: "$cookie.slug",
+          category: "$cookie.category",
+          image: {
+            $arrayElemAt: ["$cookie.images", 0],
+          },
+          weight: "$variant.weight",
+          originalPrice: "$variant.price",
+          discountPrice: "$variant.discountPrice",
+          finalPrice: {
+            $ifNull: ["$variant.discountPrice", "$variant.price"],
+          },
+        },
+      },
+    ]);
+
+    // Empty cart fallback
+    if (!cart) {
+      return res.status(200).json({
+        success: true,
+        cart: {
+          items: [],
+          totalAmount: 0,
+        },
+      });
+    }
 
     return res.status(200).json({
       success: true,
@@ -81,7 +166,7 @@ export const getCart = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Failed to fetch cart.",
     });
   }
 };

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./components/pages/Home";
 import Login from "./components/pages/Login";
@@ -16,9 +17,33 @@ import ProtectedRoute from "./routes/ProtectedRoutes";
 import PublicRoute from "./routes/PublicRoutes";
 import ResetPassword from "./components/pages/ResetPassword";
 import CheckoutPage from "./components/pages/Checkout";
+import { getCart } from "./services/cart.service";
+import useCartStore from "./store/cartStore";
 
 const App = () => {
   const { isAuthenticated } = useAuthStore();
+  const { setCartItems, clearCart } = useCartStore();
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        const data = await getCart();
+
+        if (data?.success) {
+          setCartItems(data.cart || []);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (isAuthenticated) {
+      fetchCart();
+    } else {
+      clearCart();
+    }
+  }, [isAuthenticated, setCartItems, clearCart]);
+
   return (
     <Routes>
       <Route element={<MainLayout />}>

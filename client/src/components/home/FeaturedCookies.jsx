@@ -8,7 +8,7 @@ import { getFeaturedCookie } from "../../services/cookie.service.js";
 const FeaturedCookies = () => {
   const [cookies, setCookies] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  
   useEffect(() => {
     const fetchCookie = async () => {
       try {
