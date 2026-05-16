@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import placeholderCookie from "../../assets/images/placeholder-cookie.png";
 import { addToCart, getCart } from "../../services/cart.service";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import useCartStore from "../../store/cartStore";
 
@@ -11,7 +11,7 @@ const CookieCard = ({ cookie }) => {
   const [quantity, setQuantity] = useState(0);
   const [loading, setLoading] = useState(false);
   const [isItemAddedToCart, setIsItemAddedToCart] = useState(false);
-  const { setCartItems } = useCartStore();
+  const { setCartItems, cartItems = [] } = useCartStore();
 
   const addToCartHandler = async () => {
     setLoading(true);
@@ -46,6 +46,16 @@ const CookieCard = ({ cookie }) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const item = cartItems.find(
+      (item) => item.cookieId.toString() === cookie._id.toString(),
+    );
+    if (item) {
+      setIsItemAddedToCart(true);
+      setQuantity(item.quantity);
+    }
+  }, []);
 
   return (
     <motion.div

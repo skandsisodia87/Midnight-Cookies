@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import useCartStore from "../../store/cartStore";
 
 const Navbar = () => {
+  const { clearCart } = useCartStore();
   const { isAuthenticated, logout } = useAuthStore();
   const [btnDisable, setBtnDisable] = useState(false);
 
@@ -24,6 +25,7 @@ const Navbar = () => {
 
           success: () => {
             logout();
+            clearCart();
             return "Logout successful 🍪";
           },
 
