@@ -75,7 +75,6 @@ const verifyToken = async (req, res, next) => {
         httpOnly: true,
         secure: env.NODE_ENV === "production",
         sameSite: "strict",
-        maxAge: 15 * 60 * 1000,
       });
 
       req.user = user;

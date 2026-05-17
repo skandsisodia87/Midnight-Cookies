@@ -3,27 +3,6 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import env from "../config/env.js";
 
-const addressSchema = new Schema({
-  fullAddress: {
-    type: String,
-    required: true,
-  },
-
-  city: {
-    type: String,
-    required: true,
-  },
-
-  state: {
-    type: String,
-  },
-
-  pincode: {
-    type: String,
-    required: true,
-  },
-});
-
 const userSchema = new Schema(
   {
     name: {
@@ -50,7 +29,6 @@ const userSchema = new Schema(
       enum: ["user", "admin"],
       default: "user",
     },
-    addresses: [addressSchema],
     refreshToken: {
       type: String,
     },
