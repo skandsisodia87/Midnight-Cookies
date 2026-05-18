@@ -3,15 +3,19 @@ import {
   addAddress,
   updateAddress,
   deleteAddress,
+  getAddresses,
+  getAddressById,
 } from "../controllers/address.controller.js";
 import verifyToken from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.post("/", verifyToken, addAddress);
+router.route("/").post(verifyToken, addAddress).get(verifyToken, getAddresses);
 
-router.put("/:addressId", verifyToken, updateAddress);
-
-router.delete("/:addressId", verifyToken, deleteAddress);
+router
+  .route("/:addressId")
+  .get(verifyToken, getAddressById)
+  .put(verifyToken, updateAddress)
+  .delete(verifyToken, deleteAddress);
 
 export default router;
