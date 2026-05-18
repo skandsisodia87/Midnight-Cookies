@@ -1,9 +1,62 @@
-import { FiShoppingCart } from "react-icons/fi";
+import { FiMinus, FiPlus, FiShoppingCart } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import placeholderCookie from "../../assets/images/placeholder-cookie.png";
+import { addToCart, getCart } from "../../services/cart.service";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import useCartStore from "../../store/cartStore";
 
 const CookieCard = ({ cookie }) => {
+  const [quantity, setQuantity] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [isItemAddedToCart, setIsItemAddedToCart] = useState(false);
+  const { setCartItems, cartItems = [] } = useCartStore();
+
+  const addToCartHandler = async () => {
+    setLoading(true);
+    const body = {
+      cookieId: cookie._id,
+      quantity: 1,
+      variantId: cookie.defaultVariant._id,
+    };
+    try {
+      const data = await addToCart(body);
+
+      if (data.success) {
+        setIsItemAddedToCart(true);
+
+        const cartData = await getCart();
+        if (cartData.success) {
+          setCartItems(cartData.cart);
+
+          const item = cartData.cart.find(
+            (item) => item.cookieId.toString() === cookie._id.toString(),
+          );
+
+          setQuantity(item?.quantity || 1);
+        }
+      }
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to add item to the cart",
+      );
+      setIsItemAddedToCart(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const item = cartItems.find(
+      (item) => item.cookieId.toString() === cookie._id.toString(),
+    );
+    if (item) {
+      setIsItemAddedToCart(true);
+      setQuantity(item.quantity);
+    }
+  }, []);
+
   return (
     <motion.div
       whileHover={{ y: -8 }}
@@ -101,8 +154,26 @@ const CookieCard = ({ cookie }) => {
 
         {/* Buttons */}
         <div className='mt-auto pt-6 flex gap-3'>
-          <button
-            className='
+          {isItemAddedToCart ? (
+            <div className='inline-flex items-center bg-white rounded-full p-2 shadow'>
+              <button
+                onClick={() => quantity > 1 && setQuantity(quantity - 1)}
+                className='w-10 h-10 rounded-full flex items-center justify-center hover:bg-[#FFF6EC]'
+              >
+                <FiMinus />
+              </button>
+
+              <span className='px-6 text-xl font-semibold'>{quantity}</span>
+              <button
+                onClick={() => setQuantity(quantity + 1)}
+                className='w-10 h-10 rounded-full bg-[#D98B2B] text-white flex items-center justify-center '
+              >
+                <FiPlus />
+              </button>
+            </div>
+          ) : (
+            <button
+              className='
               flex-1
               bg-[#D98B2B]
               hover:bg-[#c97818]
@@ -115,11 +186,15 @@ const CookieCard = ({ cookie }) => {
               justify-center
               gap-2
               transition
+              cursor-pointer
             '
-          >
-            <FiShoppingCart />
-            Add to Cart
-          </button>
+              onClick={addToCartHandler}
+              disabled={loading}
+            >
+              <FiShoppingCart />
+              {loading ? "Adding..." : "Add to Cart"}
+            </button>
+          )}
 
           <Link
             to={`/cookies/${cookie.slug}`}

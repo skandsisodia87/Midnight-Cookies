@@ -11,62 +11,18 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// REQUEST INTERCEPTOR
-api.interceptors.request.use(
-  (config) => {
-    const accessToken = useAuthStore.getState().accessToken;
-
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-
-    return config;
-  },
-
-  (error) => Promise.reject(error),
-);
-
 // RESPONSE INTERCEPTOR
 api.interceptors.response.use(
   (response) => response,
 
   async (error) => {
-    const originalRequest = error.config;
-
-    // Access token expired
     if (
-      error.response?.data?.code === "TOKEN_EXPIRED" &&
-      !originalRequest._retry
+      error.response?.status === 401 &&
+      error.response?.data?.code === "LOGOUT_USER"
     ) {
-      originalRequest._retry = true;
+      useAuthStore.getState().logout();
 
-      try {
-        // Refresh token API
-        const response = await axios.post(
-          `${import.meta.env.VITE_API_URL}/auth/refresh-token`,
-          {},
-          {
-            withCredentials: true,
-          },
-        );
-
-        const newAccessToken = response.data.accessToken;
-
-        // Update Zustand
-        useAuthStore.getState().setAccessToken(newAccessToken);
-
-        // Retry original request
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-
-        return api(originalRequest);
-      } catch (refreshError) {
-        // Logout user
-        useAuthStore.getState().logout();
-
-        window.location.href = "/login";
-
-        return Promise.reject(refreshError);
-      }
+      window.location.href = "/login";
     }
 
     return Promise.reject(error);

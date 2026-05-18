@@ -13,6 +13,12 @@ const cartItemSchema = new Schema(
       required: true,
       default: 1,
     },
+
+    variantId: {
+      type: Schema.Types.ObjectId,
+      ref: "CookieVariant",
+      required: true,
+    },
   },
   {
     _id: false,

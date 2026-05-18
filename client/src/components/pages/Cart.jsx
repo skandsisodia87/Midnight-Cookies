@@ -1,46 +1,99 @@
-// src/pages/Cart.jsx
-
 import { FiMinus, FiPlus, FiTrash2 } from "react-icons/fi";
-
 import { Link } from "react-router-dom";
-
-const cartItems = [
-  {
-    id: 1,
-
-    name: "Chocolate Blast",
-
-    image: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e",
-
-    quantity: 2,
-
-    originalPrice: 299,
-
-    finalPrice: 199,
-  },
-
-  {
-    id: 2,
-
-    name: "Oreo Dream",
-
-    image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35",
-
-    quantity: 1,
-
-    originalPrice: 249,
-
-    finalPrice: 149,
-  },
-];
+import useCartStore from "../../store/cartStore";
+import ErrorPage from "../../common/ErrorPage";
+import NoCartFound from "../../assets/images/no-cart-found.png";
 
 const Cart = () => {
+  const {
+    cartItems,
+    error,
+    increaseQuantity,
+    decreaseQuantity,
+    removeFromCart,
+  } = useCartStore();
+
+  // Error
+  if (error) {
+    return (
+      <div className='min-h-screen bg-[#FFF6EC] px-6 py-12'>
+        <div className='max-w-4xl mx-auto'>
+          <ErrorPage
+            title='Unable To Load Cart'
+            message='Something went wrong while fetching your cart.'
+            buttonText='Continue Shopping'
+            redirectLink='/cookies'
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (!cartItems?.length) {
+    return (
+      <div
+        className='
+          min-h-screen
+          bg-[#FFF6EC]
+          px-6
+          py-12
+          flex
+          items-center
+          justify-center
+        '
+      >
+        <div className='text-center max-w-2xl'>
+          <img
+            src={NoCartFound}
+            alt='Empty Cart'
+            className='
+              w-full
+              max-w-125
+              mx-auto
+              object-contain
+            '
+          />
+
+          <h2 className='mt-8 text-5xl font-bold text-[#2B1D16]'>
+            Your Cart Is Empty
+          </h2>
+
+          <p className='mt-5 text-lg text-gray-500 leading-8'>
+            Looks like your cookie cart is feeling lonely 🍪
+            <br />
+            Add some delicious treats before checkout.
+          </p>
+
+          <Link
+            to='/cookies'
+            className='
+              inline-flex
+              items-center
+              justify-center
+              mt-10
+              bg-[#D98B2B]
+              hover:bg-[#c97818]
+              text-white
+              px-10
+              py-4
+              rounded-full
+              font-semibold
+              transition
+            '
+          >
+            Explore Cookies
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.finalPrice * item.quantity,
     0,
   );
 
-  const shipping = 49;
+  const shipping = subtotal > 999 ? 0 : 49;
 
   const total = subtotal + shipping;
 
@@ -58,11 +111,11 @@ const Cart = () => {
 
         {/* Main Grid */}
         <div className='grid lg:grid-cols-3 gap-8'>
-          {/* Left Side */}
+          {/* Left */}
           <div className='lg:col-span-2 space-y-6'>
             {cartItems.map((item) => (
               <div
-                key={item.id}
+                key={item.cookieId}
                 className='
                   bg-white
                   rounded-4xl
@@ -95,20 +148,27 @@ const Cart = () => {
                         {item.name}
                       </h2>
 
+                      <p className='mt-1 text-sm text-gray-500'>
+                        Weight: {item.weight}
+                      </p>
+
                       {/* Prices */}
                       <div className='mt-3 flex items-center gap-3'>
                         <span className='text-2xl font-bold text-[#D98B2B]'>
                           ₹{item.finalPrice}
                         </span>
 
-                        <span className='text-gray-400 line-through'>
-                          ₹{item.originalPrice}
-                        </span>
+                        {item.originalPrice > item.finalPrice && (
+                          <span className='text-gray-400 line-through'>
+                            ₹{item.originalPrice}
+                          </span>
+                        )}
                       </div>
                     </div>
 
                     {/* Remove */}
                     <button
+                      onClick={() => removeFromCart(item.variantId)}
                       className='
                         text-red-500
                         hover:bg-red-50
@@ -137,6 +197,7 @@ const Cart = () => {
                       '
                     >
                       <button
+                        onClick={() => decreaseQuantity(item.variantId)}
                         className='
                           w-10
                           h-10
@@ -156,6 +217,7 @@ const Cart = () => {
                       </span>
 
                       <button
+                        onClick={() => increaseQuantity(item.variantId)}
                         className='
                           w-10
                           h-10
@@ -176,7 +238,7 @@ const Cart = () => {
             ))}
           </div>
 
-          {/* Right Side */}
+          {/* Right */}
           <div>
             <div
               className='
@@ -193,21 +255,18 @@ const Cart = () => {
               </h2>
 
               <div className='space-y-5'>
-                {/* Subtotal */}
                 <div className='flex justify-between text-gray-600'>
                   <span>Subtotal</span>
 
                   <span>₹{subtotal}</span>
                 </div>
 
-                {/* Shipping */}
                 <div className='flex justify-between text-gray-600'>
                   <span>Shipping</span>
 
-                  <span>₹{shipping}</span>
+                  <span>{shipping === 0 ? "Free" : `₹${shipping}`}</span>
                 </div>
 
-                {/* Divider */}
                 <div className='border-t pt-5 flex justify-between text-2xl font-bold text-[#2B1D16]'>
                   <span>Total</span>
 

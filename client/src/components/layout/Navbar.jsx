@@ -3,11 +3,15 @@ import { FiShoppingCart } from "react-icons/fi";
 import useAuthStore from "../../store/authStore";
 import { logoutUser } from "../../services/auth.service";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useCartStore from "../../store/cartStore";
 
 const Navbar = () => {
+  const { clearCart } = useCartStore();
   const { isAuthenticated, logout } = useAuthStore();
   const [btnDisable, setBtnDisable] = useState(false);
+
+  const count = useCartStore((state) => state.cartItems.length);
 
   const logoutHandler = async () => {
     try {
@@ -21,6 +25,7 @@ const Navbar = () => {
 
           success: () => {
             logout();
+            clearCart();
             return "Logout successful 🍪";
           },
 
@@ -81,9 +86,9 @@ const Navbar = () => {
 
           <Link to='/cart' className='relative'>
             <FiShoppingCart size={24} />
-            {isAuthenticated && (
+            {isAuthenticated && count > 0 && (
               <span className='absolute -top-2 -right-2 bg-[#D98B2B] text-xs w-5 h-5 flex items-center justify-center rounded-full'>
-                2
+                {count}
               </span>
             )}
           </Link>

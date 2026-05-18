@@ -6,24 +6,21 @@ const useAuthStore = create(
     (set) => ({
       // State
       user: null,
-      accessToken: null,
       isAuthenticated: false,
       pendingVerificationEmail: null,
       isLoading: false,
       isRegistering: false,
 
       // Actions
-      login: ({ user, accessToken }) =>
+      login: ({ user }) =>
         set({
           user,
-          accessToken,
           isAuthenticated: true,
         }),
 
       logout: () =>
         set({
           user: null,
-          accessToken: null,
           isAuthenticated: false,
           pendingVerificationEmail: null,
           isRegistering: false,
@@ -32,11 +29,6 @@ const useAuthStore = create(
       setUser: (user) =>
         set({
           user,
-        }),
-
-      setAccessToken: (accessToken) =>
-        set({
-          accessToken,
         }),
 
       setLoading: (loading) =>
@@ -61,6 +53,14 @@ const useAuthStore = create(
     }),
     {
       name: "auth-storage",
+      // Only persist user and auth state, NOT the token
+      // Token should be stored in httpOnly cookie by the server
+      partialize: (state) => ({
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+        pendingVerificationEmail: state.pendingVerificationEmail,
+        isRegistering: state.isRegistering,
+      }),
     },
   ),
 );

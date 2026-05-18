@@ -5,13 +5,47 @@ import { toast } from "sonner";
 import { getSingleCookie } from "../../services/cookie.service";
 import CookieDetailsSkeleton from "../skeletons/CookieDetailsSkeleton";
 import placeholderCookie from "../../assets/images/placeholder-cookie.png";
+import { addToCart, getCart } from "../../services/cart.service";
+import useCartStore from "../../store/cartStore";
 
 const CookieDetails = () => {
   const { slug } = useParams();
+  const { setCartItems } = useCartStore();
   const [cookie, setCookie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [variantIdx, setVariantIdx] = useState(0);
+  const [cartLoading, setCartLoading] = useState(false);
+
+  const addToCartHandler = async () => {
+    try {
+      setCartLoading(true);
+
+      const body = {
+        cookieId: cookie._id,
+        quantity,
+        variantId: selectedVariant._id,
+      };
+
+      const data = await addToCart(body);
+
+      if (data.success) {
+        const cartData = await getCart();
+
+        if (cartData.success) {
+          setCartItems(cartData.cart || []);
+
+          toast.success("Added to cart 🍪");
+        }
+      }
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to add item to cart",
+      );
+    } finally {
+      setCartLoading(false);
+    }
+  };
 
   useEffect(() => {
     const fetchCookie = async () => {
@@ -32,6 +66,10 @@ const CookieDetails = () => {
   useEffect(() => {
     setVariantIdx(0);
   }, [cookie]);
+
+  useEffect(() => {
+    setQuantity(1);
+  }, [variantIdx]);
 
   if (loading) {
     return <CookieDetailsSkeleton />;
@@ -341,15 +379,27 @@ const CookieDetails = () => {
               >
                 <button
                   onClick={() => quantity > 1 && setQuantity(quantity - 1)}
-                  className='
+                  disabled={quantity <= 1}
+                  className={`
                     w-10
                     h-10
                     rounded-full
                     flex
                     items-center
                     justify-center
-                    hover:bg-[#FFF6EC]
-                  '
+                    transition
+                    ${
+                      quantity <= 1
+                        ? `
+                          bg-gray-100
+                          text-gray-400
+                          cursor-not-allowed
+                        `
+                        : `
+                          hover:bg-[#FFF6EC]
+                        `
+                    }
+                  `}
                 >
                   <FiMinus />
                 </button>
@@ -366,16 +416,28 @@ const CookieDetails = () => {
 
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className='
+                  disabled={quantity >= selectedVariant?.stock}
+                  className={`
                     w-10
                     h-10
                     rounded-full
-                    bg-[#D98B2B]
-                    text-white
                     flex
                     items-center
                     justify-center
-                  '
+                    transition
+                    ${
+                      quantity >= selectedVariant?.stock
+                        ? `
+                          bg-gray-300
+                          cursor-not-allowed
+                          text-gray-500
+                        `
+                        : `
+                          bg-[#D98B2B]
+                          text-white
+                        `
+                    }
+                  `}
                 >
                   <FiPlus />
                 </button>
@@ -393,11 +455,10 @@ const CookieDetails = () => {
               '
             >
               <button
-                className='
+                onClick={addToCartHandler}
+                disabled={cartLoading || selectedVariant?.stock <= 0}
+                className={`
                   flex-1
-                  bg-[#D98B2B]
-                  hover:bg-[#c97818]
-                  text-white
                   py-5
                   rounded-full
                   font-semibold
@@ -407,10 +468,28 @@ const CookieDetails = () => {
                   gap-3
                   transition
                   text-lg
-                '
+                  ${
+                    cartLoading || selectedVariant?.stock <= 0
+                      ? `
+                        bg-gray-300
+                        cursor-not-allowed
+                        text-gray-500
+                      `
+                      : `
+                        bg-[#D98B2B]
+                        hover:bg-[#c97818]
+                        text-white
+                      `
+                  }
+                `}
               >
                 <FiShoppingCart size={22} />
-                Add To Cart
+
+                {cartLoading
+                  ? "Adding..."
+                  : selectedVariant?.stock <= 0
+                    ? "Out Of Stock"
+                    : "Add To Cart"}
               </button>
 
               <button
@@ -432,16 +511,21 @@ const CookieDetails = () => {
               </button>
             </div>
 
-            {/* Stock */}
-            <p
-              className='
+            {selectedVariant?.stock > 0 && selectedVariant?.stock <= 5 ? (
+              <p className='mt-3 text-orange-500 font-medium'>
+                Only {selectedVariant.stock} left in stock
+              </p>
+            ) : (
+              <p
+                className='
                 mt-6
                 text-green-600
                 font-semibold
               '
-            >
-              {selectedVariant?.stock} items available
-            </p>
+              >
+                {selectedVariant?.stock} items available
+              </p>
+            )}
           </div>
         </div>
 
