@@ -19,3 +19,4 @@ export const getAddresses = async () => {
   const response = await api.get("/address");
   return response.data;
 };
+

@@ -64,8 +64,7 @@ export default function AddEditDialog({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} className='relative z-50'>
-      {/* Backdrop */}
+    <Dialog open={open} onClose={()=>{}} className='relative z-50'>
       <DialogBackdrop
         transition
         className='
@@ -152,6 +151,8 @@ export default function AddEditDialog({
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder='Enter phone number'
+                pattern='[0-9]{10}'
+                maxLength={10}
                 className='
                     w-full
                     border
@@ -161,7 +162,7 @@ export default function AddEditDialog({
                     py-3
                     outline-none
                     focus:border-[#D98B2B]
-                  '
+                '
                 required
               />
             </div>

@@ -6,35 +6,28 @@ import AddressSection from "../address/AddressSection";
 
 export default function CheckoutPage() {
   const [addresses, setAddresses] = useState([]);
-
   const [selectedAddress, setSelectedAddress] = useState(null);
 
-  const [showAddressPopup, setShowAddressPopup] = useState(false);
+  const fetchAddresses = async () => {
+    try {
+      const data = await getAddresses();
 
-  const [showAddAddressPopup, setShowAddAddressPopup] = useState(false);
+      if (data.success) {
+        const allAddresses = data.addresses ?? [];
 
-  const [showEditAddressPopup, setShowEditAddressPopup] = useState(false);
+        setAddresses(allAddresses);
+        setSelectedAddress(allAddresses?.[0] ?? null);
+
+        return allAddresses;
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Please refresh the page");
+    }
+
+    return [];
+  };
 
   useEffect(() => {
-    const fetchAddresses = async () => {
-      try {
-        const data = await getAddresses();
-
-        if (data.success) {
-          const allAddresses = data.addresses ?? [];
-
-          setAddresses(allAddresses);
-
-          const defaultAddress =
-            allAddresses.find((a) => a.isDefault) || allAddresses[0];
-
-          setSelectedAddress(defaultAddress || null);
-        }
-      } catch (error) {
-        toast.error(error.response?.data?.message || "Please refresh the page");
-      }
-    };
-
     fetchAddresses();
   }, []);
 
@@ -52,7 +45,12 @@ export default function CheckoutPage() {
             </p>
           </div>
 
-          <AddressSection addresses={addresses} />
+          <AddressSection
+            addresses={addresses}
+            fetchAddresses={fetchAddresses}
+            selectedAddress={selectedAddress}
+            setSelectedAddress={setSelectedAddress}
+          />
 
           {/* Payment Method */}
           <div className='bg-white rounded-4xl shadow-lg p-6'>

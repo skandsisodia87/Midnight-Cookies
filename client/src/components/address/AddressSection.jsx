@@ -6,46 +6,26 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import AddEditDialog from "./AddEditDialog";
+import { addAddress } from "../../services/order.service";
+import { toast } from "sonner";
 
-export default function AddressSection({ addresses = [] }) {
-  const [selectedAddress, setSelectedAddress] = useState(null);
+export default function AddressSection({
+  addresses = [],
+  fetchAddresses,
+  selectedAddress,
+  setSelectedAddress,
+}) {
+  const [enableEditing, setEnableEditing] = useState(false);
   const [showAddressDialog, setShowAddressDialog] = useState(false);
-
   const [showAddAddressPopup, setShowAddAddressPopup] = useState(false);
-
-  useEffect(() => {
-    if (addresses.length > 0) {
-      const defaultAddress = addresses.find((a) => a.isDefault) || addresses[0];
-
-      setSelectedAddress(defaultAddress);
-    }
-  }, [addresses]);
 
   return (
     <>
       {/* Main Address Card */}
       <div className='bg-white rounded-4xl shadow-lg p-6'>
-        <div className='flex items-center justify-between'>
-          <h2 className='text-2xl font-semibold text-[#2B1D16]'>
-            Delivery Address
-          </h2>
-
-          <button
-            onClick={() => setShowAddAddressPopup(true)}
-            className='
-              bg-[#D98B2B]
-              hover:bg-[#c97818]
-              text-white
-              px-5
-              py-2.5
-              rounded-full
-              font-medium
-              transition
-            '
-          >
-            Add New
-          </button>
-        </div>
+        <h2 className='text-2xl font-semibold text-[#2B1D16]'>
+          Delivery Address
+        </h2>
 
         {/* Show Only Selected Address */}
         {selectedAddress && (
@@ -62,7 +42,9 @@ export default function AddressSection({ addresses = [] }) {
             <div className='flex items-start justify-between gap-4'>
               <div>
                 <div className='flex items-center gap-3'>
-                  <h3 className='font-semibold text-[#2B1D16] text-lg'>Home</h3>
+                  <h3 className='font-semibold text-[#2B1D16] text-lg'>
+                    {selectedAddress.fullName}
+                  </h3>
 
                   {selectedAddress.isDefault && (
                     <span
@@ -100,10 +82,15 @@ export default function AddressSection({ addresses = [] }) {
                   </button>
 
                   <button
+                    onClick={() => {
+                      setEnableEditing(true);
+                      setShowAddAddressPopup(true);
+                    }}
                     className='
                       text-gray-600
                       font-medium
                       hover:underline
+                      cursor-pointer
                     '
                   >
                     Edit
@@ -189,7 +176,9 @@ export default function AddressSection({ addresses = [] }) {
                   <div className='flex items-start justify-between gap-4'>
                     <div>
                       <div className='flex items-center gap-2'>
-                        <h3 className='font-semibold text-[#2B1D16]'>Home</h3>
+                        <h3 className='font-semibold text-[#2B1D16]'>
+                          {address.fullName}
+                        </h3>
 
                         {address.isDefault && (
                           <span
@@ -250,12 +239,37 @@ export default function AddressSection({ addresses = [] }) {
       </Dialog>
       <AddEditDialog
         open={showAddAddressPopup}
-        onClose={() => setShowAddAddressPopup(false)}
-        address={selectedAddress} // remove this line for Add mode
-        onSubmit={(formData) => {
-          console.log(formData);
+        onClose={() => {
+          setShowAddAddressPopup(false);
+          if (enableEditing) {
+            setEnableEditing(false);
+          }
+        }}
+        address={enableEditing ? selectedAddress : null}
+        onSubmit={async (formData) => {
+          try {
+            const res = await addAddress(formData);
 
-          // call add/update api here
+            if (res.success) {
+              toast.success(res.message);
+
+              const updatedAddresses = await fetchAddresses();
+              if (updatedAddresses?.length > 0) {
+                const latestAddress = updatedAddresses[0];
+                setSelectedAddress(latestAddress);
+              }
+
+              setShowAddAddressPopup(false);
+
+              if (enableEditing) {
+                setEnableEditing(false);
+              }
+            }
+          } catch (error) {
+            toast.error(
+              error.response?.data?.message || "Failed to add address",
+            );
+          }
         }}
         loading={false}
       />
