@@ -5,8 +5,10 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
+import { FiTrash2 } from "react-icons/fi";
 import AddEditDialog from "./AddEditDialog";
-import { addAddress } from "../../services/order.service";
+import DeleteDialog from "../../common/DeleteDialog";
+import { addAddress, updateAddress, deleteAddress } from "../../services/order.service";
 import { toast } from "sonner";
 
 export default function AddressSection({
@@ -18,6 +20,38 @@ export default function AddressSection({
   const [enableEditing, setEnableEditing] = useState(false);
   const [showAddressDialog, setShowAddressDialog] = useState(false);
   const [showAddAddressPopup, setShowAddAddressPopup] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [addressToDelete, setAddressToDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDeleteAddress = async () => {
+    if (!addressToDelete) {
+      return;
+    }
+
+    try {
+      setDeleting(true);
+
+      const res = await deleteAddress(addressToDelete._id);
+
+      if (res.success) {
+        toast.success(res.message);
+
+        const updatedAddresses = await fetchAddresses();
+
+        if (selectedAddress?._id === addressToDelete._id) {
+          setSelectedAddress(updatedAddresses?.[0] ?? null);
+        }
+
+        setShowDeleteDialog(false);
+        setAddressToDelete(null);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete address");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   return (
     <>
@@ -156,15 +190,10 @@ export default function AddressSection({
               {addresses.map((address) => (
                 <div
                   key={address._id}
-                  onClick={() => {
-                    setSelectedAddress(address);
-                    setShowAddressDialog(false);
-                  }}
                   className={`
                     border
                     rounded-3xl
                     p-5
-                    cursor-pointer
                     transition
                     ${
                       selectedAddress?._id === address._id
@@ -174,7 +203,14 @@ export default function AddressSection({
                   `}
                 >
                   <div className='flex items-start justify-between gap-4'>
-                    <div>
+                    <button
+                      type='button'
+                      onClick={() => {
+                        setSelectedAddress(address);
+                        setShowAddressDialog(false);
+                      }}
+                      className='flex-1 text-left cursor-pointer'
+                    >
                       <div className='flex items-center gap-2'>
                         <h3 className='font-semibold text-[#2B1D16]'>
                           {address.fullName}
@@ -200,14 +236,52 @@ export default function AddressSection({
                         {address.fullAddress}, {address.city}, {address.state} -{" "}
                         {address.pincode}
                       </p>
-                    </div>
+                    </button>
 
-                    <input
-                      type='radio'
-                      checked={selectedAddress?._id === address._id}
-                      readOnly
-                      className='w-5 h-5 accent-[#D98B2B]'
-                    />
+                    <div className='flex items-center gap-3 shrink-0'>
+                      <button
+                        type='button'
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setAddressToDelete(address);
+                          setShowDeleteDialog(true);
+                        }}
+                        className='
+                          p-2
+                          rounded-full
+                          text-gray-500
+                          hover:text-red-600
+                          hover:bg-red-50
+                          transition
+                          cursor-pointer
+                        '
+                        aria-label={`Delete ${address.fullName} address`}
+                      >
+                        <FiTrash2 className='h-5 w-5' />
+                      </button>
+
+                      <div
+                        className={`
+                          w-5
+                          h-5
+                          rounded-full
+                          border-2
+                          flex
+                          items-center
+                          justify-center
+                          transition
+                          ${
+                            selectedAddress?._id === address._id
+                              ? "border-[#D98B2B]"
+                              : "border-gray-300"
+                          }
+                        `}
+                      >
+                        {selectedAddress?._id === address._id && (
+                          <div className='w-2.5 h-2.5 rounded-full bg-[#D98B2B]' />
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -237,6 +311,20 @@ export default function AddressSection({
           </DialogPanel>
         </div>
       </Dialog>
+      <DeleteDialog
+        open={showDeleteDialog}
+        onClose={() => {
+          setShowDeleteDialog(false);
+          setAddressToDelete(null);
+        }}
+        onConfirm={handleDeleteAddress}
+        title='Delete Address'
+        message={`Are you sure you want to delete ${
+          addressToDelete?.fullName || "this address"
+        }? This action cannot be undone.`}
+        confirmLabel='Delete Address'
+        loading={deleting}
+      />
       <AddEditDialog
         open={showAddAddressPopup}
         onClose={() => {
@@ -248,7 +336,12 @@ export default function AddressSection({
         address={enableEditing ? selectedAddress : null}
         onSubmit={async (formData) => {
           try {
-            const res = await addAddress(formData);
+            let res;
+            if (enableEditing && selectedAddress) {
+              res = await updateAddress(selectedAddress._id, formData);
+            } else {
+              res = await addAddress(formData);
+            }
 
             if (res.success) {
               toast.success(res.message);

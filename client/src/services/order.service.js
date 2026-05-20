@@ -20,3 +20,12 @@ export const getAddresses = async () => {
   return response.data;
 };
 
+export const updateAddress = async (addressId, body) => {
+  const response = await api.put(`/address/${addressId}`, body);
+  return response.data;
+};
+
+export const deleteAddress = async (addressId) => {
+  const response = await api.delete(`/address/${addressId}`);
+  return response.data;
+};
