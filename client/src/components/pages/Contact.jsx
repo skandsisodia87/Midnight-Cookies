@@ -1,9 +1,46 @@
 import { FiMail, FiMapPin, FiPhone, FiClock } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import constants from "../../common/constants";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { constactUS } from "../../services/contact.service";
+import { toast } from "sonner";
 
 export default function Contact() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      fullName: "",
+      email: "",
+      subject: "",
+      message: "",
+    },
+  });
+
+  const onSubmit = async (formData) => {
+    try {
+      setLoading(true);
+
+      const data = await constactUS(formData);
+
+      if (data.success) {
+        toast.success(data.message);
+        reset();
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to send message");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className='min-h-screen bg-[#FFF6EC] py-16 px-4 md:px-8'>
       <div className='max-w-7xl mx-auto'>
@@ -26,7 +63,7 @@ export default function Contact() {
               Fill out the form below and we'll get back to you shortly.
             </p>
 
-            <form className='mt-8 space-y-6'>
+            <form className='mt-8 space-y-6' onSubmit={handleSubmit(onSubmit)}>
               <div>
                 <label className='block mb-2 font-medium text-[#2B1D16]'>
                   Full Name
@@ -35,18 +72,34 @@ export default function Contact() {
                 <input
                   type='text'
                   placeholder='Enter your full name'
-                  className='
+                  className={`
                     w-full
                     border
-                    border-gray-300
                     rounded-2xl
                     px-5
                     py-4
                     outline-none
-                    focus:border-[#D98B2B]
                     transition
-                  '
+                    ${
+                      errors.fullName
+                        ? "border-red-400"
+                        : "border-gray-300 focus:border-[#D98B2B]"
+                    }
+                  `}
+                  {...register("fullName", {
+                    required: "Full name is required",
+                    minLength: {
+                      value: 2,
+                      message: "Name must be at least 2 characters",
+                    },
+                  })}
                 />
+
+                {errors.fullName && (
+                  <p className='mt-2 text-sm text-red-500'>
+                    {errors.fullName.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -57,18 +110,34 @@ export default function Contact() {
                 <input
                   type='email'
                   placeholder='Enter your email'
-                  className='
+                  className={`
                     w-full
                     border
-                    border-gray-300
                     rounded-2xl
                     px-5
                     py-4
                     outline-none
-                    focus:border-[#D98B2B]
                     transition
-                  '
+                    ${
+                      errors.email
+                        ? "border-red-400"
+                        : "border-gray-300 focus:border-[#D98B2B]"
+                    }
+                  `}
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Please enter a valid email",
+                    },
+                  })}
                 />
+
+                {errors.email && (
+                  <p className='mt-2 text-sm text-red-500'>
+                    {errors.email.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -79,18 +148,34 @@ export default function Contact() {
                 <input
                   type='text'
                   placeholder='Enter subject'
-                  className='
+                  className={`
                     w-full
                     border
-                    border-gray-300
                     rounded-2xl
                     px-5
                     py-4
                     outline-none
-                    focus:border-[#D98B2B]
                     transition
-                  '
+                    ${
+                      errors.subject
+                        ? "border-red-400"
+                        : "border-gray-300 focus:border-[#D98B2B]"
+                    }
+                  `}
+                  {...register("subject", {
+                    required: "Subject is required",
+                    minLength: {
+                      value: 3,
+                      message: "Subject must be at least 3 characters",
+                    },
+                  })}
                 />
+
+                {errors.subject && (
+                  <p className='mt-2 text-sm text-red-500'>
+                    {errors.subject.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -101,23 +186,40 @@ export default function Contact() {
                 <textarea
                   rows={6}
                   placeholder='Write your message here...'
-                  className='
+                  className={`
                     w-full
                     border
-                    border-gray-300
                     rounded-2xl
                     px-5
                     py-4
                     outline-none
                     resize-none
-                    focus:border-[#D98B2B]
                     transition
-                  '
+                    ${
+                      errors.message
+                        ? "border-red-400"
+                        : "border-gray-300 focus:border-[#D98B2B]"
+                    }
+                  `}
+                  {...register("message", {
+                    required: "Message is required",
+                    minLength: {
+                      value: 10,
+                      message: "Message must be at least 10 characters",
+                    },
+                  })}
                 />
+
+                {errors.message && (
+                  <p className='mt-2 text-sm text-red-500'>
+                    {errors.message.message}
+                  </p>
+                )}
               </div>
 
               <button
                 type='submit'
+                disabled={loading}
                 className='
                   w-full
                   bg-[#D98B2B]
@@ -129,9 +231,11 @@ export default function Contact() {
                   text-lg
                   transition
                   cursor-pointer
+                  disabled:opacity-70
+                  disabled:cursor-not-allowed
                 '
               >
-                Send Message ✨
+                {loading ? "Sending..." : "Send Message ✨"}
               </button>
             </form>
           </div>
@@ -149,18 +253,7 @@ export default function Contact() {
 
               <div className='mt-8 space-y-6'>
                 <div className='flex items-start gap-4'>
-                  <div
-                    className='
-                      h-14
-                      w-14
-                      rounded-2xl
-                      bg-[#FFF3E2]
-                      flex
-                      items-center
-                      justify-center
-                      shrink-0
-                    '
-                  >
+                  <div className='h-14 w-14 rounded-2xl bg-[#FFF3E2] flex items-center justify-center shrink-0'>
                     <FiMail className='text-[#D98B2B] text-2xl' />
                   </div>
 
@@ -174,18 +267,7 @@ export default function Contact() {
                 </div>
 
                 <div className='flex items-start gap-4'>
-                  <div
-                    className='
-                      h-14
-                      w-14
-                      rounded-2xl
-                      bg-[#FFF3E2]
-                      flex
-                      items-center
-                      justify-center
-                      shrink-0
-                    '
-                  >
+                  <div className='h-14 w-14 rounded-2xl bg-[#FFF3E2] flex items-center justify-center shrink-0'>
                     <FiPhone className='text-[#D98B2B] text-2xl' />
                   </div>
 
@@ -199,18 +281,7 @@ export default function Contact() {
                 </div>
 
                 <div className='flex items-start gap-4'>
-                  <div
-                    className='
-                      h-14
-                      w-14
-                      rounded-2xl
-                      bg-[#FFF3E2]
-                      flex
-                      items-center
-                      justify-center
-                      shrink-0
-                    '
-                  >
+                  <div className='h-14 w-14 rounded-2xl bg-[#FFF3E2] flex items-center justify-center shrink-0'>
                     <FiMapPin className='text-[#D98B2B] text-2xl' />
                   </div>
 
@@ -223,19 +294,9 @@ export default function Contact() {
                   </div>
                 </div>
 
+                {/* Working Hours */}
                 <div className='flex items-start gap-4'>
-                  <div
-                    className='
-                      h-14
-                      w-14
-                      rounded-2xl
-                      bg-[#FFF3E2]
-                      flex
-                      items-center
-                      justify-center
-                      shrink-0
-                    '
-                  >
+                  <div className='h-14 w-14 rounded-2xl bg-[#FFF3E2] flex items-center justify-center shrink-0'>
                     <FiClock className='text-[#D98B2B] text-2xl' />
                   </div>
 
@@ -253,18 +314,7 @@ export default function Contact() {
               </div>
             </div>
 
-            <div
-              className='
-                bg-linear-to-br
-                from-[#D98B2B]
-                to-[#B76A12]
-                rounded-4xl
-                p-8
-                text-white
-                overflow-hidden
-                relative
-              '
-            >
+            <div className='bg-linear-to-br from-[#D98B2B] to-[#B76A12] rounded-4xl p-8 text-white overflow-hidden relative'>
               <div className='relative z-10'>
                 <h2 className='text-3xl font-semibold'>
                   Freshly Baked Daily 🍪
@@ -277,46 +327,15 @@ export default function Contact() {
 
                 <button
                   onClick={() => navigate("/cookies")}
-                  className='
-                    mt-6
-                    bg-white
-                    text-[#D98B2B]
-                    px-6
-                    py-3
-                    rounded-full
-                    font-semibold
-                    hover:bg-[#FFF3E2]
-                    transition
-                    cursor-pointer
-                  '
+                  className='mt-6 bg-white text-[#D98B2B] px-6 py-3 rounded-full font-semibold hover:bg-[#FFF3E2] transition cursor-pointer'
                 >
                   Explore Cookies
                 </button>
               </div>
 
-              <div
-                className='
-                  absolute
-                  -bottom-10
-                  -right-10
-                  h-48
-                  w-48
-                  rounded-full
-                  bg-white/10
-                '
-              />
+              <div className='absolute -bottom-10 -right-10 h-48 w-48 rounded-full bg-white/10' />
 
-              <div
-                className='
-                  absolute
-                  top-10
-                  right-16
-                  h-20
-                  w-20
-                  rounded-full
-                  bg-white/10
-                '
-              />
+              <div className='absolute top-10 right-16 h-20 w-20 rounded-full bg-white/10' />
             </div>
           </div>
         </div>
