@@ -10,6 +10,8 @@ import {
   getFeaturedCookies,
 } from "../controllers/cookie.controller.js";
 import verifyAdmin from "../middleware/admin.middleware.js";
+import { validate } from "../middleware/validation.middleware.js";
+import { cookieSchema } from "../validations/cookie.validation.js";
 
 const router = express.Router();
 
@@ -19,11 +21,17 @@ router.get("/featured", getFeaturedCookies);
 
 router.get("/:slug", getSingleCookie);
 
-router.post("/", verifyJWT, verifyAdmin, createCookie);
+router.post("/", verifyJWT, verifyAdmin, validate(cookieSchema), createCookie);
 
 router.post("/bulk", verifyJWT, verifyAdmin, bulkCreateCookies);
 
-router.put("/:id", verifyJWT, verifyAdmin, updateCookie);
+router.put(
+  "/:id",
+  verifyJWT,
+  verifyAdmin,
+  validate(cookieSchema),
+  updateCookie,
+);
 
 router.delete("/:id", verifyJWT, verifyAdmin, deleteCookie);
 

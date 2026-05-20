@@ -1,10 +1,10 @@
 import { FiInstagram, FiFacebook, FiTwitter } from "react-icons/fi";
+import { Link, NavLink } from "react-router-dom";
 
 const Footer = () => {
   return (
     <footer className='bg-[#1F140F] text-white pt-20 pb-10 px-6'>
       <div className='max-w-7xl mx-auto grid md:grid-cols-4 gap-10'>
-        {/* Brand */}
         <div>
           <h2 className='text-3xl font-bold text-[#F5C16C]'>
             Midnight Cookies
@@ -14,31 +14,75 @@ const Footer = () => {
             Freshly baked premium cookies delivered with love.
           </p>
         </div>
-
-        {/* Links */}
         <div>
           <h3 className='text-xl font-semibold mb-5'>Quick Links</h3>
 
           <ul className='space-y-3 text-gray-300'>
-            <li className='hover:text-[#D98B2B] cursor-pointer transition'>
-              Home
+            <li>
+              <NavLink
+                to='/'
+                className={({ isActive }) =>
+                  `
+                    cursor-pointer
+                    transition
+                    hover:text-[#D98B2B]
+                    ${isActive ? "text-[#D98B2B] font-semibold" : ""}
+                  `
+                }
+              >
+                Home
+              </NavLink>
             </li>
 
-            <li className='hover:text-[#D98B2B] cursor-pointer transition'>
-              Cookies
+            <li>
+              <NavLink
+                to='/cookies'
+                className={({ isActive }) =>
+                  `
+                    cursor-pointer
+                    transition
+                    hover:text-[#D98B2B]
+                    ${isActive ? "text-[#D98B2B] font-semibold" : ""}
+                  `
+                }
+              >
+                Cookies
+              </NavLink>
             </li>
 
-            <li className='hover:text-[#D98B2B] cursor-pointer transition'>
-              Orders
+            <li>
+              <NavLink
+                to='/orders'
+                className={({ isActive }) =>
+                  `
+                    cursor-pointer
+                    transition
+                    hover:text-[#D98B2B]
+                    ${isActive ? "text-[#D98B2B] font-semibold" : ""}
+                  `
+                }
+              >
+                Orders
+              </NavLink>
             </li>
 
-            <li className='hover:text-[#D98B2B] cursor-pointer transition'>
-              Contact
+            <li>
+              <NavLink
+                to='/contact'
+                className={({ isActive }) =>
+                  `
+                    cursor-pointer
+                    transition
+                    hover:text-[#D98B2B]
+                    ${isActive ? "text-[#D98B2B] font-semibold" : ""}
+                  `
+                }
+              >
+                Contact
+              </NavLink>
             </li>
           </ul>
         </div>
-
-        {/* Contact */}
         <div>
           <h3 className='text-xl font-semibold mb-5'>Contact</h3>
 
@@ -48,7 +92,6 @@ const Footer = () => {
             <li>+91 67123387446</li>
           </ul>
         </div>
-
         {/* Social */}
         <div>
           <h3 className='text-xl font-semibold mb-5'>Follow Us</h3>
@@ -107,8 +150,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-
-      {/* Bottom */}
       <div
         className='
           border-t

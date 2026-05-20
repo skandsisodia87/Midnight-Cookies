@@ -12,15 +12,6 @@ export const createOrder = async (req, res) => {
   try {
     const { items, shippingAddress, paymentMethod, notes } = req.body;
 
-    if (!items || items.length === 0) {
-      await session.abortTransaction();
-      session.endSession();
-      return res.status(400).json({
-        success: false,
-        message: "Order items are required",
-      });
-    }
-
     let totalAmount = 0;
     const orderItems = [];
 
