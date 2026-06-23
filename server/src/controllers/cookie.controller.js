@@ -9,20 +9,6 @@ export const createCookie = async (req, res) => {
     const { name, description, images, category, ingredients, variants } =
       req.body;
 
-    if (!name || !description || !category) {
-      return res.status(400).json({
-        success: false,
-        message: "Required fields are missing",
-      });
-    }
-
-    if (!Array.isArray(variants) || variants.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "At least one variant is required",
-      });
-    }
-
     const existingCookie = await Cookie.findOne({
       name,
     });

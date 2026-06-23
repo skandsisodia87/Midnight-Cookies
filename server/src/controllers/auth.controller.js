@@ -50,13 +50,6 @@ export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: "Email and password are required",
-      });
-    }
-
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -209,13 +202,6 @@ export const sendVerificationOtp = async (req, res) => {
   try {
     const { email } = req.body;
 
-    if (!email) {
-      return res.status(400).json({
-        success: false,
-        message: "Email is required",
-      });
-    }
-
     const user = await User.findOne({
       email,
     });
@@ -266,12 +252,6 @@ export const verifyEmailOtp = async (req, res) => {
   try {
     const { email, otp } = req.body;
 
-    if (!email || !otp) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Email and OTP are required" });
-    }
-
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -312,13 +292,6 @@ export const verifyEmailOtp = async (req, res) => {
 export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
-
-    if (!email) {
-      return res.status(400).json({
-        success: false,
-        message: "Email is required",
-      });
-    }
 
     const user = await User.findOne({ email: email.toLowerCase() });
 
@@ -365,20 +338,6 @@ export const resetPassword = async (req, res) => {
   try {
     const { token } = req.params;
     const { password, confirmPassword } = req.body;
-
-    if (!password || !confirmPassword) {
-      return res.status(400).json({
-        success: false,
-        message: "Password and confirm password are required",
-      });
-    }
-
-    if (password !== confirmPassword) {
-      return res.status(400).json({
-        success: false,
-        message: "Passwords do not match",
-      });
-    }
 
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 

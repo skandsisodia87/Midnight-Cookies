@@ -20,6 +20,7 @@ import ResetPassword from "./components/pages/ResetPassword";
 import CheckoutPage from "./components/pages/Checkout";
 import { getCart } from "./services/cart.service";
 import useCartStore from "./store/cartStore";
+import Contact from "./components/pages/Contact";
 
 const App = () => {
   const { isAuthenticated } = useAuthStore();
@@ -50,7 +51,6 @@ const App = () => {
             "Network error. Unable to load cart. Please check your connection.",
           );
         } else if (error.response?.status === 401) {
-          // Token expired or invalid, logout will be handled by axios interceptor
           console.log("Cart fetch unauthorized");
         } else {
           toast.error(
@@ -75,6 +75,7 @@ const App = () => {
     <Routes>
       <Route element={<MainLayout />}>
         <Route path='/' element={<Home />} />
+        <Route path='/contact' element={<Contact />} />
         <Route path='/cookies' element={<Cookies />} />
         <Route path='/cookies/:slug' element={<CookieDetails />} />
       </Route>

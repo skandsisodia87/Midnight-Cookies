@@ -2,7 +2,15 @@ import Address from "../models/address.model.js";
 
 export const addAddress = async (req, res) => {
   try {
-    const { fullName, phone, fullAddress, city, state, pincode } = req.body;
+    const { fullName, phone, fullAddress, city, state, pincode, isDefault } =
+      req.body;
+
+    if (isDefault) {
+      await Address.updateMany(
+        { user: req.user._id },
+        { $set: { isDefault: false } },
+      );
+    }
 
     const address = await Address.create({
       user: req.user._id,
@@ -12,6 +20,7 @@ export const addAddress = async (req, res) => {
       city,
       state,
       pincode,
+      isDefault: !!isDefault,
     });
 
     return res.status(201).json({
@@ -31,6 +40,9 @@ export const updateAddress = async (req, res) => {
   try {
     const { addressId } = req.params;
 
+    const { fullName, phone, fullAddress, city, state, pincode, isDefault } =
+      req.body;
+
     const address = await Address.findOne({
       _id: addressId,
       user: req.user._id,
@@ -43,9 +55,29 @@ export const updateAddress = async (req, res) => {
       });
     }
 
+    if (isDefault) {
+      await Address.updateMany(
+        {
+          user: req.user._id,
+          _id: { $ne: addressId },
+        },
+        {
+          $set: { isDefault: false },
+        },
+      );
+    }
+
     const updatedAddress = await Address.findByIdAndUpdate(
       addressId,
-      req.body,
+      {
+        fullName,
+        phone,
+        fullAddress,
+        city,
+        state,
+        pincode,
+        isDefault: !!isDefault,
+      },
       {
         new: true,
         runValidators: true,

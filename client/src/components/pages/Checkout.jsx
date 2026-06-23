@@ -1,4 +1,36 @@
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { getAddresses } from "../../services/order.service";
+import { getFullAddress } from "../../common/getFullAddress";
+import AddressSection from "../address/AddressSection";
+
 export default function CheckoutPage() {
+  const [addresses, setAddresses] = useState([]);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+
+  const fetchAddresses = async () => {
+    try {
+      const data = await getAddresses();
+
+      if (data.success) {
+        const allAddresses = data.addresses ?? [];
+
+        setAddresses(allAddresses);
+        setSelectedAddress(allAddresses?.[0] ?? null);
+
+        return allAddresses;
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Please refresh the page");
+    }
+
+    return [];
+  };
+
+  useEffect(() => {
+    fetchAddresses();
+  }, []);
+
   return (
     <div className='min-h-screen bg-[#FFF6EC] py-10 px-4 md:px-8'>
       <div className='max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8'>
@@ -13,95 +45,12 @@ export default function CheckoutPage() {
             </p>
           </div>
 
-          {/* Delivery Address */}
-          <div className='bg-white rounded-4xl shadow-lg p-6'>
-            <div className='flex items-center justify-between'>
-              <h2 className='text-2xl font-semibold text-[#2B1D16]'>
-                Delivery Address
-              </h2>
-
-              <button
-                className='
-                  bg-[#D98B2B]
-                  hover:bg-[#c97818]
-                  text-white
-                  px-5
-                  py-2.5
-                  rounded-full
-                  font-medium
-                  transition
-                '
-              >
-                Add New
-              </button>
-            </div>
-
-            <div className='mt-6 space-y-4'>
-              {/* Address Card */}
-              <div
-                className='
-                  border-2
-                  border-[#D98B2B]
-                  rounded-3xl
-                  p-5
-                  cursor-pointer
-                  transition
-                  bg-[#fffaf4]
-                '
-              >
-                <div className='flex items-start justify-between gap-4'>
-                  <div>
-                    <h3 className='font-semibold text-[#2B1D16] text-lg'>
-                      Home
-                    </h3>
-
-                    <p className='mt-2 text-gray-600 leading-7'>
-                      221B Baker Street, Hazratganj, Lucknow, Uttar Pradesh -
-                      226001
-                    </p>
-                  </div>
-
-                  <input
-                    type='radio'
-                    checked
-                    readOnly
-                    className='w-5 h-5 accent-[#D98B2B]'
-                  />
-                </div>
-              </div>
-
-              <div
-                className='
-                  border
-                  border-gray-200
-                  rounded-3xl
-                  p-5
-                  cursor-pointer
-                  transition
-                  hover:border-[#D98B2B]
-                '
-              >
-                <div className='flex items-start justify-between gap-4'>
-                  <div>
-                    <h3 className='font-semibold text-[#2B1D16] text-lg'>
-                      Office
-                    </h3>
-
-                    <p className='mt-2 text-gray-600 leading-7'>
-                      Cyber Heights, Gomti Nagar, Lucknow, Uttar Pradesh -
-                      226010
-                    </p>
-                  </div>
-
-                  <input
-                    type='radio'
-                    readOnly
-                    className='w-5 h-5 accent-[#D98B2B]'
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+          <AddressSection
+            addresses={addresses}
+            fetchAddresses={fetchAddresses}
+            selectedAddress={selectedAddress}
+            setSelectedAddress={setSelectedAddress}
+          />
 
           {/* Payment Method */}
           <div className='bg-white rounded-4xl shadow-lg p-6'>

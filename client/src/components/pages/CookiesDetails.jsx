@@ -603,7 +603,7 @@ const CookieDetails = () => {
                         leading-8
                       '
                   >
-                    {review?.comment}
+                    {review?.review}
                   </p>
                 </div>
               ))}

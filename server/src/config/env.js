@@ -10,6 +10,7 @@ const env = {
   EMAIL_PASS: process.env.EMAIL_PASS,
   CLIENT_URL: process.env.CLIENT_URL,
   NODE_ENV: process.env.NODE_ENV,
+  SUPPORT_EMAIL: process.env.SUPPORT_EMAIL,
 };
 
 export default env;

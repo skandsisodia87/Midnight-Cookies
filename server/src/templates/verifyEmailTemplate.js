@@ -1,5 +1,3 @@
-// templates/verifyEmailTemplate.js
-
 const verifyEmailTemplate = ({ name, otp }) => {
   return `
     <div

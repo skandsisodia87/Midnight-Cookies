@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { FiShoppingCart } from "react-icons/fi";
 import useAuthStore from "../../store/authStore";
 import { logoutUser } from "../../services/auth.service";
@@ -40,7 +40,6 @@ const Navbar = () => {
   return (
     <nav className='bg-[#1F140F] text-white px-6 py-4 sticky top-0 z-50 shadow-lg'>
       <div className='max-w-7xl mx-auto flex items-center justify-between'>
-        {/* Logo */}
         <Link
           to='/'
           className='text-2xl font-bold tracking-wide text-[#F5C16C]'
@@ -48,20 +47,46 @@ const Navbar = () => {
           Midnight Cookies
         </Link>
 
-        {/* Nav Links */}
         <div className='hidden md:flex items-center gap-8 text-sm font-medium'>
-          <Link to='/' className='hover:text-[#F5C16C] transition'>
+          <NavLink
+            to='/'
+            className={({ isActive }) =>
+              `
+              transition
+              hover:text-[#F5C16C]
+              ${isActive ? "text-[#F5C16C] font-semibold" : ""}
+            `
+            }
+          >
             Home
-          </Link>
+          </NavLink>
 
-          <Link to='/cookies' className='hover:text-[#F5C16C] transition'>
+          <NavLink
+            to='/cookies'
+            className={({ isActive }) =>
+              `
+              transition
+              hover:text-[#F5C16C]
+              ${isActive ? "text-[#F5C16C] font-semibold" : ""}
+            `
+            }
+          >
             Cookies
-          </Link>
+          </NavLink>
 
           {isAuthenticated && (
-            <Link to='/orders' className='hover:text-[#F5C16C] transition'>
+            <NavLink
+              to='/orders'
+              className={({ isActive }) =>
+                `
+                transition
+                hover:text-[#F5C16C]
+                ${isActive ? "text-[#F5C16C] font-semibold" : ""}
+              `
+              }
+            >
               Orders
-            </Link>
+            </NavLink>
           )}
         </div>
 
