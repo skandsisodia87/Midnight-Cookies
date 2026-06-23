@@ -1,4 +1,4 @@
-export const welcomeEmailTemplate = (name) => {
+export const welcomeEmailTemplate = (name, url) => {
   return `
   <div
       style="
@@ -45,7 +45,7 @@ export const welcomeEmailTemplate = (name) => {
           </p>
           <div style="text-align: center; margin: 20px 0">
             <a
-              href="#"
+              href=${url}
               style="
                 background: #d98b2b;
                 color: white;

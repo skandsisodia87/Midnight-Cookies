@@ -16,7 +16,7 @@ export default function AddEditDialog({
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
-    fullAddress: "",
+    address: "",
     city: "",
     state: "",
     pincode: "",
@@ -29,7 +29,7 @@ export default function AddEditDialog({
       setFormData({
         fullName: address.fullName || "",
         phone: address.phone || "",
-        fullAddress: address.fullAddress || "",
+        address: address.address || "",
         city: address.city || "",
         state: address.state || "",
         pincode: address.pincode || "",
@@ -39,7 +39,7 @@ export default function AddEditDialog({
       setFormData({
         fullName: "",
         phone: "",
-        fullAddress: "",
+        address: "",
         city: "",
         state: "",
         pincode: "",
@@ -175,8 +175,8 @@ export default function AddEditDialog({
 
               <textarea
                 rows={4}
-                name='fullAddress'
-                value={formData.fullAddress}
+                name='address'
+                value={formData.address}
                 onChange={handleChange}
                 placeholder='House no, apartment, street...'
                 className='

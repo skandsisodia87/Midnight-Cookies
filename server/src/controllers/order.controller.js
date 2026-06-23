@@ -5,6 +5,7 @@ import CookieVariant from "../models/cookieVariant.model.js";
 import { generateOrderId } from "../utils/generateOrderId.js";
 import { orderStatusEmailTemplate } from "../templates/orderEmailTemplate.js";
 import { sendEmail } from "../services/email.service.js";
+import env from "../config/env.js";
 
 export const createOrder = async (req, res) => {
   const session = await mongoose.startSession();
@@ -104,6 +105,7 @@ export const createOrder = async (req, res) => {
           orderStatus: order.orderStatus,
           items: order.items,
           totalAmount: order.totalAmount,
+          viewOrderUrl: `${env.CLIENT_URL}/orders/${orderId}`,
         }),
       });
     } catch (emailError) {
@@ -225,6 +227,7 @@ export const updateOrderStatus = async (req, res) => {
               orderStatus: order.orderStatus,
               items: order.items,
               totalAmount: order.totalAmount,
+              viewOrderUrl: `${env.CLIENT_URL}/orders/${order.orderId}`,
             }),
           });
         } catch (emailError) {

@@ -10,7 +10,7 @@ export const addressSchema = Joi.object({
       "string.pattern.base": "Phone number must be 10 digits",
     }),
 
-  fullAddress: Joi.string().trim().min(5).max(500).required(),
+  address: Joi.string().trim().min(5).max(500).required(),
   city: Joi.string().trim().min(2).max(100).required(),
   state: Joi.string().trim().min(2).max(100).required(),
 

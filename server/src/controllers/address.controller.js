@@ -2,7 +2,7 @@ import Address from "../models/address.model.js";
 
 export const addAddress = async (req, res) => {
   try {
-    const { fullName, phone, fullAddress, city, state, pincode, isDefault } =
+    const { fullName, phone, address, city, state, pincode, isDefault } =
       req.body;
 
     if (isDefault) {
@@ -12,11 +12,11 @@ export const addAddress = async (req, res) => {
       );
     }
 
-    const address = await Address.create({
+    const newAddress = await Address.create({
       user: req.user._id,
       fullName,
       phone,
-      fullAddress,
+      address,
       city,
       state,
       pincode,
@@ -26,7 +26,7 @@ export const addAddress = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "Address added successfully",
-      address,
+      newAddress,
     });
   } catch (error) {
     return res.status(500).json({
@@ -40,15 +40,15 @@ export const updateAddress = async (req, res) => {
   try {
     const { addressId } = req.params;
 
-    const { fullName, phone, fullAddress, city, state, pincode, isDefault } =
+    const { fullName, phone, address, city, state, pincode, isDefault } =
       req.body;
 
-    const address = await Address.findOne({
+    const addressExist = await Address.findOne({
       _id: addressId,
       user: req.user._id,
     });
 
-    if (!address) {
+    if (!addressExist) {
       return res.status(404).json({
         success: false,
         message: "Address not found",
@@ -72,7 +72,7 @@ export const updateAddress = async (req, res) => {
       {
         fullName,
         phone,
-        fullAddress,
+        address,
         city,
         state,
         pincode,

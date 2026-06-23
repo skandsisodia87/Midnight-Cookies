@@ -14,7 +14,7 @@ export const registrationSchema = z.object({
     .string()
     .min(1, "Email is required")
     .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address"),
-  number: z
+  phone: z
     .string()
     .min(1, "Phone number is required")
     .regex(/^[0-9]{10}$/, "Phone number must be 10 digits"),
@@ -43,7 +43,7 @@ const Register = () => {
       name: "",
       email: "",
       password: "",
-      number: "",
+      phone: "",
     },
     resolver: zodResolver(registrationSchema),
   });
@@ -204,7 +204,7 @@ const Register = () => {
                 px-5
                 py-4
                 ${
-                  errors.number
+                  errors.phone
                     ? "border-red-500"
                     : "border-gray-300 focus-within:border-[#D98B2B]"
                 }
@@ -215,7 +215,7 @@ const Register = () => {
               <input
                 type='tel'
                 placeholder='Enter your 10-digit phone number'
-                {...register("number")}
+                {...register("phone")}
                 className='
                   w-full
                   ml-3
@@ -224,9 +224,9 @@ const Register = () => {
                 '
               />
             </div>
-            {errors.number && (
+            {errors.phone && (
               <p className='text-red-500 text-sm mt-2'>
-                {errors.number.message}
+                {errors.phone.message}
               </p>
             )}
           </div>

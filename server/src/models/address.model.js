@@ -20,7 +20,7 @@ const addressSchema = new Schema(
       trim: true,
     },
 
-    fullAddress: {
+    address: {
       type: String,
       required: true,
       trim: true,
