@@ -1,26 +1,29 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { toast } from "sonner";
 import Home from "./components/pages/Home";
-import Login from "./components/pages/Login";
-import Register from "./components/pages/Register";
-import ForgotPassword from "./components/pages/ForgotPassword";
-import VerifyEmail from "./components/pages/VerifyEmail";
-import Orders from "./components/pages/Orders";
-import MainLayout from "./components/pages/MainLayout";
-import OrderDetails from "./components/pages/OrderDetails";
-import Cart from "./components/pages/Cart";
-import Cookies from "./components/pages/Cookies";
-import CookieDetails from "./components/pages/CookiesDetails";
+
+const Login = lazy(() => import("./components/pages/Login"));
+const Register = lazy(() => import("./components/pages/Register"));
+const ForgotPassword = lazy(() => import("./components/pages/ForgotPassword"));
+const VerifyEmail = lazy(() => import("./components/pages/VerifyEmail"));
+const Orders = lazy(() => import("./components/pages/Orders"));
+const MainLayout = lazy(() => import("./components/pages/MainLayout"));
+const OrderDetails = lazy(() => import("./components/pages/OrderDetails"));
+const Cart = lazy(() => import("./components/pages/Cart"));
+const Cookies = lazy(() => import("./components/pages/Cookies"));
+const CookieDetails = lazy(() => import("./components/pages/CookiesDetails"));
+const ResetPassword = lazy(() => import("./components/pages/ResetPassword"));
+const CheckoutPage = lazy(() => import("./components/pages/Checkout"));
+const Contact = lazy(() => import("./components/pages/Contact"));
+
 import useAuthStore from "./store/authStore";
 import VerifyEmailRoute from "./routes/VerifyEmailRoute";
 import ProtectedRoute from "./routes/ProtectedRoutes";
 import PublicRoute from "./routes/PublicRoutes";
-import ResetPassword from "./components/pages/ResetPassword";
-import CheckoutPage from "./components/pages/Checkout";
 import { getCart } from "./services/cart.service";
 import useCartStore from "./store/cartStore";
-import Contact from "./components/pages/Contact";
+import LandingPageLoader from "./components/pages/LandingPageLoader";
 
 const App = () => {
   const { isAuthenticated } = useAuthStore();
@@ -72,34 +75,36 @@ const App = () => {
   }, [isAuthenticated, setCartItems, clearCart]);
 
   return (
-    <Routes>
-      <Route element={<MainLayout />}>
-        <Route path='/' element={<Home />} />
-        <Route path='/contact' element={<Contact />} />
-        <Route path='/cookies' element={<Cookies />} />
-        <Route path='/cookies/:slug' element={<CookieDetails />} />
-      </Route>
-
-      <Route element={<PublicRoute />}>
-        <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/forgot-password' element={<ForgotPassword />} />
-        <Route path='/reset-password/:token' element={<ResetPassword />} />
-      </Route>
-
-      <Route element={<VerifyEmailRoute />}>
-        <Route path='/verify-email' element={<VerifyEmail />} />
-      </Route>
-
-      <Route element={<ProtectedRoute />}>
+    <Suspense fallback={<LandingPageLoader />}>
+      <Routes>
         <Route element={<MainLayout />}>
-          <Route path='/cart' element={<Cart />} />
-          <Route path='/orders' element={<Orders />} />
-          <Route path='/orders/:orderId' element={<OrderDetails />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/cookies" element={<Cookies />} />
+          <Route path="/cookies/:slug" element={<CookieDetails />} />
         </Route>
-        <Route path='/checkout' element={<CheckoutPage />} />
-      </Route>
-    </Routes>
+
+        <Route element={<PublicRoute />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+        </Route>
+
+        <Route element={<VerifyEmailRoute />}>
+          <Route path="/verify-email" element={<VerifyEmail />} />
+        </Route>
+
+        <Route element={<ProtectedRoute />}>
+          <Route element={<MainLayout />}>
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/orders/:orderId" element={<OrderDetails />} />
+          </Route>
+          <Route path="/checkout" element={<CheckoutPage />} />
+        </Route>
+      </Routes>
+    </Suspense>
   );
 };
 
