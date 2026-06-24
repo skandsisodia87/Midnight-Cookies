@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import moment from "moment";
 import { getMyOrders } from "../../services/order.service";
 import OrderSkeleton from "../skeletons/OrderSkeleton";
 import StatusConfig from "../../common/StatusConfig";
@@ -110,8 +111,7 @@ const Orders = () => {
                       </h2>
 
                       <p className='text-gray-500 mt-2'>
-                        Ordered on{" "}
-                        {new Date(order.createdAt).toLocaleDateString()}
+                        Ordered on {moment(order.createdAt).format("MMMM D, YYYY h:mm A")}
                       </p>
                     </div>
 

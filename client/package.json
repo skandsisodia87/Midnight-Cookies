@@ -23,7 +23,8 @@
     "react-router-dom": "^7.15.0",
     "sonner": "^2.0.7",
     "zod": "^4.4.3",
-    "zustand": "^5.0.13"
+    "zustand": "^5.0.13",
+    "moment": "^2.29.4"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
