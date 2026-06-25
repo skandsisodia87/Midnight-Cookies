@@ -44,7 +44,7 @@ import contactRoutes from "./routes/contact.routes.js";
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/cookie", cookieRoutes);
 app.use("/api/v1/orders", orderRoutes);
-app.use("/api/v1/reviews", reviewRoutes);
+app.use("/api/v1/review", reviewRoutes);
 app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/address", addressRoutes);
 app.use("/api/v1/contact", contactRoutes);

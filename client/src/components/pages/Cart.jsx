@@ -13,16 +13,15 @@ const Cart = () => {
     removeFromCart,
   } = useCartStore();
 
-  // Error
   if (error) {
     return (
-      <div className='min-h-screen bg-[#FFF6EC] px-6 py-12'>
-        <div className='max-w-4xl mx-auto'>
+      <div className="min-h-screen bg-[#FFF6EC] px-6 py-12">
+        <div className="max-w-4xl mx-auto">
           <ErrorPage
-            title='Unable To Load Cart'
-            message='Something went wrong while fetching your cart.'
-            buttonText='Continue Shopping'
-            redirectLink='/cookies'
+            title="Unable To Load Cart"
+            message="Something went wrong while fetching your cart."
+            buttonText="Continue Shopping"
+            redirectLink="/cookies"
           />
         </div>
       </div>
@@ -32,7 +31,7 @@ const Cart = () => {
   if (!cartItems?.length) {
     return (
       <div
-        className='
+        className="
           min-h-screen
           bg-[#FFF6EC]
           px-6
@@ -40,33 +39,33 @@ const Cart = () => {
           flex
           items-center
           justify-center
-        '
+        "
       >
-        <div className='text-center max-w-2xl'>
+        <div className="text-center max-w-2xl">
           <img
             src={NoCartFound}
-            alt='Empty Cart'
-            className='
+            alt="Empty Cart"
+            className="
               w-full
               max-w-125
               mx-auto
               object-contain
-            '
+            "
           />
 
-          <h2 className='mt-8 text-5xl font-bold text-[#2B1D16]'>
+          <h2 className="mt-8 text-5xl font-bold text-[#2B1D16]">
             Your Cart Is Empty
           </h2>
 
-          <p className='mt-5 text-lg text-gray-500 leading-8'>
+          <p className="mt-5 text-lg text-gray-500 leading-8">
             Looks like your cookie cart is feeling lonely 🍪
             <br />
             Add some delicious treats before checkout.
           </p>
 
           <Link
-            to='/cookies'
-            className='
+            to="/cookies"
+            className="
               inline-flex
               items-center
               justify-center
@@ -79,7 +78,7 @@ const Cart = () => {
               rounded-full
               font-semibold
               transition
-            '
+            "
           >
             Explore Cookies
           </Link>
@@ -98,25 +97,22 @@ const Cart = () => {
   const total = subtotal + shipping;
 
   return (
-    <div className='min-h-screen bg-[#FFF6EC] px-6 py-12'>
-      <div className='max-w-7xl mx-auto'>
-        {/* Heading */}
-        <div className='mb-12'>
-          <h1 className='text-5xl font-bold text-[#2B1D16]'>Your Cart 🛒</h1>
+    <div className="min-h-screen bg-[#FFF6EC] px-6 py-12">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-12">
+          <h1 className="text-5xl font-bold text-[#2B1D16]">Your Cart 🛒</h1>
 
-          <p className='mt-4 text-gray-600'>
+          <p className="mt-4 text-gray-600">
             Review your delicious cookies before checkout.
           </p>
         </div>
 
-        {/* Main Grid */}
-        <div className='grid lg:grid-cols-3 gap-8'>
-          {/* Left */}
-          <div className='lg:col-span-2 space-y-6'>
+        <div className="grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-6">
             {cartItems.map((item) => (
               <div
                 key={item.cookieId}
-                className='
+                className="
                   bg-white
                   rounded-4xl
                   shadow-lg
@@ -125,51 +121,45 @@ const Cart = () => {
                   flex-col
                   md:flex-row
                   gap-6
-                '
+                "
               >
-                {/* Image */}
                 <img
                   src={item.image}
                   alt={item.name}
-                  className='
+                  className="
                     w-full
                     md:w-40
                     h-40
                     object-cover
                     rounded-3xl
-                  '
+                  "
                 />
-
-                {/* Details */}
-                <div className='flex-1'>
-                  <div className='flex justify-between gap-5'>
+                <div className="flex-1">
+                  <div className="flex justify-between gap-5">
                     <div>
-                      <h2 className='text-2xl font-bold text-[#2B1D16]'>
+                      <h2 className="text-2xl font-bold text-[#2B1D16]">
                         {item.name}
                       </h2>
 
-                      <p className='mt-1 text-sm text-gray-500'>
+                      <p className="mt-1 text-sm text-gray-500">
                         Weight: {item.weight}
                       </p>
-
-                      {/* Prices */}
-                      <div className='mt-3 flex items-center gap-3'>
-                        <span className='text-2xl font-bold text-[#D98B2B]'>
+                      <div className="mt-3 flex items-center gap-3">
+                        <span className="text-2xl font-bold text-[#D98B2B]">
                           ₹{item.finalPrice}
                         </span>
 
                         {item.originalPrice > item.finalPrice && (
-                          <span className='text-gray-400 line-through'>
+                          <span className="text-gray-400 line-through">
                             ₹{item.originalPrice}
                           </span>
                         )}
                       </div>
                     </div>
 
-                    {/* Remove */}
                     <button
                       onClick={() => removeFromCart(item.variantId)}
-                      className='
+                      className="
                         text-red-500
                         hover:bg-red-50
                         w-12
@@ -179,26 +169,26 @@ const Cart = () => {
                         items-center
                         justify-center
                         transition
-                      '
+                      "
                     >
                       <FiTrash2 size={20} />
                     </button>
                   </div>
 
                   {/* Quantity */}
-                  <div className='mt-8'>
+                  <div className="mt-8">
                     <div
-                      className='
+                      className="
                         inline-flex
                         items-center
                         bg-[#FFF6EC]
                         rounded-full
                         p-2
-                      '
+                      "
                     >
                       <button
                         onClick={() => decreaseQuantity(item.variantId)}
-                        className='
+                        className="
                           w-10
                           h-10
                           rounded-full
@@ -207,18 +197,18 @@ const Cart = () => {
                           items-center
                           justify-center
                           shadow
-                        '
+                        "
                       >
                         <FiMinus />
                       </button>
 
-                      <span className='px-6 font-semibold text-lg'>
+                      <span className="px-6 font-semibold text-lg">
                         {item.quantity}
                       </span>
 
                       <button
                         onClick={() => increaseQuantity(item.variantId)}
-                        className='
+                        className="
                           w-10
                           h-10
                           rounded-full
@@ -227,7 +217,7 @@ const Cart = () => {
                           flex
                           items-center
                           justify-center
-                        '
+                        "
                       >
                         <FiPlus />
                       </button>
@@ -238,46 +228,44 @@ const Cart = () => {
             ))}
           </div>
 
-          {/* Right */}
           <div>
             <div
-              className='
+              className="
                 bg-white
                 rounded-4xl
                 shadow-lg
                 p-8
                 sticky
                 top-6
-              '
+              "
             >
-              <h2 className='text-3xl font-bold text-[#2B1D16] mb-8'>
+              <h2 className="text-3xl font-bold text-[#2B1D16] mb-8">
                 Order Summary
               </h2>
 
-              <div className='space-y-5'>
-                <div className='flex justify-between text-gray-600'>
+              <div className="space-y-5">
+                <div className="flex justify-between text-gray-600">
                   <span>Subtotal</span>
 
                   <span>₹{subtotal}</span>
                 </div>
 
-                <div className='flex justify-between text-gray-600'>
+                <div className="flex justify-between text-gray-600">
                   <span>Shipping</span>
 
                   <span>{shipping === 0 ? "Free" : `₹${shipping}`}</span>
                 </div>
 
-                <div className='border-t pt-5 flex justify-between text-2xl font-bold text-[#2B1D16]'>
+                <div className="border-t pt-5 flex justify-between text-2xl font-bold text-[#2B1D16]">
                   <span>Total</span>
 
                   <span>₹{total}</span>
                 </div>
               </div>
 
-              {/* Checkout */}
               <Link
-                to='/checkout'
-                className='
+                to="/checkout"
+                className="
                   mt-10
                   w-full
                   bg-[#D98B2B]
@@ -290,15 +278,14 @@ const Cart = () => {
                   flex
                   items-center
                   justify-center
-                '
+                "
               >
                 Proceed to Checkout
               </Link>
 
-              {/* Continue Shopping */}
               <Link
-                to='/cookies'
-                className='
+                to="/cookies"
+                className="
                   mt-4
                   w-full
                   border
@@ -313,7 +300,7 @@ const Cart = () => {
                   justify-center
                   hover:bg-[#D98B2B]
                   hover:text-white
-                '
+                "
               >
                 Continue Shopping
               </Link>

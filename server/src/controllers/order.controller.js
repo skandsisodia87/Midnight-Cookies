@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Order from "../models/order.model.js";
 import Cookie from "../models/cookie.model.js";
+import Review from "../models/review.model.js";
 import CookieVariant from "../models/cookieVariant.model.js";
 import { generateOrderId } from "../utils/generateOrderId.js";
 import { orderStatusEmailTemplate } from "../templates/orderEmailTemplate.js";
@@ -153,8 +154,12 @@ export const getMyOrders = async (req, res) => {
 export const getSingleOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
+    const userId = req.user._id;
 
-    const order = await Order.findOne({ orderId });
+    const order = await Order.findOne({
+      orderId,
+      userId, // Ensure user owns the order
+    }).lean();
 
     if (!order) {
       return res.status(404).json({
@@ -163,9 +168,21 @@ export const getSingleOrder = async (req, res) => {
       });
     }
 
+    const cookieIds = [
+      ...new Set(order.items.map((item) => item.cookieId.toString())),
+    ];
+
+    const itemReviews = await Review.find({
+      userId,
+      cookieId: { $in: cookieIds },
+    })
+      .select("cookieId rating review")
+      .lean();
+
     return res.status(200).json({
       success: true,
       order,
+      itemReviews,
     });
   } catch (error) {
     return res.status(500).json({
