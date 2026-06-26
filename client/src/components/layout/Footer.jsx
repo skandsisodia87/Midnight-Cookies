@@ -3,24 +3,24 @@ import { Link, NavLink } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className='bg-[#1F140F] text-white pt-20 pb-10 px-6'>
-      <div className='max-w-7xl mx-auto grid md:grid-cols-4 gap-10'>
+    <footer className="bg-[#1F140F] text-white pt-20 pb-10 px-6">
+      <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-10">
         <div>
-          <h2 className='text-3xl font-bold text-[#F5C16C]'>
+          <h2 className="text-3xl font-bold bg-linear-to-r from-[#D98B2B] via-yellow-400 to-[#D98B2B] bg-clip-text text-transparent">
             Midnight Cookies
           </h2>
 
-          <p className='mt-5 text-gray-300 leading-7'>
+          <p className="mt-5 text-gray-300 leading-7">
             Freshly baked premium cookies delivered with love.
           </p>
         </div>
         <div>
-          <h3 className='text-xl font-semibold mb-5'>Quick Links</h3>
+          <h3 className="text-xl font-semibold mb-5">Quick Links</h3>
 
-          <ul className='space-y-3 text-gray-300'>
+          <ul className="space-y-3 text-gray-300">
             <li>
               <NavLink
-                to='/'
+                to="/"
                 className={({ isActive }) =>
                   `
                     cursor-pointer
@@ -36,7 +36,7 @@ const Footer = () => {
 
             <li>
               <NavLink
-                to='/cookies'
+                to="/cookies"
                 className={({ isActive }) =>
                   `
                     cursor-pointer
@@ -52,7 +52,7 @@ const Footer = () => {
 
             <li>
               <NavLink
-                to='/orders'
+                to="/orders"
                 className={({ isActive }) =>
                   `
                     cursor-pointer
@@ -68,7 +68,7 @@ const Footer = () => {
 
             <li>
               <NavLink
-                to='/contact'
+                to="/contact"
                 className={({ isActive }) =>
                   `
                     cursor-pointer
@@ -84,9 +84,9 @@ const Footer = () => {
           </ul>
         </div>
         <div>
-          <h3 className='text-xl font-semibold mb-5'>Contact</h3>
+          <h3 className="text-xl font-semibold mb-5">Contact</h3>
 
-          <ul className='space-y-3 text-gray-300'>
+          <ul className="space-y-3 text-gray-300">
             <li>Ghaziabad, Uttar Pradesh</li>
             <li>fresh.midnight.cookies@gmail.com</li>
             <li>+91 67123387446</li>
@@ -94,11 +94,11 @@ const Footer = () => {
         </div>
         {/* Social */}
         <div>
-          <h3 className='text-xl font-semibold mb-5'>Follow Us</h3>
+          <h3 className="text-xl font-semibold mb-5">Follow Us</h3>
 
-          <div className='flex gap-4'>
+          <div className="flex gap-4">
             <div
-              className='
+              className="
                 w-12
                 h-12
                 rounded-full
@@ -109,13 +109,13 @@ const Footer = () => {
                 hover:bg-[#D98B2B]
                 transition
                 cursor-pointer
-              '
+              "
             >
               <FiInstagram size={20} />
             </div>
 
             <div
-              className='
+              className="
                 w-12
                 h-12
                 rounded-full
@@ -126,13 +126,13 @@ const Footer = () => {
                 hover:bg-[#D98B2B]
                 transition
                 cursor-pointer
-              '
+              "
             >
               <FiFacebook size={20} />
             </div>
 
             <div
-              className='
+              className="
                 w-12
                 h-12
                 rounded-full
@@ -143,7 +143,7 @@ const Footer = () => {
                 hover:bg-[#D98B2B]
                 transition
                 cursor-pointer
-              '
+              "
             >
               <FiTwitter size={20} />
             </div>
@@ -151,14 +151,14 @@ const Footer = () => {
         </div>
       </div>
       <div
-        className='
+        className="
           border-t
           border-[#3b2a22]
           mt-16
           pt-8
           text-center
           text-gray-400
-        '
+        "
       >
         © 2026 Midnight Cookies. All rights reserved.
       </div>

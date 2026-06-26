@@ -1,18 +1,27 @@
 const LandingPageLoader = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#24140f]">
+    <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-[#1b0f0b] via-[#2c1810] to-[#140c08]">
       <div className="text-center">
-        <h1 className="text-5xl font-extrabold text-amber-400">
+        <div className="mb-6 flex justify-center">
+          <div className="animate-bounce text-7xl drop-shadow-xl">🍪</div>
+        </div>
+
+        <h1 className="p-2 bg-linear-to-r from-[#D98B2B] via-yellow-400 to-[#D98B2B] bg-clip-text text-5xl font-extrabold text-transparent">
           Midnight Cookies
         </h1>
 
-        <div className="relative mx-auto mt-6 h-1 w-48 overflow-hidden rounded-full bg-white/10">
-          <div className="absolute inset-y-0 w-1/2 animate-loading rounded-full bg-amber-400" />
-        </div>
-
-        <p className="mt-4 text-sm uppercase tracking-widest text-gray-400">
-          Loading...
+        <p className="mt-2 text-sm tracking-[0.4em] text-[#D98B2B] uppercase">
+          Freshly Baking...
         </p>
+
+        <div className="mx-auto mt-8 flex items-center justify-center gap-2">
+          <span className="h-3 w-3 animate-bounce rounded-full bg-[#D98B2B] [animation-delay:-0.3s]" />
+          <span className="h-3 w-3 animate-bounce rounded-full bg-[#D98B2B] [animation-delay:-0.15s]" />
+          <span className="h-3 w-3 animate-bounce rounded-full bg-[#D98B2B]" />
+        </div>
+        <div className="relative mx-auto mt-8 h-2 w-60 overflow-hidden rounded-full bg-white/10">
+          <div className="absolute inset-y-0 w-1/3 animate-loading rounded-full bg-linear-to-r from-amber-300 via-yellow-400 to-[#D98B2B]" />
+        </div>
       </div>
     </div>
   );

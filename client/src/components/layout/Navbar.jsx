@@ -38,18 +38,18 @@ const Navbar = () => {
   };
 
   return (
-    <nav className='bg-[#1F140F] text-white px-6 py-4 sticky top-0 z-50 shadow-lg'>
-      <div className='max-w-7xl mx-auto flex items-center justify-between'>
+    <nav className="bg-[#1F140F] text-white px-6 py-4 sticky top-0 z-50 shadow-lg">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link
-          to='/'
-          className='text-2xl font-bold tracking-wide text-[#F5C16C]'
+          to="/"
+          className="text-2xl font-bold tracking-wide bg-linear-to-r from-[#D98B2B] via-yellow-400 to-[#D98B2B] bg-clip-text text-transparent"
         >
           Midnight Cookies
         </Link>
 
-        <div className='hidden md:flex items-center gap-8 text-sm font-medium'>
+        <div className="hidden md:flex items-center gap-8 text-sm font-medium">
           <NavLink
-            to='/'
+            to="/"
             className={({ isActive }) =>
               `
               transition
@@ -62,7 +62,7 @@ const Navbar = () => {
           </NavLink>
 
           <NavLink
-            to='/cookies'
+            to="/cookies"
             className={({ isActive }) =>
               `
               transition
@@ -76,7 +76,7 @@ const Navbar = () => {
 
           {isAuthenticated && (
             <NavLink
-              to='/orders'
+              to="/orders"
               className={({ isActive }) =>
                 `
                 transition
@@ -90,11 +90,10 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Right Section */}
-        <div className='flex items-center gap-4'>
+        <div className="flex items-center gap-4">
           {isAuthenticated ? (
             <button
-              className='hidden md:block border border-[#D98B2B] px-4 py-2 rounded-full hover:bg-[#D98B2B] transition'
+              className="hidden md:block border border-[#D98B2B] px-4 py-2 rounded-full hover:bg-[#D98B2B] transition"
               onClick={logoutHandler}
               disabled={btnDisable}
             >
@@ -102,17 +101,17 @@ const Navbar = () => {
             </button>
           ) : (
             <Link
-              to='/login'
-              className='hidden md:block border border-[#D98B2B] px-4 py-2 rounded-full hover:bg-[#D98B2B] transition'
+              to="/login"
+              className="hidden md:block border border-[#D98B2B] px-4 py-2 rounded-full hover:bg-[#D98B2B] transition"
             >
               Login
             </Link>
           )}
 
-          <Link to='/cart' className='relative'>
+          <Link to="/cart" className="relative">
             <FiShoppingCart size={24} />
             {isAuthenticated && count > 0 && (
-              <span className='absolute -top-2 -right-2 bg-[#D98B2B] text-xs w-5 h-5 flex items-center justify-center rounded-full'>
+              <span className="absolute -top-2 -right-2 bg-[#D98B2B] text-xs w-5 h-5 flex items-center justify-center rounded-full">
                 {count}
               </span>
             )}
