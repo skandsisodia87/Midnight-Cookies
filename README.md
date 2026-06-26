@@ -9,6 +9,7 @@ Freshly baked cookies delivered to your doorstep.
 **Midnight Cookies** is a full-stack cookie ordering web application where users can browse different types of cookies, add products to cart, and place orders online.
 
 The platform includes:
+
 - Customer-facing cookie store
 - Shopping cart & checkout system
 - User authentication
@@ -22,6 +23,7 @@ This project is built using **React**, **Node.js**, **Express.js**, and **MongoD
 # 🚀 Features
 
 ## 👤 User Features
+
 - Browse all cookies
 - View cookie details
 - Add/remove items from cart
@@ -31,6 +33,7 @@ This project is built using **React**, **Node.js**, **Express.js**, and **MongoD
 - Responsive design for mobile and desktop
 
 ## 🛠️ Admin Features
+
 - Admin login
 - Add/Edit/Delete cookies
 - Manage customer orders
@@ -42,23 +45,28 @@ This project is built using **React**, **Node.js**, **Express.js**, and **MongoD
 # 🧑‍💻 Tech Stack
 
 ## Frontend
+
 - React
 - React Router
 - Material UI / Tailwind CSS
 - Axios
 
 ## Backend
+
 - Node.js
 - Express.js
 
 ## Database
+
 - MongoDB
 - Mongoose
 
 ## Authentication
+
 - JWT Authentication
 
 ## Deployment
+
 - Frontend: Vercel
 - Backend: Render / Railway
 - Database: MongoDB Atlas
@@ -91,18 +99,12 @@ Midnight-Cookies/
 # 🗃️ Database Collections
 
 ## Cookies
+
 Stores all cookie product information.
 
 ```js
 {
-  name,
-  description,
-  price,
-  images,
-  category,
-  stock,
-  ingredients,
-  ratings
+  (name, description, price, images, category, stock, ingredients, ratings);
 }
 ```
 
@@ -110,11 +112,7 @@ Stores all cookie product information.
 
 ```js
 {
-  name,
-  email,
-  password,
-  phone,
-  role
+  (name, email, password, phone, role);
 }
 ```
 
@@ -122,12 +120,7 @@ Stores all cookie product information.
 
 ```js
 {
-  userId,
-  items,
-  totalAmount,
-  paymentStatus,
-  orderStatus,
-  shippingAddress
+  (userId, items, totalAmount, paymentStatus, orderStatus, shippingAddress);
 }
 ```
 
@@ -166,11 +159,23 @@ npm install
 Create a `.env` file inside the `server` folder.
 
 ```env
-PORT=3000
+PORT = 3000
+MONGO_URI = your_mongodb_connection_string
+CORS_ORIGIN = origin_url
+ACCESS_TOKEN_SECRET = your_access_token_secret
+ACCESS_TOKEN_EXPIRY = 15m
+REFRESH_TOKEN_SECRET = your_refresh_token_secret
+REFRESH_TOKEN_EXPIRY = 7d
+EMAIL_USER = sender_email
+EMAIL_PASS = app_password
+CLIENT_URL = client_uri
+NODE_ENV = develop
+```
 
-MONGO_URI=your_mongodb_connection_string
+Create a `.env` file inside the `client` folder.
 
-JWT_SECRET=your_secret_key
+```env
+VITE_API_URL=your_api_endpoint
 ```
 
 ---
@@ -224,6 +229,7 @@ Order Delivered
 # 📱 Responsive Design
 
 The application is fully responsive and optimized for:
+
 - Mobile Devices
 - Tablets
 - Desktop Screens
