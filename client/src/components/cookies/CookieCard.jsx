@@ -60,9 +60,9 @@ const CookieCard = ({ cookie }) => {
   return (
     <motion.div
       whileHover={{ y: -8 }}
-      className='
+      className="
         bg-white
-        rounded-[28px]
+        rounded-2xl sm:rounded-[28px]
         overflow-hidden
         shadow-lg
         hover:shadow-2xl
@@ -71,123 +71,139 @@ const CookieCard = ({ cookie }) => {
         flex
         flex-col
         h-full
-      '
+      "
     >
-      {/* Image */}
-      <div className='overflow-hidden h-64'>
+      <div className="overflow-hidden h-48 sm:h-56 lg:h-64">
         <img
           src={cookie.images?.[0] || placeholderCookie}
           alt={cookie.name}
-          className='
+          className="
             w-full
             h-full
             object-cover
             hover:scale-110
             transition
             duration-500
-          '
+          "
         />
       </div>
 
-      {/* Content */}
-      <div className='p-5 flex flex-col flex-1'>
-        {/* Top */}
+      <div className="p-4 sm:p-5 flex flex-col flex-1">
         <div>
-          {/* Name + Category */}
-          <div className='flex items-start justify-between gap-3'>
+          <div className="flex items-start justify-between gap-3">
             <h3
-              className='
-                text-xl
+              className="
+                text-lg
+                sm:text-xl
                 font-bold
                 text-[#2B1D16]
                 leading-snug
-              '
+              "
             >
               {cookie.name}
             </h3>
 
             <span
-              className='
+              className="
                 bg-[#FFF1DD]
                 text-[#D98B2B]
-                px-3
+                px-2.5
+                sm:px-3
                 py-1
                 rounded-full
-                text-sm
+                text-xs
+                sm:text-sm
                 font-semibold
                 whitespace-nowrap
-              '
+              "
             >
               {cookie.category}
             </span>
           </div>
 
-          {/* Description */}
           <p
-            className='
+            className="
               text-gray-600
-              mt-3
+              mt-2 sm:mt-3
               text-sm
-              leading-6
+              leading-5 sm:leading-6
               line-clamp-2
-              min-h-12
-            '
+              min-h-10 sm:min-h-12
+            "
           >
             {cookie.description}
           </p>
 
-          {/* Price */}
-          <div className='mt-4 flex items-center gap-3'>
-            <span className='text-2xl font-bold text-[#D98B2B]'>
+          <div className="mt-3 sm:mt-4 flex items-center gap-2 sm:gap-3">
+            <span className="text-xl sm:text-2xl font-bold text-[#D98B2B]">
               ₹{cookie.defaultVariant?.discountPrice}
             </span>
 
-            <div className='flex items-center text-gray-400 text-sm'>
-              <span className='line-through'>
+            <div className="flex items-center text-gray-400 text-xs sm:text-sm">
+              <span className="line-through">
                 ₹{cookie.defaultVariant?.price}
               </span>
 
-              <span className='ml-1'>/{cookie.defaultVariant?.weight}</span>
+              <span className="ml-1">/{cookie.defaultVariant?.weight}</span>
             </div>
           </div>
         </div>
 
-        {/* Buttons */}
-        <div className='mt-auto pt-6 flex gap-3'>
+        <div className="mt-auto pt-5 sm:pt-6 flex gap-2 sm:gap-3">
           {isItemAddedToCart ? (
-            <div className='inline-flex items-center bg-white rounded-full p-2 shadow'>
+            <div className="inline-flex items-center bg-white rounded-full p-1.5 sm:p-2 shadow">
               <button
                 onClick={() => quantity > 1 && setQuantity(quantity - 1)}
-                className='w-10 h-10 rounded-full flex items-center justify-center hover:bg-[#FFF6EC]'
+                className="
+                  w-8 h-8
+                  sm:w-10 sm:h-10
+                  rounded-full
+                  flex
+                  items-center
+                  justify-center
+                  hover:bg-[#FFF6EC]
+                "
               >
                 <FiMinus />
               </button>
 
-              <span className='px-6 text-xl font-semibold'>{quantity}</span>
+              <span className="px-4 sm:px-6 text-lg sm:text-xl font-semibold">
+                {quantity}
+              </span>
               <button
                 onClick={() => setQuantity(quantity + 1)}
-                className='w-10 h-10 rounded-full bg-[#D98B2B] text-white flex items-center justify-center '
+                className="
+                  w-8 h-8
+                  sm:w-10 sm:h-10
+                  rounded-full
+                  bg-[#D98B2B]
+                  text-white
+                  flex
+                  items-center
+                  justify-center
+                "
               >
                 <FiPlus />
               </button>
             </div>
           ) : (
             <button
-              className='
-              flex-1
-              bg-[#D98B2B]
-              hover:bg-[#c97818]
-              text-white
-              py-3
-              rounded-full
-              font-semibold
-              flex
-              items-center
-              justify-center
-              gap-2
-              transition
-              cursor-pointer
-            '
+              className="
+                flex-1
+                bg-[#D98B2B]
+                hover:bg-[#c97818]
+                text-white
+                py-2.5 sm:py-3
+                rounded-full
+                font-semibold
+                text-sm sm:text-base
+                flex
+                items-center
+                justify-center
+                gap-2
+                transition
+                cursor-pointer
+              "
               onClick={addToCartHandler}
               disabled={loading}
             >
@@ -198,19 +214,20 @@ const CookieCard = ({ cookie }) => {
 
           <Link
             to={`/cookies/${cookie.slug}`}
-            className='
+            className="
               border
               border-[#D98B2B]
-              px-5
-              py-3
+              px-4 sm:px-5
+              py-2.5 sm:py-3
               rounded-full
+              text-sm sm:text-base
               hover:bg-[#D98B2B]
               hover:text-white
               transition
               flex
               items-center
               justify-center
-            '
+            "
           >
             View
           </Link>
