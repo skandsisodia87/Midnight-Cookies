@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import StatusConfig from "../../common/StatusConfig";
@@ -244,9 +244,12 @@ const OrderDetails = () => {
               </p>
             </div>
 
-            <button className="rounded-full bg-[#D98B2B] px-8 py-4 font-semibold transition hover:bg-[#c97818]">
+            <Link
+              to="/contact"
+              className="rounded-full bg-[#D98B2B] px-8 py-4 font-semibold transition hover:bg-[#c97818]"
+            >
               Contact Support
-            </button>
+            </Link>
           </div>
         </div>
       </div>

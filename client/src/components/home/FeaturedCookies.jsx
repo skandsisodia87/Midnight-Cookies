@@ -26,7 +26,7 @@ const FeaturedCookies = () => {
   }, []);
 
   return (
-    <section className='py-24 px-6 bg-[#FFF6EC]'>
+    <section id='featured-cookies' className='py-24 px-6 bg-[#FFF6EC]'>
       <div className='max-w-7xl mx-auto'>
         {/* Heading */}
         <div className='text-center mb-16'>
