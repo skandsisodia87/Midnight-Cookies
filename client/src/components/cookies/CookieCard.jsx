@@ -6,12 +6,18 @@ import { addToCart, getCart } from "../../services/cart.service";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import useCartStore from "../../store/cartStore";
+import useCartSync from "../../common/useCartSync";
 
 const CookieCard = ({ cookie }) => {
-  const [quantity, setQuantity] = useState(0);
+  const { increase, decrease } = useCartSync();
   const [loading, setLoading] = useState(false);
-  const [isItemAddedToCart, setIsItemAddedToCart] = useState(false);
   const { setCartItems, cartItems = [], setError } = useCartStore();
+
+  const cartItem = cartItems.find(
+    (item) => item.cookieId.toString() === cookie._id.toString(),
+  );
+
+  const quantity = cartItem?.quantity ?? 0;
 
   const addToCartHandler = async () => {
     setLoading(true);
@@ -26,39 +32,22 @@ const CookieCard = ({ cookie }) => {
       const data = await addToCart(body);
 
       if (data.success) {
-        setIsItemAddedToCart(true);
-
         const cartData = await getCart();
         if (cartData.success) {
           setCartItems(cartData.cart);
-
-          const item = cartData.cart.find(
-            (item) => item.cookieId.toString() === cookie._id.toString(),
-          );
-
-          setQuantity(item?.quantity || 1);
         }
       }
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to add item to the cart");
+      setError(
+        error.response?.data?.message || "Failed to add item to the cart",
+      );
       toast.error(
         error.response?.data?.message || "Failed to add item to the cart",
       );
-      setIsItemAddedToCart(false);
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    const item = cartItems.find(
-      (item) => item.cookieId.toString() === cookie._id.toString(),
-    );
-    if (item) {
-      setIsItemAddedToCart(true);
-      setQuantity(item.quantity);
-    }
-  }, []);
 
   return (
     <motion.div
@@ -153,10 +142,11 @@ const CookieCard = ({ cookie }) => {
         </div>
 
         <div className="mt-auto pt-5 sm:pt-6 flex gap-2 sm:gap-3">
-          {isItemAddedToCart ? (
+          {quantity > 0 ? (
             <div className="inline-flex items-center bg-white rounded-full p-1.5 sm:p-2 shadow">
               <button
-                onClick={() => quantity > 1 && setQuantity(quantity - 1)}
+                disabled={quantity <= 1}
+                onClick={() => decrease(cookie.defaultVariant._id)}
                 className="
                   w-8 h-8
                   sm:w-10 sm:h-10
@@ -174,7 +164,7 @@ const CookieCard = ({ cookie }) => {
                 {quantity}
               </span>
               <button
-                onClick={() => setQuantity(quantity + 1)}
+                onClick={() => increase(cookie.defaultVariant._id)}
                 className="
                   w-8 h-8
                   sm:w-10 sm:h-10

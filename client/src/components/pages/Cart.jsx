@@ -8,6 +8,7 @@ import {
   removeCartItem,
   updateCartItemsQuantity,
 } from "../../services/cart.service";
+import useCartSync from "../../common/useCartSync";
 
 const Cart = () => {
   const {
@@ -18,64 +19,7 @@ const Cart = () => {
     removeFromCart,
     setError,
   } = useCartStore();
-
-  const pendingQuantityUpdatesRef = useRef(new Map());
-  const quantitySyncTimeoutRef = useRef(null);
-
-  useEffect(() => {
-    return () => {
-      if (quantitySyncTimeoutRef.current) {
-        clearTimeout(quantitySyncTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  const flushQuantityUpdates = async () => {
-    const pendingUpdates = Array.from(pendingQuantityUpdatesRef.current.entries())
-      .filter(([, quantity]) => quantity > 0)
-      .map(([cookieId, quantity]) => ({ cookieId, quantity }));
-
-    pendingQuantityUpdatesRef.current.clear();
-
-    if (!pendingUpdates.length) {
-      return;
-    }
-
-    try {
-      await updateCartItemsQuantity(pendingUpdates);
-      setError(null);
-    } catch (error) {
-      setError("Failed to update cart quantity.");
-    }
-  };
-
-  const scheduleQuantitySync = () => {
-    if (quantitySyncTimeoutRef.current) {
-      clearTimeout(quantitySyncTimeoutRef.current);
-    }
-
-    quantitySyncTimeoutRef.current = setTimeout(() => {
-      void flushQuantityUpdates();
-    }, 500);
-  };
-
-  const handleQuantityChange = (item, delta) => {
-    const currentPendingQuantity = pendingQuantityUpdatesRef.current.get(
-      item.cookieId,
-    );
-    const baseQuantity = currentPendingQuantity ?? item.quantity;
-    const nextQuantity = Math.max(0, baseQuantity + delta);
-
-    pendingQuantityUpdatesRef.current.set(item.cookieId, nextQuantity);
-
-    if (delta > 0) {
-      increaseQuantity(item.variantId);
-    } else {
-      decreaseQuantity(item.variantId);
-    }
-
-    scheduleQuantitySync();
-  };
+  const { increase, decrease } = useCartSync();
 
   const handleRemoveItem = async (item) => {
     try {
@@ -261,7 +205,7 @@ const Cart = () => {
                       "
                     >
                       <button
-                        onClick={() => handleQuantityChange(item, -1)}
+                        onClick={() => decrease(item.variantId)}
                         className="
                           w-10
                           h-10
@@ -281,7 +225,7 @@ const Cart = () => {
                       </span>
 
                       <button
-                        onClick={() => handleQuantityChange(item, 1)}
+                        onClick={() => increase(item.variantId)}
                         className="
                           w-10
                           h-10

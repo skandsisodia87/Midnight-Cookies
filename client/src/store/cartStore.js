@@ -20,91 +20,43 @@ const useCartStore = create((set, get) => ({
   },
 
   addToCart: (product) => {
-    try {
-      get().clearError();
+    const existing = get().cartItems.find(
+      (item) => item.variantId === product.variantId,
+    );
 
-      const existingItem = get().cartItems.find(
-        (item) => item.variantId === product.variantId,
-      );
-
-      if (existingItem) {
-        const updatedItems = get().cartItems.map((item) =>
-          item.variantId === product.variantId
-            ? {
-                ...item,
-                quantity: item.quantity + product.quantity,
-              }
-            : item,
-        );
-
-        set({
-          cartItems: updatedItems,
-          error: null,
-        });
-
-        return;
-      }
-
-      set({
-        cartItems: [...get().cartItems, product],
-        error: null,
-      });
-    } catch (error) {
-      set({
-        error: "Failed to add item to cart.",
-      });
+    if (existing) {
+      get().increaseQuantity(product.variantId);
+      return;
     }
+
+    set((state) => ({
+      cartItems: [...state.cartItems, product],
+    }));
   },
 
   removeFromCart: (variantId) => {
-    try {
-      get().clearError();
-
-      const updatedItems = get().cartItems.filter(
-        (item) => item.variantId !== variantId,
-      );
-
-      set({
-        cartItems: updatedItems,
-        error: null,
-      });
-    } catch (error) {
-      set({
-        error: "Failed to remove item from cart.",
-      });
-    }
+    set((state) => ({
+      cartItems: state.cartItems.filter((item) => item.variantId !== variantId),
+    }));
   },
 
   increaseQuantity: (variantId) => {
-    try {
-      get().clearError();
-
-      const updatedItems = get().cartItems.map((item) =>
+    set((state) => ({
+      cartItems: state.cartItems.map((item) =>
         item.variantId === variantId
           ? {
               ...item,
               quantity: item.quantity + 1,
             }
           : item,
-      );
-
-      set({
-        cartItems: updatedItems,
-        error: null,
-      });
-    } catch (error) {
-      set({
-        error: "Failed to update quantity.",
-      });
-    }
+      ),
+    }));
   },
 
   decreaseQuantity: (variantId) => {
-    try {
-      get().clearError();
-
-      const updatedItems = get()
-        .cartItems.map((item) =>
+    set((state) => ({
+      cartItems: state.cartItems
+        .map((item) =>
           item.variantId === variantId
             ? {
                 ...item,
@@ -112,35 +64,38 @@ const useCartStore = create((set, get) => ({
               }
             : item,
         )
-        .filter((item) => item.quantity > 0);
-
-      set({
-        cartItems: updatedItems,
-        error: null,
-      });
-    } catch (error) {
-      set({
-        error: "Failed to update quantity.",
-      });
-    }
+        .filter((item) => item.quantity > 0),
+    }));
   },
 
-  clearCart: () => {
+  updateQuantity: (variantId, quantity) => {
+    set((state) => ({
+      cartItems: state.cartItems.map((item) =>
+        item.variantId === variantId
+          ? {
+              ...item,
+              quantity,
+            }
+          : item,
+      ),
+    }));
+  },
+
+  clearCart: () =>
     set({
       cartItems: [],
       error: null,
-    });
-  },
+    }),
 
   getCartTotal: () => {
     return get().cartItems.reduce(
-      (total, item) => total + item.finalPrice * item.quantity,
+      (sum, item) => sum + item.finalPrice * item.quantity,
       0,
     );
   },
 
   getCartCount: () => {
-    return get().cartItems.reduce((total, item) => total + item.quantity, 0);
+    return get().cartItems.reduce((sum, item) => sum + item.quantity, 0);
   },
 }));
 
