@@ -1,21 +1,59 @@
 import { FiShoppingCart, FiMinus, FiPlus, FiStar } from "react-icons/fi";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { getSingleCookie } from "../../services/cookie.service";
 import CookieDetailsSkeleton from "../skeletons/CookieDetailsSkeleton";
 import placeholderCookie from "../../assets/images/placeholder-cookie.png";
-import { addToCart, getCart } from "../../services/cart.service";
+import { addToCart, emptyCart, getCart } from "../../services/cart.service";
 import useCartStore from "../../store/cartStore";
 
 const CookieDetails = () => {
+  const navigate = useNavigate();
   const { slug } = useParams();
-  const { setCartItems, setError } = useCartStore();
+  const { setCartItems, setError, clearCart } = useCartStore();
   const [cookie, setCookie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [variantIdx, setVariantIdx] = useState(0);
   const [cartLoading, setCartLoading] = useState(false);
+
+  const buyNowHandler = async () => {
+    try {
+      setCartLoading(true);
+      setError(null);
+
+      clearCart();
+      await emptyCart();
+
+      const body = {
+        cookieId: cookie._id,
+        quantity,
+        variantId: selectedVariant._id,
+      };
+
+      const data = await addToCart(body);
+
+      if (data.success) {
+        const cartData = await getCart();
+
+        if (cartData.success) {
+          setCartItems(cartData.cart || []);
+          navigate("/cart");
+          toast.success("Proceeding to cart 🛒");
+        }
+      }
+    } catch (error) {
+      setError(
+        error.response?.data?.message || "Failed to proceed with Buy Now",
+      );
+      toast.error(
+        error.response?.data?.message || "Failed to proceed with Buy Now",
+      );
+    } finally {
+      setCartLoading(false);
+    }
+  };
 
   const addToCartHandler = async () => {
     try {
@@ -80,20 +118,20 @@ const CookieDetails = () => {
   if (!cookie) {
     return (
       <div
-        className='
+        className="
           min-h-screen
           bg-[#FFF6EC]
           flex
           items-center
           justify-center
-        '
+        "
       >
         <h2
-          className='
+          className="
             text-3xl
             font-bold
             text-[#2B1D16]
-          '
+          "
         >
           Cookie not found 🍪
         </h2>
@@ -105,46 +143,46 @@ const CookieDetails = () => {
 
   return (
     <div
-      className='
+      className="
         min-h-screen
         bg-[#FFF6EC]
         px-6
         py-12
-      '
+      "
     >
       <div
-        className='
+        className="
           max-w-7xl
           mx-auto
-        '
+        "
       >
         {/* Main Section */}
         <div
-          className='
+          className="
             grid
             lg:grid-cols-2
             gap-12
             items-start
-          '
+          "
         >
           {/* Left */}
           <div>
             <div
-              className='
+              className="
                 bg-white
                 rounded-[40px]
                 overflow-hidden
                 shadow-xl
-              '
+              "
             >
               <img
                 src={cookie?.images?.[0] || placeholderCookie}
                 alt={cookie?.name}
-                className='
+                className="
                   w-full
                   h-137.5
                   object-cover
-                '
+                "
               />
             </div>
           </div>
@@ -153,7 +191,7 @@ const CookieDetails = () => {
           <div>
             {/* Category */}
             <span
-              className='
+              className="
                 bg-[#FFF1DD]
                 text-[#D98B2B]
                 px-4
@@ -161,56 +199,56 @@ const CookieDetails = () => {
                 rounded-full
                 text-sm
                 font-semibold
-              '
+              "
             >
               {cookie?.category}
             </span>
 
             {/* Title */}
             <h1
-              className='
+              className="
                 text-5xl
                 font-bold
                 text-[#2B1D16]
                 mt-6
                 leading-tight
-              '
+              "
             >
               {cookie?.name}
             </h1>
 
             {/* Rating */}
             <div
-              className='
+              className="
                 flex
                 items-center
                 gap-3
                 mt-5
-              '
+              "
             >
               <div
-                className='
+                className="
                   flex
                   items-center
                   text-[#D98B2B]
-                '
+                "
               >
-                <FiStar fill='#D98B2B' />
+                <FiStar fill="#D98B2B" />
 
                 <span
-                  className='
+                  className="
                     ml-2
                     font-semibold
-                  '
+                  "
                 >
                   {cookie?.ratings}
                 </span>
               </div>
 
               <span
-                className='
+                className="
                   text-gray-500
-                '
+                "
               >
                 ({cookie?.totalReviews} reviews)
               </span>
@@ -218,60 +256,60 @@ const CookieDetails = () => {
 
             {/* Description */}
             <p
-              className='
+              className="
                 mt-8
                 text-gray-600
                 leading-8
                 text-lg
-              '
+              "
             >
               {cookie?.description}
             </p>
 
             {/* Price */}
             <div
-              className='
+              className="
                 mt-8
                 flex
                 items-center
                 gap-4
-              '
+              "
             >
               <span
-                className='
+                className="
                   text-5xl
                   font-bold
                   text-[#D98B2B]
-                '
+                "
               >
                 ₹{selectedVariant?.discountPrice}
               </span>
 
               <span
-                className='
+                className="
                   text-2xl
                   text-gray-400
                   line-through
-                '
+                "
               >
                 ₹{selectedVariant?.price}
               </span>
             </div>
 
             {/* Weight */}
-            <div className='mt-8'>
+            <div className="mt-8">
               <h3
-                className='
+                className="
                   font-bold
                   text-[#2B1D16]
                   mb-3
-                '
+                "
               >
                 Weight
               </h3>
               {!cookie.variants || cookie.variants.length === 0 ? (
                 <div
-                  className='
+                  className="
                     inline-flex
                     items-center
                     bg-white
@@ -279,12 +317,12 @@ const CookieDetails = () => {
                     py-3
                     rounded-full
                     shadow
-                  '
+                  "
                 >
                   500g
                 </div>
               ) : (
-                <div className='flex gap-3 items-center flex-wrap'>
+                <div className="flex gap-3 items-center flex-wrap">
                   {cookie.variants.map((variant, index) => (
                     <div
                       key={variant._id}
@@ -320,36 +358,35 @@ const CookieDetails = () => {
               )}
             </div>
 
-            {/* Ingredients */}
-            <div className='mt-8'>
+            <div className="mt-8">
               <h3
-                className='
+                className="
                   font-bold
                   text-[#2B1D16]
                   mb-4
-                '
+                "
               >
                 Ingredients
               </h3>
 
               <div
-                className='
+                className="
                   flex
                   flex-wrap
                   gap-3
-                '
+                "
               >
                 {cookie?.ingredients?.map((ingredient, index) => (
                   <span
                     key={index}
-                    className='
+                    className="
                         bg-white
                         px-4
                         py-2
                         rounded-full
                         text-sm
                         shadow
-                      '
+                      "
                   >
                     {ingredient}
                   </span>
@@ -357,27 +394,26 @@ const CookieDetails = () => {
               </div>
             </div>
 
-            {/* Quantity */}
-            <div className='mt-10'>
+            <div className="mt-10">
               <h3
-                className='
+                className="
                   font-bold
                   text-[#2B1D16]
                   mb-4
-                '
+                "
               >
                 Quantity
               </h3>
 
               <div
-                className='
+                className="
                   inline-flex
                   items-center
                   bg-white
                   rounded-full
                   p-2
                   shadow
-                '
+                "
               >
                 <button
                   onClick={() => quantity > 1 && setQuantity(quantity - 1)}
@@ -407,11 +443,11 @@ const CookieDetails = () => {
                 </button>
 
                 <span
-                  className='
+                  className="
                     px-6
                     text-xl
                     font-semibold
-                  '
+                  "
                 >
                   {quantity}
                 </span>
@@ -448,13 +484,13 @@ const CookieDetails = () => {
 
             {/* Buttons */}
             <div
-              className='
+              className="
                 mt-10
                 flex
                 flex-col
                 sm:flex-row
                 gap-5
-              '
+              "
             >
               <button
                 onClick={addToCartHandler}
@@ -470,6 +506,7 @@ const CookieDetails = () => {
                   gap-3
                   transition
                   text-lg
+                  cursor-pointer
                   ${
                     cartLoading || selectedVariant?.stock <= 0
                       ? `
@@ -495,7 +532,7 @@ const CookieDetails = () => {
               </button>
 
               <button
-                className='
+                className="
                   flex-1
                   border
                   border-[#D98B2B]
@@ -504,26 +541,37 @@ const CookieDetails = () => {
                   rounded-full
                   font-semibold
                   transition
-                  hover:bg-[#D98B2B]
-                  hover:text-white
-                  text-lg
-                '
+                  cursor-pointer
+                  disabled:bg-gray-200
+                  disabled:border-gray-300
+                  disabled:text-gray-500
+                  disabled:cursor-not-allowed
+                  disabled:opacity-70
+                  disabled:hover:bg-gray-200
+                  disabled:hover:text-gray-500
+                "
+                onClick={buyNowHandler}
+                disabled={cartLoading || selectedVariant?.stock <= 0}
               >
-                Buy Now
+                {cartLoading
+                  ? "Processing..."
+                  : selectedVariant?.stock <= 0
+                    ? "Out of Stock"
+                    : "Buy Now"}
               </button>
             </div>
 
             {selectedVariant?.stock > 0 && selectedVariant?.stock <= 5 ? (
-              <p className='mt-3 text-orange-500 font-medium'>
+              <p className="mt-3 text-orange-500 font-medium">
                 Only {selectedVariant.stock} left in stock
               </p>
             ) : (
               <p
-                className='
+                className="
                 mt-6
                 text-green-600
                 font-semibold
-              '
+              "
               >
                 {selectedVariant?.stock} items available
               </p>
@@ -532,66 +580,66 @@ const CookieDetails = () => {
         </div>
 
         {/* Reviews */}
-        <div className='mt-24'>
+        <div className="mt-24">
           <h2
-            className='
+            className="
               text-4xl
               font-bold
               text-[#2B1D16]
               mb-10
-            '
+            "
           >
             Customer Reviews
           </h2>
 
           {cookie?.reviews?.length > 0 ? (
             <div
-              className='
+              className="
                 grid
                 md:grid-cols-2
                 gap-8
-              '
+              "
             >
               {cookie?.reviews?.map((review, index) => (
                 <div
                   key={index}
-                  className='
+                  className="
                       bg-white
                       rounded-[28px]
                       shadow-lg
                       p-8
-                    '
+                    "
                 >
                   <div
-                    className='
+                    className="
                         flex
                         items-center
                         justify-between
-                      '
+                      "
                   >
                     <h3
-                      className='
+                      className="
                           text-xl
                           font-bold
                           text-[#2B1D16]
-                        '
+                        "
                     >
                       {review.name}
                     </h3>
 
                     <div
-                      className='
+                      className="
                           flex
                           items-center
                           text-[#D98B2B]
-                        '
+                        "
                     >
-                      <FiStar fill='#D98B2B' />
+                      <FiStar fill="#D98B2B" />
 
                       <span
-                        className='
+                        className="
                             ml-2
-                          '
+                          "
                       >
                         {review.rating}
                       </span>
@@ -599,11 +647,11 @@ const CookieDetails = () => {
                   </div>
 
                   <p
-                    className='
+                    className="
                         mt-5
                         text-gray-600
                         leading-8
-                      '
+                      "
                   >
                     {review?.review}
                   </p>
@@ -612,10 +660,10 @@ const CookieDetails = () => {
             </div>
           ) : (
             <p
-              className='
+              className="
                 text-gray-500
                 text-lg
-              '
+              "
             >
               No reviews yet 🍪
             </p>

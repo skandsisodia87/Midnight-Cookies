@@ -4,6 +4,7 @@ import {
   addToCart,
   getCart,
   updateCartItemQuantity,
+  updateCartItemsQuantity,
   removeCartItem,
   clearCart,
 } from "../controllers/cart.controller.js";
@@ -15,6 +16,8 @@ router.post("/add", verifyToken, addToCart);
 router.get("/", verifyToken, getCart);
 
 router.patch("/update/:cookieId", verifyToken, updateCartItemQuantity);
+
+router.patch("/batch-update", verifyToken, updateCartItemsQuantity);
 
 router.delete("/remove/:cookieId", verifyToken, removeCartItem);
 

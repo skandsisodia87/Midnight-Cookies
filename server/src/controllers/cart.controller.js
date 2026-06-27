@@ -229,6 +229,65 @@ export const updateCartItemQuantity = async (req, res) => {
   }
 };
 
+export const updateCartItemsQuantity = async (req, res) => {
+  try {
+    const { items } = req.body;
+
+    if (!Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "At least one cart item update is required",
+      });
+    }
+
+    const cart = await Cart.findOne({ userId: req.user._id });
+
+    if (!cart) {
+      return res.status(404).json({
+        success: false,
+        message: "Cart not found",
+      });
+    }
+
+    for (const update of items) {
+      const { cookieId, quantity } = update;
+
+      if (!cookieId || typeof quantity !== "number") {
+        continue;
+      }
+
+      const item = cart.items.find(
+        (cartItem) => cartItem.cookieId.toString() === cookieId.toString(),
+      );
+
+      if (!item) {
+        continue;
+      }
+
+      if (quantity <= 0) {
+        cart.items = cart.items.filter(
+          (cartItem) => cartItem.cookieId.toString() !== cookieId.toString(),
+        );
+      } else {
+        item.quantity = quantity;
+      }
+    }
+
+    await cart.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Cart updated successfully",
+      cart,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 export const removeCartItem = async (req, res) => {
   try {
     const { cookieId } = req.params;
