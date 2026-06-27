@@ -83,7 +83,7 @@ export const loginUser = async (req, res) => {
     const cookieOptions = {
       httpOnly: true,
       secure: env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "none",  // for same domain use sameSite: "strict"
     };
 
     return res
