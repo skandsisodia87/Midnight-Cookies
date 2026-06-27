@@ -10,7 +10,7 @@ import useCartStore from "../../store/cartStore";
 
 const CookieDetails = () => {
   const { slug } = useParams();
-  const { setCartItems } = useCartStore();
+  const { setCartItems, setError } = useCartStore();
   const [cookie, setCookie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -20,6 +20,7 @@ const CookieDetails = () => {
   const addToCartHandler = async () => {
     try {
       setCartLoading(true);
+      setError(null);
 
       const body = {
         cookieId: cookie._id,
@@ -39,6 +40,7 @@ const CookieDetails = () => {
         }
       }
     } catch (error) {
+      setError(error.response?.data?.message || "Failed to add item to cart");
       toast.error(
         error.response?.data?.message || "Failed to add item to cart",
       );

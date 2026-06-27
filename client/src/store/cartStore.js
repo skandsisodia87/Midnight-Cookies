@@ -8,6 +8,10 @@ const useCartStore = create((set, get) => ({
     set({ error });
   },
 
+  clearError: () => {
+    set({ error: null });
+  },
+
   setCartItems: (items) => {
     set({
       cartItems: items || [],
@@ -17,6 +21,8 @@ const useCartStore = create((set, get) => ({
 
   addToCart: (product) => {
     try {
+      get().clearError();
+
       const existingItem = get().cartItems.find(
         (item) => item.variantId === product.variantId,
       );
@@ -52,6 +58,8 @@ const useCartStore = create((set, get) => ({
 
   removeFromCart: (variantId) => {
     try {
+      get().clearError();
+
       const updatedItems = get().cartItems.filter(
         (item) => item.variantId !== variantId,
       );
@@ -69,6 +77,8 @@ const useCartStore = create((set, get) => ({
 
   increaseQuantity: (variantId) => {
     try {
+      get().clearError();
+
       const updatedItems = get().cartItems.map((item) =>
         item.variantId === variantId
           ? {
@@ -91,6 +101,8 @@ const useCartStore = create((set, get) => ({
 
   decreaseQuantity: (variantId) => {
     try {
+      get().clearError();
+
       const updatedItems = get()
         .cartItems.map((item) =>
           item.variantId === variantId

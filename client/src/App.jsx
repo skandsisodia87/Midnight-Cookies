@@ -27,14 +27,13 @@ import LandingPageLoader from "./components/pages/LandingPageLoader";
 
 const App = () => {
   const { isAuthenticated } = useAuthStore();
-  const { setCartItems, clearCart } = useCartStore();
+  const { setCartItems, clearCart, setError } = useCartStore();
   const [cartLoading, setCartLoading] = useState(false);
-  const [cartError, setCartError] = useState(null);
 
   useEffect(() => {
     const fetchCart = async () => {
       setCartLoading(true);
-      setCartError(null);
+      setError(null);
 
       try {
         const data = await getCart();
@@ -42,12 +41,12 @@ const App = () => {
         if (data?.success) {
           setCartItems(data.cart || []);
         } else {
-          setCartError("Failed to load cart");
+          setError("Failed to load cart");
           toast.error("Failed to load your cart. Please refresh the page.");
         }
       } catch (error) {
         console.error("Cart fetch error:", error);
-        setCartError("Failed to load cart");
+        setError("Failed to load cart");
 
         if (!error.response) {
           toast.error(
@@ -70,9 +69,9 @@ const App = () => {
       fetchCart();
     } else {
       clearCart();
-      setCartError(null);
+      setError(null);
     }
-  }, [isAuthenticated, setCartItems, clearCart]);
+  }, [isAuthenticated, setCartItems, clearCart, setError]);
 
   return (
     <Suspense fallback={<LandingPageLoader />}>

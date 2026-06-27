@@ -11,10 +11,12 @@ const CookieCard = ({ cookie }) => {
   const [quantity, setQuantity] = useState(0);
   const [loading, setLoading] = useState(false);
   const [isItemAddedToCart, setIsItemAddedToCart] = useState(false);
-  const { setCartItems, cartItems = [] } = useCartStore();
+  const { setCartItems, cartItems = [], setError } = useCartStore();
 
   const addToCartHandler = async () => {
     setLoading(true);
+    setError(null);
+
     const body = {
       cookieId: cookie._id,
       quantity: 1,
@@ -38,6 +40,7 @@ const CookieCard = ({ cookie }) => {
         }
       }
     } catch (error) {
+      setError(error.response?.data?.message || "Failed to add item to the cart");
       toast.error(
         error.response?.data?.message || "Failed to add item to the cart",
       );

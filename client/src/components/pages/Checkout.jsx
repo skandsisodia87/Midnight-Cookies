@@ -8,7 +8,7 @@ import useCartStore from "../../store/cartStore";
 import { emptyCart } from "../../services/cart.service";
 
 export default function CheckoutPage() {
-  const { cartItems, clearCart } = useCartStore();
+  const { cartItems, clearCart, setError } = useCartStore();
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
 
@@ -64,6 +64,7 @@ export default function CheckoutPage() {
 
     try {
       setOrdering(true);
+      setError(null);
 
       const items = cartItems.map((it) => ({
         cookieId: it.cookieId,
@@ -95,6 +96,7 @@ export default function CheckoutPage() {
         toast.error(res?.message || "Failed to place order");
       }
     } catch (error) {
+      setError(error.response?.data?.message || "Failed to place order");
       toast.error(error.response?.data?.message || "Failed to place order");
     } finally {
       setOrdering(false);

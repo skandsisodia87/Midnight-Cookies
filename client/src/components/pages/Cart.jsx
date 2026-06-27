@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import useCartStore from "../../store/cartStore";
 import ErrorPage from "../../common/ErrorPage";
 import NoCartFound from "../../assets/images/no-cart-found.png";
+import { removeCartItem } from "../../services/cart.service";
 
 const Cart = () => {
   const {
@@ -11,7 +12,18 @@ const Cart = () => {
     increaseQuantity,
     decreaseQuantity,
     removeFromCart,
+    setError,
   } = useCartStore();
+
+  const handleRemoveItem = async (item) => {
+    try {
+      setError(null);
+      await removeCartItem(item.cookieId);
+      removeFromCart(item.variantId);
+    } catch (error) {
+      setError("Failed to remove item from cart.");
+    }
+  };
 
   if (error) {
     return (
@@ -158,7 +170,7 @@ const Cart = () => {
                     </div>
 
                     <button
-                      onClick={() => removeFromCart(item.variantId)}
+                      onClick={() => handleRemoveItem(item)}
                       className="
                         text-red-500
                         hover:bg-red-50
@@ -169,13 +181,13 @@ const Cart = () => {
                         items-center
                         justify-center
                         transition
+                        cursor-pointer
                       "
                     >
                       <FiTrash2 size={20} />
                     </button>
                   </div>
 
-                  {/* Quantity */}
                   <div className="mt-8">
                     <div
                       className="
