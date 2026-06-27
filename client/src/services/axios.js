@@ -20,9 +20,9 @@ api.interceptors.response.use(
       error.response?.status === 401 &&
       error.response?.data?.code === "LOGOUT_USER"
     ) {
-      // useAuthStore.getState().logout();
+      useAuthStore.getState().logout();
 
-      // window.location.href = "/login";
+      window.location.href = "/login";
     }
 
     return Promise.reject(error);
