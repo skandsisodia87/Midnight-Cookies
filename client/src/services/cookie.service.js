@@ -12,5 +12,5 @@ export const getSingleCookie = async (slug) => {
 
 export const getFeaturedCookie = async () => {
   const response = await api.get(`/cookie/featured`);
-  return response.data;
+  return response.data?.cookies ?? [];
 };

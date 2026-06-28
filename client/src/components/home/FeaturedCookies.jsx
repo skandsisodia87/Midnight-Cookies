@@ -1,29 +1,41 @@
-import { useState } from "react";
 import CookieCard from "../cookies/CookieCard.jsx";
-import { useEffect } from "react";
 import { toast } from "sonner";
 import CookieCardSkeleton from "../skeletons/CookieCardSkeleton.jsx";
 import { getFeaturedCookie } from "../../services/cookie.service.js";
+import { useQuery } from "@tanstack/react-query";
+import ErrorPage from "../../common/ErrorPage.jsx";
 
 const FeaturedCookies = () => {
-  const [cookies, setCookies] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const {
+    data: cookies,
+    error,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["featured-cookie"],
+    queryFn: getFeaturedCookie,
+    staleTime: 3 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  });
 
-  useEffect(() => {
-    const fetchCookie = async () => {
-      try {
-        setLoading(true);
-        const data = await getFeaturedCookie();
-        setCookies(data.cookies);
-      } catch (error) {
-        toast.error(error.response?.data?.message || error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCookie();
-  }, []);
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-[#FFF6EC] px-6 py-12">
+        <div className="max-w-4xl mx-auto">
+          <ErrorPage
+            title="Unable To Featured Cookie"
+            message={
+              error?.response?.data?.message ||
+              error?.message ||
+              "Something went wrong"
+            }
+            buttonText="Reload Page"
+            redirectLink="/"
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <section
@@ -42,7 +54,7 @@ const FeaturedCookies = () => {
           </p>
         </div>
 
-        {loading ? (
+        {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {Array.from({
               length: 3,
@@ -52,7 +64,7 @@ const FeaturedCookies = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {cookies.map((cookie) => (
+            {cookies?.map((cookie) => (
               <CookieCard key={cookie._id} cookie={cookie} />
             ))}
           </div>
