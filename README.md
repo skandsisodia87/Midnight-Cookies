@@ -161,7 +161,6 @@ Create a `.env` file inside the `server` folder.
 ```env
 PORT = 3000
 MONGO_URI = your_mongodb_connection_string
-CORS_ORIGIN = origin_url
 ACCESS_TOKEN_SECRET = your_access_token_secret
 ACCESS_TOKEN_EXPIRY = 15m
 REFRESH_TOKEN_SECRET = your_refresh_token_secret
