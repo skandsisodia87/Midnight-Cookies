@@ -48,33 +48,33 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className='min-h-screen bg-[#FFF6EC] flex items-center justify-center px-6 py-12'>
+    <div className="min-h-screen bg-[#FFF6EC] flex items-center justify-center px-4 sm:px-6 py-6 sm:py-12">
       <div
-        className='
+        className="
           w-full
           max-w-md
           bg-white
-          rounded-4xl
+          rounded-3xl sm:rounded-4xl
           shadow-2xl
-          p-8
-        '
+          p-6 sm:p-8
+        "
       >
-        {/* Heading */}
-        <div className='text-center'>
-          <h1 className='text-4xl font-bold text-[#2B1D16]'>
+        <div className="text-center">
+          <h1 className="text-3xl sm:text-4xl font-bold text-[#2B1D16]">
             Forgot Password 🔐
           </h1>
 
-          <p className='mt-3 text-gray-500 leading-7'>
+          <p className="mt-2 sm:mt-3 text-sm sm:text-base text-gray-500 leading-6 sm:leading-7">
             Enter your email address and we’ll send you a password reset link.
           </p>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit(onSubmit)} className='mt-10 space-y-6'>
-          {/* Email */}
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="mt-8 sm:mt-10 space-y-5 sm:space-y-6"
+        >
           <div>
-            <label className='block mb-2 font-medium text-[#2B1D16]'>
+            <label className="block mb-2 font-medium text-[#2B1D16]">
               Email Address
             </label>
 
@@ -84,8 +84,8 @@ const ForgotPassword = () => {
                 items-center
                 border
                 rounded-full
-                px-5
-                py-4
+                px-4 sm:px-5
+                py-3.5 sm:py-4
                 ${
                   errors.email
                     ? "border-red-500"
@@ -93,60 +93,54 @@ const ForgotPassword = () => {
                 }
               `}
             >
-              <FiMail className='text-gray-400' />
+              <FiMail className="text-gray-400 text-lg" />
 
               <input
-                type='email'
-                placeholder='Enter your email'
-                className='
+                type="email"
+                placeholder="Enter your email"
+                className="
                   w-full
                   ml-3
                   outline-none
                   bg-transparent
-                '
+                  text-sm sm:text-base
+                "
                 {...register("email")}
               />
             </div>
 
-            {/* Error Message */}
             {errors.email && (
-              <p className='text-red-500 text-sm mt-2'>
+              <p className="mt-2 text-xs sm:text-sm text-red-500">
                 {errors.email.message}
               </p>
             )}
           </div>
 
-          {/* Submit */}
           <button
-            type='submit'
+            type="submit"
             disabled={isPending}
-            className='
+            className="
               w-full
               bg-[#D98B2B]
               hover:bg-[#c97818]
               text-white
-              py-4
+              py-3.5 sm:py-4
               rounded-full
               font-semibold
               transition
               disabled:opacity-50
               disabled:cursor-not-allowed
-            '
+            "
           >
             {isPending ? "Sending..." : "Send Reset Link"}
           </button>
         </form>
 
-        {/* Bottom */}
-        <p className='text-center text-gray-500 mt-8'>
+        <p className="text-center text-sm sm:text-base text-gray-500 mt-6 sm:mt-8">
           Remember your password?{" "}
           <Link
-            to='/login'
-            className='
-              text-[#D98B2B]
-              font-semibold
-              hover:underline
-            '
+            to="/login"
+            className="text-[#D98B2B] font-semibold hover:underline"
           >
             Back to Login
           </Link>

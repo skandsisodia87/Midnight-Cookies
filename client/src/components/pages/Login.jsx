@@ -59,142 +59,134 @@ const Login = () => {
   };
 
   return (
-    <div className='min-h-screen bg-[#FFF6EC] flex items-center justify-center px-6 py-12'>
+    <div className="min-h-screen bg-[#FFF6EC] flex items-center justify-center px-4 sm:px-6 py-6 sm:py-12">
       <div
-        className='
+        className="
           w-full
           max-w-md
           bg-white
-          rounded-4xl
+          rounded-3xl sm:rounded-4xl
           shadow-2xl
-          p-8
-        '
+          p-6 sm:p-8
+        "
       >
-        {/* Heading */}
-        <div className='text-center'>
-          <h1 className='text-4xl font-bold text-[#2B1D16]'>Welcome Back 🍪</h1>
+        <div className="text-center">
+          <h1 className="text-3xl sm:text-4xl font-bold text-[#2B1D16]">
+            Welcome Back 🍪
+          </h1>
 
-          <p className='mt-3 text-gray-500'>
+          <p className="mt-2 sm:mt-3 text-sm sm:text-base text-gray-500">
             Login to continue your cookie journey.
           </p>
         </div>
 
-        {/* Form */}
-        <form className='mt-10 space-y-6' onSubmit={handleSubmit}>
-          {/* Email */}
+        <form
+          className="mt-8 sm:mt-10 space-y-5 sm:space-y-6"
+          onSubmit={handleSubmit}
+        >
           <div>
-            <label className='block mb-2 font-medium text-[#2B1D16]'>
+            <label className="block mb-2 font-medium text-[#2B1D16]">
               Email
             </label>
 
             <div
-              className='
+              className="
                 flex
                 items-center
                 border
                 border-gray-300
                 rounded-full
-                px-5
-                py-4
+                px-4 sm:px-5
+                py-3.5 sm:py-4
                 focus-within:border-[#D98B2B]
-              '
+              "
             >
-              <FiMail className='text-gray-400' />
+              <FiMail className="text-gray-400 text-lg" />
 
               <input
-                type='email'
-                placeholder='Enter your email'
-                className='
+                type="email"
+                placeholder="Enter your email"
+                className="
                   w-full
                   ml-3
                   outline-none
                   bg-transparent
-                '
+                  text-sm sm:text-base
+                "
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
           </div>
 
-          {/* Password */}
           <div>
-            <label className='block mb-2 font-medium text-[#2B1D16]'>
+            <label className="block mb-2 font-medium text-[#2B1D16]">
               Password
             </label>
 
             <div
-              className='
+              className="
                 flex
                 items-center
                 border
                 border-gray-300
                 rounded-full
-                px-5
-                py-4
+                px-4 sm:px-5
+                py-3.5 sm:py-4
                 focus-within:border-[#D98B2B]
-              '
+              "
             >
-              <FiLock className='text-gray-400' />
+              <FiLock className="text-gray-400 text-lg" />
 
               <input
-                type='password'
-                placeholder='Enter your password'
-                className='
+                type="password"
+                placeholder="Enter your password"
+                className="
                   w-full
                   ml-3
                   outline-none
                   bg-transparent
-                '
+                  text-sm sm:text-base
+                "
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
           </div>
 
-          {/* Forgot Password */}
-          <div className='text-right'>
+          <div className="text-right">
             <Link
-              to='/forgot-password'
-              className='
-                text-sm
-                text-[#D98B2B]
-                hover:underline
-              '
+              to="/forgot-password"
+              className="text-sm text-[#D98B2B] hover:underline"
             >
               Forgot Password?
             </Link>
           </div>
 
-          {/* Submit */}
           <button
-            type='submit'
+            type="submit"
             disabled={loading}
-            className='
+            className="
               w-full
               bg-[#D98B2B]
               hover:bg-[#c97818]
               text-white
-              py-4
+              py-3.5 sm:py-4
               rounded-full
               font-semibold
               transition
               disabled:opacity-50
-            '
+            "
           >
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
-        {/* Bottom */}
-        <p className='text-center text-gray-500 mt-8'>
+        <p className="text-center text-sm sm:text-base text-gray-500 mt-6 sm:mt-8">
           Don’t have an account?{" "}
           <Link
-            to='/register'
-            className='
-              text-[#D98B2B]
-              font-semibold
-              hover:underline
-            '
+            to="/register"
+            className="text-[#D98B2B] font-semibold hover:underline"
           >
             Create Account
           </Link>

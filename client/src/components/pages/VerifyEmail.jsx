@@ -59,120 +59,126 @@ const VerifyEmail = () => {
   };
 
   return (
-    <div className='min-h-screen bg-[#FFF6EC] flex items-center justify-center px-6 py-12'>
+    <div className="min-h-screen bg-[#FFF6EC] flex items-center justify-center px-4 sm:px-6 py-6 sm:py-12">
       <div
-        className='
+        className="
           w-full
           max-w-md
           bg-white
-          rounded-4xl
+          rounded-3xl sm:rounded-4xl
           shadow-2xl
-          p-8
-        '
+          p-6 sm:p-8
+        "
       >
-        {/* Heading */}
-        <div className='text-center'>
+        <div className="text-center">
           <div
-            className='
-              w-20
-              h-20
+            className="
+              w-16
+              h-16
+              sm:w-20
+              sm:h-20
               mx-auto
               rounded-full
               bg-[#FFF1DD]
               flex
               items-center
               justify-center
-              text-4xl
-            '
+              text-3xl
+              sm:text-4xl
+            "
           >
             📩
           </div>
 
-          <h1 className='text-4xl font-bold text-[#2B1D16] mt-6'>
+          <h1 className="mt-5 sm:mt-6 text-3xl sm:text-4xl font-bold text-[#2B1D16]">
             Verify Email
           </h1>
 
-          <p className='mt-4 text-gray-500 leading-7'>
+          <p className="mt-3 sm:mt-4 text-sm sm:text-base text-gray-500 leading-6 sm:leading-7">
             Enter the 6-digit verification code sent to your email.
           </p>
         </div>
 
-        {/* OTP Inputs */}
-        <div className='flex justify-center gap-3 mt-10'>
+        <div className="flex justify-center gap-2 sm:gap-3 mt-8 sm:mt-10">
           {code.map((digit, index) => (
             <input
               key={index}
               id={`otp-${index}`}
-              type='text'
+              type="text"
               maxLength={1}
               value={digit}
               onChange={(e) => handleChange(e.target.value, index)}
-              className='
-                w-14
-                h-14
-                rounded-2xl
+              className="
+                w-10
+                h-10
+                sm:w-14
+                sm:h-14
+                rounded-xl
+                sm:rounded-2xl
                 border
                 border-gray-300
                 text-center
-                text-2xl
+                text-lg
+                sm:text-2xl
                 font-bold
                 outline-none
                 focus:border-[#D98B2B]
-              '
+              "
             />
           ))}
         </div>
 
-        {/* Verify Button */}
         <button
           onClick={handleSubmit}
           disabled={loading}
-          className='
+          className="
             w-full
-            mt-10
+            mt-8
+            sm:mt-10
             bg-[#D98B2B]
             hover:bg-[#c97818]
             text-white
-            py-4
+            py-3.5
+            sm:py-4
             rounded-full
             font-semibold
             transition
             disabled:opacity-50
             disabled:cursor-not-allowed
-          '
+          "
         >
           {loading ? "Verifying..." : "Verify Email"}
         </button>
 
-        {/* Resend */}
-        <div className='text-center mt-8'>
-          <p className='text-gray-500'>Didn’t receive the code?</p>
+        <div className="text-center mt-6 sm:mt-8">
+          <p className="text-sm sm:text-base text-gray-500">
+            Didn’t receive the code?
+          </p>
 
           <button
-            className='
+            className="
               mt-2
               text-[#D98B2B]
               font-semibold
               hover:underline
-            '
+            "
           >
             Resend Code
           </button>
         </div>
 
-        {/* Back */}
-        <p className='text-center text-gray-500 mt-8'>
+        <p className="text-center text-sm sm:text-base text-gray-500 mt-6 sm:mt-8">
           <button
             onClick={() =>
               navigate("/login", {
                 replace: true,
               })
             }
-            className='
-                text-[#D98B2B]
-                font-semibold
-                hover:underline
-            '
+            className="
+              text-[#D98B2B]
+              font-semibold
+              hover:underline
+            "
           >
             Back to Login
           </button>
