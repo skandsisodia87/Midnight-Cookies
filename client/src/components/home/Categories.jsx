@@ -1,73 +1,79 @@
 const categories = [
   {
     title: "Chocolate",
-    image: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e",
+    image:
+      "https://res.cloudinary.com/dvxwaltk8/image/upload/v1778474022/double_choco-chip_nl8ho9.jpg",
   },
 
   {
     title: "Oreo",
-    image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35",
+    image:
+      "https://res.cloudinary.com/dvxwaltk8/image/upload/v1778477269/oreo-dream_ktf5ba.png",
   },
 
   {
     title: "Premium",
-    image: "https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e",
+    image:
+      "https://res.cloudinary.com/dvxwaltk8/image/upload/v1778476344/red-velvet-cookie_yupu07.png",
   },
 ];
 
 const Categories = () => {
   return (
-    <section className='py-24 px-6 bg-white'>
-      <div className='max-w-7xl mx-auto'>
-        {/* Heading */}
-        <div className='text-center mb-16'>
-          <h2 className='text-5xl font-bold text-[#2B1D16]'>
+    <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-white">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-10 sm:mb-12 lg:mb-16">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#2B1D16]">
             Explore Categories
           </h2>
 
-          <p className='mt-4 text-gray-600 max-w-2xl mx-auto leading-7'>
+          <p className="mt-3 sm:mt-4 text-sm sm:text-base text-gray-600 max-w-2xl mx-auto leading-6 sm:leading-7">
             Discover cookies crafted for every craving.
           </p>
         </div>
 
-        {/* Grid */}
-        <div className='grid md:grid-cols-3 gap-8'>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
           {categories.map((category, index) => (
             <div
               key={index}
-              className='
+              className="
                 relative
                 overflow-hidden
-                rounded-4xl
+                rounded-3xl
+                lg:rounded-4xl
                 group
                 cursor-pointer
-                h-100
-              '
+                h-72
+                sm:h-80
+                lg:h-100
+              "
             >
               <img
                 src={category.image}
                 alt={category.title}
-                className='
+                className="
                   w-full
                   h-full
                   object-cover
-                  group-hover:scale-110
-                  transition
+                  transition-transform
                   duration-700
-                '
+                  group-hover:scale-110
+                "
               />
 
               <div
-                className='
+                className="
                   absolute
                   inset-0
                   bg-black/40
                   flex
                   items-end
-                  p-8
-                '
+                  p-5
+                  sm:p-6
+                  lg:p-8
+                "
               >
-                <h3 className='text-4xl font-bold text-white'>
+                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
                   {category.title}
                 </h3>
               </div>
