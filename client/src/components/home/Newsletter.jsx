@@ -1,4 +1,21 @@
+import { useMutation } from "@tanstack/react-query";
+import { subscribeNewsletter } from "../../services/newsletter.service";
+import { toast } from "sonner";
+import { useState } from "react";
+
 const Newsletter = () => {
+  const [email, setEmail] = useState("");
+  const { mutate, isPending } = useMutation({
+    mutationFn: subscribeNewsletter,
+    onSuccess: (data) => {
+      toast.success(data.message);
+      setEmail("");
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    },
+  });
+
   return (
     <section className="bg-[#1F140F] py-12 sm:py-16 lg:py-24 px-4 sm:px-6">
       <div
@@ -43,6 +60,9 @@ const Newsletter = () => {
               sm:text-base
               outline-none
             "
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            autoComplete="off"
           />
 
           <button
@@ -59,9 +79,19 @@ const Newsletter = () => {
               font-semibold
               transition
               whitespace-nowrap
+              cursor-pointer
             "
+            disabled={isPending}
+            onClick={() => {
+              if (!email.trim()) {
+                toast.error("Please enter your email address.");
+                return;
+              }
+
+              mutate(email);
+            }}
           >
-            Subscribe
+            {isPending ? "Subscribing..." : "Subscribe"}
           </button>
         </div>
       </div>

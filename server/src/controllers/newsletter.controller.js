@@ -2,47 +2,82 @@ import crypto from "crypto";
 import Newsletter from "../models/newsletter.model.js";
 import User from "../models/user.model.js";
 import env from "../config/env.js";
+import { sendEmail } from "../services/email.service.js";
+import newsletterSubscribeTemplate from "../templates/newsletterSubscribeTemplate.js";
+import mongoose from "mongoose";
 
 export const subscribeNewsletter = async (req, res) => {
+  const session = await mongoose.startSession();
+
   try {
+    session.startTransaction();
+
     const { email } = req.body;
 
-    const existingSubscriber = await Newsletter.findOne({ email });
+    const existingSubscriber = await Newsletter.findOne({ email }).session(
+      session,
+    );
 
     if (existingSubscriber) {
+      await session.abortTransaction();
+
       return res.status(409).json({
         success: false,
         message: existingSubscriber.isVerified
           ? "You are already subscribed."
-          : "Please verify your email to complete the subscription.",
+          : "Please verify your email to complete your subscription.",
       });
     }
 
-    const user = await User.findOne({ email }).select("_id");
+    const user = await User.findOne({ email })
+      .select("_id isEmailVerified")
+      .session(session);
 
-    const verificationToken = crypto.randomBytes(32).toString("hex");
+    const isVerified = user?.isEmailVerified ?? false;
 
-    await Newsletter.create({
-      email,
-      isUser: !!user,
-      verificationToken,
-    });
+    const verificationToken = isVerified
+      ? null
+      : crypto.randomBytes(32).toString("hex");
 
-    const verificationUrl = `${env.CLIENT_URL}/newsletter/verify/${verificationToken}`;
-    console.log(verificationUrl);
+    await Newsletter.create(
+      [
+        {
+          email,
+          isUser: !!user,
+          isVerified,
+          verificationToken,
+        },
+      ],
+      { session },
+    );
 
-    // TODO: Send verification email
+    if (!isVerified) {
+      const verificationUrl = `${env.CLIENT_URL}/newsletter/verify/${verificationToken}`;
+
+      await sendEmail({
+        to: email,
+        subject: "🍪 Confirm Your Midnight Cookies Subscription",
+        html: newsletterSubscribeTemplate(verificationUrl),
+      });
+    }
+
+    await session.commitTransaction();
 
     return res.status(201).json({
       success: true,
-      message:
-        "Subscription successful. Please check your email to verify your subscription.",
+      message: isVerified
+        ? "You've successfully subscribed to Midnight Cookies notifications!"
+        : "Subscription successful! Please check your email to confirm your subscription.",
     });
   } catch (error) {
+    await session.abortTransaction();
+
     return res.status(500).json({
       success: false,
       message: error.message,
     });
+  } finally {
+    session.endSession();
   }
 };
 
