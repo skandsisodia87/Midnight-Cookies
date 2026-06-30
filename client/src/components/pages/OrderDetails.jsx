@@ -229,7 +229,7 @@ const OrderDetails = () => {
           </div>
         </div>
 
-        {order.orderStatus === "completed" && (
+        {order.orderStatus === "delivered" && (
           <OrderReview items={order.items} itemReviews={itemReviews} />
         )}
 

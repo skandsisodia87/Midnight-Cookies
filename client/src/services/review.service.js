@@ -4,3 +4,8 @@ export const createReview = async (body) => {
   const response = await api.post("/review", body);
   return response.data;
 };
+
+export const getCookieReviews = async (cookieId) => {
+  const response = await api.get(`/review/${cookieId}`);
+  return response.data?.reviews ?? [];
+};

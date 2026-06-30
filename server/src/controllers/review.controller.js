@@ -69,13 +69,11 @@ export const getCookieReviews = async (req, res) => {
 
     const reviews = await Review.find({ cookieId })
       .populate("userId", "name")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .limit(5);
 
     return res.status(200).json({
       success: true,
-
-      total: reviews.length,
-
       reviews,
     });
   } catch (error) {

@@ -7,6 +7,8 @@ import CookieDetailsSkeleton from "../skeletons/CookieDetailsSkeleton";
 import placeholderCookie from "../../assets/images/placeholder-cookie.png";
 import { addToCart, emptyCart, getCart } from "../../services/cart.service";
 import useCartStore from "../../store/cartStore";
+import { getCookieReviews } from "../../services/review.service";
+import { useQuery } from "@tanstack/react-query";
 
 const CookieDetails = () => {
   const navigate = useNavigate();
@@ -86,6 +88,13 @@ const CookieDetails = () => {
       setCartLoading(false);
     }
   };
+
+  const { data: reviews } = useQuery({
+    queryKey: ["cookie-review", cookie?._id],
+    queryFn: () => getCookieReviews(cookie._id),
+    enabled: !!cookie?._id,
+    staleTime: 30 * 60 * 1000,
+  });
 
   useEffect(() => {
     const fetchCookie = async () => {
@@ -592,7 +601,7 @@ const CookieDetails = () => {
             Customer Reviews
           </h2>
 
-          {cookie?.reviews?.length > 0 ? (
+          {reviews?.length > 0 ? (
             <div
               className="
                 grid
@@ -600,9 +609,9 @@ const CookieDetails = () => {
                 gap-8
               "
             >
-              {cookie?.reviews?.map((review, index) => (
+              {reviews?.map((review, index) => (
                 <div
-                  key={index}
+                  key={review._id}
                   className="
                       bg-white
                       rounded-[28px]
@@ -624,7 +633,7 @@ const CookieDetails = () => {
                           text-[#2B1D16]
                         "
                     >
-                      {review.name}
+                      {review?.userId?.name}
                     </h3>
 
                     <div
