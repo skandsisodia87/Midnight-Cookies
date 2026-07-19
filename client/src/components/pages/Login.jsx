@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { FiMail, FiLock } from "react-icons/fi";
+import { FiMail, FiLock, FiUser } from "react-icons/fi";
 import { useState } from "react";
 import useAuthStore from "../../store/authStore";
 import { loginUser } from "../../services/auth.service";
@@ -56,6 +56,11 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleContinueAsGuest = () => {
+    toast.success("Exploring as guest 🍪");
+    navigate("/", { replace: true });
   };
 
   return (
@@ -179,6 +184,34 @@ const Login = () => {
             "
           >
             {loading ? "Logging in..." : "Login"}
+          </button>
+
+          <button
+            type="button"
+            onClick={handleContinueAsGuest}
+            className="
+              w-full
+              mt-3
+              py-3.5 sm:py-4
+              rounded-full
+              font-semibold
+              transition
+              flex
+              items-center
+              justify-center
+              gap-3
+              border-2
+              border-[#F0C79B]
+              bg-white
+              text-[#D98B2B]
+              hover:shadow-md
+              hover:bg-[#FFF3E6]
+              cursor-pointer
+            "
+            aria-label="Continue as guest"
+          >
+            <FiUser className="text-lg" />
+            Continue as Guest
           </button>
         </form>
 

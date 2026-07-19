@@ -1,7 +1,9 @@
 import { FiInstagram, FiFacebook, FiTwitter } from "react-icons/fi";
 import { Link, NavLink } from "react-router-dom";
+import useAuthStore from "../../store/authStore";
 
 const Footer = () => {
+  const { isAuthenticated } = useAuthStore();
   return (
     <footer className="bg-[#1F140F] text-white pt-20 pb-10 px-6">
       <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-10">
@@ -23,7 +25,6 @@ const Footer = () => {
                 to="/"
                 className={({ isActive }) =>
                   `
-                    cursor-pointer
                     transition
                     hover:text-[#D98B2B]
                     ${isActive ? "text-[#D98B2B] font-semibold" : ""}
@@ -39,7 +40,6 @@ const Footer = () => {
                 to="/cookies"
                 className={({ isActive }) =>
                   `
-                    cursor-pointer
                     transition
                     hover:text-[#D98B2B]
                     ${isActive ? "text-[#D98B2B] font-semibold" : ""}
@@ -53,12 +53,17 @@ const Footer = () => {
             <li>
               <NavLink
                 to="/orders"
+                onClick={(e) => {
+                  if (!isAuthenticated) {
+                    e.preventDefault();
+                  }
+                }}
                 className={({ isActive }) =>
                   `
-                    cursor-pointer
                     transition
                     hover:text-[#D98B2B]
                     ${isActive ? "text-[#D98B2B] font-semibold" : ""}
+                    ${!isAuthenticated ? "cursor-not-allowed opacity-50" : ""}
                   `
                 }
               >
@@ -71,7 +76,6 @@ const Footer = () => {
                 to="/contact"
                 className={({ isActive }) =>
                   `
-                    cursor-pointer
                     transition
                     hover:text-[#D98B2B]
                     ${isActive ? "text-[#D98B2B] font-semibold" : ""}

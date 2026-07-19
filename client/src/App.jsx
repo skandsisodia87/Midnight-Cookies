@@ -16,6 +16,7 @@ const CookieDetails = lazy(() => import("./components/pages/CookiesDetails"));
 const ResetPassword = lazy(() => import("./components/pages/ResetPassword"));
 const CheckoutPage = lazy(() => import("./components/pages/Checkout"));
 const Contact = lazy(() => import("./components/pages/Contact"));
+const NotFound = lazy(() => import("./components/pages/NotFound"));
 
 import useAuthStore from "./store/authStore";
 import VerifyEmailRoute from "./routes/VerifyEmailRoute";
@@ -102,6 +103,7 @@ const App = () => {
           </Route>
           <Route path="/checkout" element={<CheckoutPage />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   );

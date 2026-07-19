@@ -9,11 +9,13 @@ import { addToCart, emptyCart, getCart } from "../../services/cart.service";
 import useCartStore from "../../store/cartStore";
 import { getCookieReviews } from "../../services/review.service";
 import { useQuery } from "@tanstack/react-query";
+import useAuthStore from "../../store/authStore";
 
 const CookieDetails = () => {
   const navigate = useNavigate();
   const { slug } = useParams();
   const { setCartItems, setError, clearCart } = useCartStore();
+  const { isAuthenticated } = useAuthStore();
   const [cookie, setCookie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -21,6 +23,11 @@ const CookieDetails = () => {
   const [cartLoading, setCartLoading] = useState(false);
 
   const buyNowHandler = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to continue with checkout");
+      return;
+    }
+
     try {
       setCartLoading(true);
       setError(null);
@@ -58,6 +65,11 @@ const CookieDetails = () => {
   };
 
   const addToCartHandler = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to add items to your cart");
+      return;
+    }
+
     try {
       setCartLoading(true);
       setError(null);
@@ -491,7 +503,6 @@ const CookieDetails = () => {
               </div>
             </div>
 
-            {/* Buttons */}
             <div
               className="
                 mt-10
@@ -501,10 +512,12 @@ const CookieDetails = () => {
                 gap-5
               "
             >
-              <button
-                onClick={addToCartHandler}
-                disabled={cartLoading || selectedVariant?.stock <= 0}
-                className={`
+              {isAuthenticated ? (
+                <>
+                  <button
+                    onClick={addToCartHandler}
+                    disabled={cartLoading || selectedVariant?.stock <= 0}
+                    className={`
                   flex-1
                   py-5
                   rounded-full
@@ -530,18 +543,18 @@ const CookieDetails = () => {
                       `
                   }
                 `}
-              >
-                <FiShoppingCart size={22} />
+                  >
+                    <FiShoppingCart size={22} />
 
-                {cartLoading
-                  ? "Adding..."
-                  : selectedVariant?.stock <= 0
-                    ? "Out Of Stock"
-                    : "Add To Cart"}
-              </button>
+                    {cartLoading
+                      ? "Adding..."
+                      : selectedVariant?.stock <= 0
+                        ? "Out Of Stock"
+                        : "Add To Cart"}
+                  </button>
 
-              <button
-                className="
+                  <button
+                    className="
                   flex-1
                   border
                   border-[#D98B2B]
@@ -559,15 +572,41 @@ const CookieDetails = () => {
                   disabled:hover:bg-gray-200
                   disabled:hover:text-gray-500
                 "
-                onClick={buyNowHandler}
-                disabled={cartLoading || selectedVariant?.stock <= 0}
-              >
-                {cartLoading
-                  ? "Processing..."
-                  : selectedVariant?.stock <= 0
-                    ? "Out of Stock"
-                    : "Buy Now"}
-              </button>
+                    onClick={buyNowHandler}
+                    disabled={cartLoading || selectedVariant?.stock <= 0}
+                  >
+                    {cartLoading
+                      ? "Processing..."
+                      : selectedVariant?.stock <= 0
+                        ? "Out of Stock"
+                        : "Buy Now"}
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => navigate("/login")}
+                  className={`
+                  flex-1
+                  py-5
+                  rounded-full
+                  font-semibold
+                  flex
+                  items-center
+                  justify-center
+                  gap-3
+                  transition
+                  text-lg
+                  cursor-pointer                 
+                bg-[#D98B2B]
+                hover:bg-[#c97818]
+                text-white
+                   
+                `}
+                >
+                  <FiShoppingCart size={22} />
+                  Login to Buy
+                </button>
+              )}
             </div>
 
             {selectedVariant?.stock > 0 && selectedVariant?.stock <= 5 ? (

@@ -7,11 +7,13 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import useCartStore from "../../store/cartStore";
 import useCartSync from "../../common/useCartSync";
+import useAuthStore from "../../store/authStore";
 
 const CookieCard = ({ cookie }) => {
   const { increase, decrease } = useCartSync();
   const [loading, setLoading] = useState(false);
   const { setCartItems, cartItems = [], setError } = useCartStore();
+  const { isAuthenticated } = useAuthStore();
 
   const cartItem = cartItems.find(
     (item) => item.cookieId.toString() === cookie._id.toString(),
@@ -20,6 +22,11 @@ const CookieCard = ({ cookie }) => {
   const quantity = cartItem?.quantity ?? 0;
 
   const addToCartHandler = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to add items to your cart");
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -196,12 +203,18 @@ const CookieCard = ({ cookie }) => {
                 gap-2
                 transition
                 cursor-pointer
+                disabled:cursor-not-allowed
+                disabled:opacity-70
               "
               onClick={addToCartHandler}
-              disabled={loading}
+              disabled={loading || !isAuthenticated}
             >
               <FiShoppingCart />
-              {loading ? "Adding..." : "Add to Cart"}
+              {loading
+                ? "Adding..."
+                : isAuthenticated
+                  ? "Add to Cart"
+                  : "Login to Buy"}
             </button>
           )}
 
