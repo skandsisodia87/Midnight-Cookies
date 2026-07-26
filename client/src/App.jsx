@@ -18,6 +18,8 @@ const CheckoutPage = lazy(() => import("./pages/cart/Checkout"));
 const Contact = lazy(() => import("./pages/misc/Contact"));
 const NotFound = lazy(() => import("./pages/misc/NotFound"));
 
+const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
+
 import useAuthStore from "./store/authStore";
 import VerifyEmailRoute from "./routes/VerifyEmailRoute";
 import ProtectedRoute from "./routes/ProtectedRoutes";
@@ -25,6 +27,8 @@ import PublicRoute from "./routes/PublicRoutes";
 import { getCart } from "./services/cart.service";
 import useCartStore from "./store/cartStore";
 import LandingPageLoader from "./pages/misc/LandingPageLoader";
+import AdminRoute from "./routes/AdminRoutes";
+import AdminLayout from "./layouts/AdminLayout";
 
 const App = () => {
   const { isAuthenticated } = useAuthStore();
@@ -103,6 +107,12 @@ const App = () => {
           </Route>
           <Route path="/checkout" element={<CheckoutPage />} />
         </Route>
+
+        {/* <Route element={<AdminRoute />}> */}
+          <Route element={<AdminLayout />}>
+            <Route path="/admin" element={<Dashboard />} />
+          </Route>
+        {/* </Route> */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>

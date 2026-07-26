@@ -4,14 +4,16 @@ import Header from "./admin/Header";
 
 const AdminLayout = () => {
   return (
-    <div className="flex bg-gray-100 min-h-screen">
+    <div className="flex min-h-screen bg-[#FFF6EC] text-[#2B1D16]">
       <Sidebar />
 
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-1 flex-col">
         <Header />
 
-        <main className="p-6">
-          <Outlet />
+        <main className="flex-1 bg-[radial-gradient(circle_at_top_left,rgba(217,139,43,0.10),transparent_35%),linear-gradient(135deg,#FFF8F2_0%,#FFF6EC_100%)] p-6 lg:p-8">
+          <div className="mx-auto w-full max-w-7xl">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>
