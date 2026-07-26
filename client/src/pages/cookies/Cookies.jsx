@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import CookieCard from "../cookies/CookieCard";
+import CookieCard from "../../components/cookies/CookieCard";
 import { getAllCookies } from "../../services/cookie.service";
-import CookieCardSkeleton from "../skeletons/CookieCardSkeleton";
+import CookieCardSkeleton from "../../components/cookies/CookieCardSkeleton";
 
 const Cookies = () => {
   const [cookies, setCookies] = useState([]);

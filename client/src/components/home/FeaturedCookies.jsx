@@ -1,6 +1,6 @@
 import CookieCard from "../cookies/CookieCard.jsx";
 import { toast } from "sonner";
-import CookieCardSkeleton from "../skeletons/CookieCardSkeleton.jsx";
+import CookieCardSkeleton from "../cookies/CookieCardSkeleton.jsx";
 import { getFeaturedCookie } from "../../services/cookie.service.js";
 import { useQuery } from "@tanstack/react-query";
 import ErrorPage from "../../common/ErrorPage.jsx";

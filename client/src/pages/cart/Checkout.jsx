@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { getAddresses, createOrder } from "../../services/order.service";
 import { getFullAddress } from "../../common/getFullAddress";
-import AddressSection from "../address/AddressSection";
+import AddressSection from "../../components/address/AddressSection";
 import useCartStore from "../../store/cartStore";
 import { emptyCart } from "../../services/cart.service";
 

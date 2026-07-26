@@ -4,9 +4,9 @@ import moment from "moment";
 import StatusConfig from "../../common/StatusConfig";
 import { getSingleOrder } from "../../services/order.service";
 import ErrorPage from "../../common/ErrorPage";
-import OrderDetailsSkeleton from "../skeletons/OrderDetailsSkeleton";
+import OrderDetailsSkeleton from "../../components/order/OrderDetailsSkeleton";
 import { FaRegStar, FaTruckFast } from "react-icons/fa6";
-import OrderReview from "../order/OrderReview";
+import OrderReview from "../../components/order/OrderReview";
 
 const OrderDetails = () => {
   const { orderId } = useParams();

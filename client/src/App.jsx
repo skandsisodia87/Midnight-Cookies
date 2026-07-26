@@ -1,22 +1,22 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { toast } from "sonner";
-import Home from "./components/pages/Home";
+import Home from "./pages/misc/Home";
 
-const Login = lazy(() => import("./components/pages/Login"));
-const Register = lazy(() => import("./components/pages/Register"));
-const ForgotPassword = lazy(() => import("./components/pages/ForgotPassword"));
-const VerifyEmail = lazy(() => import("./components/pages/VerifyEmail"));
-const Orders = lazy(() => import("./components/pages/Orders"));
-const MainLayout = lazy(() => import("./components/pages/MainLayout"));
-const OrderDetails = lazy(() => import("./components/pages/OrderDetails"));
-const Cart = lazy(() => import("./components/pages/Cart"));
-const Cookies = lazy(() => import("./components/pages/Cookies"));
-const CookieDetails = lazy(() => import("./components/pages/CookiesDetails"));
-const ResetPassword = lazy(() => import("./components/pages/ResetPassword"));
-const CheckoutPage = lazy(() => import("./components/pages/Checkout"));
-const Contact = lazy(() => import("./components/pages/Contact"));
-const NotFound = lazy(() => import("./components/pages/NotFound"));
+const Login = lazy(() => import("./pages/auth/Login"));
+const Register = lazy(() => import("./pages/auth/Register"));
+const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
+const VerifyEmail = lazy(() => import("./pages/auth/VerifyEmail"));
+const Orders = lazy(() => import("./pages/orders/Orders"));
+const MainLayout = lazy(() => import("./layouts/MainLayout"));
+const OrderDetails = lazy(() => import("./pages/orders/OrderDetails"));
+const Cart = lazy(() => import("./pages/cart/Cart"));
+const Cookies = lazy(() => import("./pages/cookies/Cookies"));
+const CookieDetails = lazy(() => import("./pages/cookies/CookiesDetails"));
+const ResetPassword = lazy(() => import("./pages/auth/ResetPassword"));
+const CheckoutPage = lazy(() => import("./pages/cart/Checkout"));
+const Contact = lazy(() => import("./pages/misc/Contact"));
+const NotFound = lazy(() => import("./pages/misc/NotFound"));
 
 import useAuthStore from "./store/authStore";
 import VerifyEmailRoute from "./routes/VerifyEmailRoute";
@@ -24,7 +24,7 @@ import ProtectedRoute from "./routes/ProtectedRoutes";
 import PublicRoute from "./routes/PublicRoutes";
 import { getCart } from "./services/cart.service";
 import useCartStore from "./store/cartStore";
-import LandingPageLoader from "./components/pages/LandingPageLoader";
+import LandingPageLoader from "./pages/misc/LandingPageLoader";
 
 const App = () => {
   const { isAuthenticated } = useAuthStore();

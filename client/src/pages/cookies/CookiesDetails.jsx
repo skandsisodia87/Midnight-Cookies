@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { getSingleCookie } from "../../services/cookie.service";
-import CookieDetailsSkeleton from "../skeletons/CookieDetailsSkeleton";
+import CookieDetailsSkeleton from "../../components/cookies/CookieDetailsSkeleton";
 import placeholderCookie from "../../assets/images/placeholder-cookie.png";
 import { addToCart, emptyCart, getCart } from "../../services/cart.service";
 import useCartStore from "../../store/cartStore";
