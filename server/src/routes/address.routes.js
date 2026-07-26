@@ -12,15 +12,17 @@ import { addressSchema } from "../validations/address.validation.js";
 
 const router = express.Router();
 
+router.use(verifyToken);
+
 router
   .route("/")
-  .post(verifyToken, validate(addressSchema), addAddress)
-  .get(verifyToken, validate(addressSchema), getAddresses);
+  .post(validate(addressSchema), addAddress)
+  .get(validate(addressSchema), getAddresses);
 
 router
   .route("/:addressId")
-  .get(verifyToken, getAddressById)
-  .put(verifyToken, updateAddress)
-  .delete(verifyToken, deleteAddress);
+  .get(getAddressById)
+  .put(updateAddress)
+  .delete(deleteAddress);
 
 export default router;

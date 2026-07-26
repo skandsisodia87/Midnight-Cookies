@@ -11,16 +11,18 @@ import {
 
 const router = Router();
 
-router.post("/add", verifyToken, addToCart);
+router.use(verifyToken);
 
-router.get("/", verifyToken, getCart);
+router.post("/add", addToCart);
 
-router.patch("/update/:cookieId", verifyToken, updateCartItemQuantity);
+router.get("/", getCart);
 
-router.patch("/batch-update", verifyToken, updateCartItemsQuantity);
+router.patch("/update/:cookieId", updateCartItemQuantity);
 
-router.delete("/remove/:cookieId", verifyToken, removeCartItem);
+router.patch("/batch-update", updateCartItemsQuantity);
 
-router.delete("/clear", verifyToken, clearCart);
+router.delete("/remove/:cookieId", removeCartItem);
+
+router.delete("/clear", clearCart);
 
 export default router;

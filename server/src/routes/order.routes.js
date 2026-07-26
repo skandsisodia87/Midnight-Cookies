@@ -17,17 +17,18 @@ import {
 
 const router = express.Router();
 
-router.post("/", verifyJWT, validate(createOrderSchema), createOrder);
+router.use(verifyJWT);
 
-router.get("/my-orders", verifyJWT, getMyOrders);
+router.post("/", validate(createOrderSchema), createOrder);
 
-router.get("/:orderId", verifyJWT, getSingleOrder);
+router.get("/my-orders", getMyOrders);
 
-router.get("/admin/all", verifyJWT, verifyAdmin, getAllOrders);
+router.get("/:orderId", getSingleOrder);
+
+router.get("/admin/all", verifyAdmin, getAllOrders);
 
 router.put(
   "/admin/:id",
-  verifyJWT,
   verifyAdmin,
   validate(orderStatusSchema),
   updateOrderStatus,
