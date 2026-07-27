@@ -41,6 +41,7 @@ import cartRoutes from "./routes/cart.routes.js";
 import addressRoutes from "./routes/address.routes.js";
 import contactRoutes from "./routes/contact.routes.js";
 import newsletterRoutes from "./routes/newsletter.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/cookie", cookieRoutes);
@@ -50,5 +51,6 @@ app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/address", addressRoutes);
 app.use("/api/v1/contact", contactRoutes);
 app.use("/api/v1/newsletter", newsletterRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
 export { app };

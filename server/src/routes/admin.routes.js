@@ -1,9 +1,8 @@
-// import express from "express";
+import express from "express";
 
-// import { verifyJWT } from "../middlewares/auth.middleware.js";
-// import { isAdmin } from "../middlewares/admin.middleware.js";
-
-// import { getDashboard } from "../controllers/admin/dashboard.controller.js";
+import verifyJWT from "../middleware/auth.middleware.js";
+import verifyAdmin from "../middleware/admin.middleware.js";
+import { getDashboard } from "../controllers/admin/dashboard.controller.js";
 
 // import {
 //   getProducts,
@@ -49,14 +48,12 @@
 
 // import { getAnalytics } from "../controllers/admin/analytics.controller.js";
 
-// const router = express.Router();
-
+const router = express.Router();
 
 // router.use(verifyJWT);
-// router.use(isAdmin);
+router.use(verifyAdmin);
 
-
-// router.get("/dashboard", getDashboard);
+router.get("/dashboard", getDashboard);
 
 // router.get("/products", getProducts);
 // router.get("/products/:id", getProduct);
@@ -65,12 +62,10 @@
 // router.patch("/products/:id/status", updateProductStatus);
 // router.delete("/products/:id", deleteProduct);
 
-
 // router.get("/categories", getCategories);
 // router.post("/categories", createCategory);
 // router.patch("/categories/:id", updateCategory);
 // router.delete("/categories/:id", deleteCategory);
-
 
 // router.get("/orders", getOrders);
 // router.get("/orders/:id", getOrder);
@@ -82,7 +77,6 @@
 // router.patch("/customers/:id/status", updateCustomerStatus);
 // router.delete("/customers/:id", deleteCustomer);
 
-
 // router.get("/coupons", getCoupons);
 // router.post("/coupons", createCoupon);
 // router.patch("/coupons/:id", updateCoupon);
@@ -93,4 +87,4 @@
 
 // router.get("/analytics", getAnalytics);
 
-// export default router;
+export default router;
