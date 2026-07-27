@@ -34,9 +34,15 @@ const Login = () => {
 
       toast.success("Login successful 🍪");
 
-      navigate("/", {
-        replace: true,
-      });
+      if (data?.user?.role === "admin") {
+        navigate("/admin", {
+          replace: true,
+        });
+      } else {
+        navigate("/", {
+          replace: true,
+        });
+      }
     } catch (error) {
       let errorMessage = "Login failed";
 

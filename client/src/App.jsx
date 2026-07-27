@@ -108,11 +108,11 @@ const App = () => {
           <Route path="/checkout" element={<CheckoutPage />} />
         </Route>
 
-        {/* <Route element={<AdminRoute />}> */}
+        <Route element={<AdminRoute />}>
           <Route element={<AdminLayout />}>
             <Route path="/admin" element={<Dashboard />} />
           </Route>
-        {/* </Route> */}
+        </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
