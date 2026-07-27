@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-export const cookieSchema = Joi.object({
+export const productSchema = Joi.object({
   name: Joi.string().trim().min(2).max(200).required(),
   description: Joi.string().trim().min(10).required(),
   category: Joi.string().required(),

@@ -4,14 +4,17 @@ import verifyJWT from "../middleware/auth.middleware.js";
 import verifyAdmin from "../middleware/admin.middleware.js";
 import { getDashboard } from "../controllers/admin/dashboard.controller.js";
 
-// import {
-//   getProducts,
-//   getProduct,
-//   createProduct,
-//   updateProduct,
-//   deleteProduct,
-//   updateProductStatus,
-// } from "../controllers/admin/product.controller.js";
+import {
+  //   getProducts,
+  //   getProduct,
+  createProduct,
+  //   updateProduct,
+  deleteProduct,
+  bulkCreateProduct,
+  //   updateProductStatus,
+} from "../controllers/admin/product.controller.js";
+import { validate } from "../middleware/validation.middleware.js";
+import { productSchema } from "../validations/product.validation.js";
 
 // import {
 //   getOrders,
@@ -51,16 +54,24 @@ import { getDashboard } from "../controllers/admin/dashboard.controller.js";
 const router = express.Router();
 
 // router.use(verifyJWT);
-router.use(verifyAdmin);
+// router.use(verifyAdmin);
 
 router.get("/dashboard", getDashboard);
 
 // router.get("/products", getProducts);
 // router.get("/products/:id", getProduct);
-// router.post("/products", createProduct);
+router.post("/products", createProduct);
+router.post(
+  "/",
+  verifyJWT,
+  verifyAdmin,
+  validate(productSchema),
+  createProduct,
+);
 // router.patch("/products/:id", updateProduct);
 // router.patch("/products/:id/status", updateProductStatus);
-// router.delete("/products/:id", deleteProduct);
+router.delete("/products/:id", deleteProduct);
+router.post("/bulk/products", bulkCreateProduct);
 
 // router.get("/categories", getCategories);
 // router.post("/categories", createCategory);
