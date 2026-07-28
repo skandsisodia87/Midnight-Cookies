@@ -4,13 +4,11 @@ export const getCoupons = async (_, res) => {
   try {
     const coupons = await Coupon.find().sort({ createdAt: -1 });
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "Coupons fetched successfully.",
-        data: coupons,
-      });
+    return res.status(200).json({
+      success: true,
+      message: "Coupons fetched successfully.",
+      data: coupons,
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -35,6 +33,23 @@ export const getCoupon = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Coupon fetched successfully.",
+      data: coupon,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const createCoupon = async (req, res) => {
+  try {
+    const coupon = await Coupon.create(req.body);
+
+    return res.status(200).json({
+      success: true,
+      message: "Coupon created successfully.",
       data: coupon,
     });
   } catch (error) {

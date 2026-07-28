@@ -41,11 +41,12 @@ import { productSchema } from "../validations/product.validation.js";
 import {
   getCoupons,
   getCoupon,
-  // createCoupon,
+  createCoupon,
   // updateCoupon,
   // deleteCoupon,
 } from "../controllers/admin/coupon.controller.js";
 import validateObjectId from "../middleware/validateObjectId.js";
+import { couponSchema } from "../validations/coupon.validation.js";
 
 // import {
 //   getSubscribers,
@@ -99,7 +100,7 @@ router.patch("/products/:id/soft-delete", softDeleteProduct);
 
 router.get("/coupons", getCoupons);
 router.get("/coupons/:id", validateObjectId(), getCoupon);
-// router.post("/coupons", createCoupon);
+router.post("/coupons", validate(couponSchema), createCoupon);
 // router.patch("/coupons/:id", updateCoupon);
 // router.delete("/coupons/:id", deleteCoupon);
 
