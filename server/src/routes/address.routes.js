@@ -9,6 +9,7 @@ import {
 import verifyToken from "../middleware/auth.middleware.js";
 import { validate } from "../middleware/validation.middleware.js";
 import { addressSchema } from "../validations/address.validation.js";
+import validateObjectId from "../middleware/validateObjectId.js";
 
 const router = express.Router();
 
@@ -21,6 +22,7 @@ router
 
 router
   .route("/:addressId")
+  .all(validateObjectId("addressId"))
   .get(getAddressById)
   .put(updateAddress)
   .delete(deleteAddress);

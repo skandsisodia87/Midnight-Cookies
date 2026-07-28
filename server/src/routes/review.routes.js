@@ -5,13 +5,14 @@ import {
   getCookieReviews,
   deleteReview,
 } from "../controllers/review.controller.js";
+import validateObjectId from "../middleware/validateObjectId.js";
 
 const router = express.Router();
 
-router.get("/:cookieId", getCookieReviews);
+router.get("/:cookieId", validateObjectId("cookieId"), getCookieReviews);
 
 router.post("/", verifyJWT, createReview);
 
-router.delete("/:id", verifyJWT, deleteReview);
+router.delete("/:id", verifyJWT, validateObjectId(), deleteReview);
 
 export default router;

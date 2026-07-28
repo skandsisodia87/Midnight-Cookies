@@ -8,6 +8,7 @@ import {
   removeCartItem,
   clearCart,
 } from "../controllers/cart.controller.js";
+import validateObjectId from "../middleware/validateObjectId.js";
 
 const router = Router();
 
@@ -17,11 +18,19 @@ router.post("/add", addToCart);
 
 router.get("/", getCart);
 
-router.patch("/update/:cookieId", updateCartItemQuantity);
+router.patch(
+  "/update/:cookieId",
+  validateObjectId("cookieId"),
+  updateCartItemQuantity,
+);
 
 router.patch("/batch-update", updateCartItemsQuantity);
 
-router.delete("/remove/:cookieId", removeCartItem);
+router.delete(
+  "/remove/:cookieId",
+  validateObjectId("cookieId"),
+  removeCartItem,
+);
 
 router.delete("/clear", clearCart);
 

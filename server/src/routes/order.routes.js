@@ -14,6 +14,7 @@ import {
   createOrderSchema,
   orderStatusSchema,
 } from "../validations/order.validation.js";
+import validateObjectId from "../middleware/validateObjectId.js";
 
 const router = express.Router();
 
@@ -31,6 +32,7 @@ router.put(
   "/admin/:id",
   verifyAdmin,
   validate(orderStatusSchema),
+  validateObjectId(),
   updateOrderStatus,
 );
 
