@@ -106,7 +106,7 @@ export const createOrder = async (req, res) => {
           orderStatus: order.orderStatus,
           items: order.items,
           totalAmount: order.totalAmount,
-          viewOrderUrl: `${env.CLIENT_URL}/orders/${orderId}`,
+          viewOrderUrl: `${env.CLIENT_URL}/orders/${order.orderId}`,
         }),
       });
     } catch (emailError) {
