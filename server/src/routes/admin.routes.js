@@ -5,13 +5,14 @@ import verifyAdmin from "../middleware/admin.middleware.js";
 import { getDashboard } from "../controllers/admin/dashboard.controller.js";
 
 import {
-  //   getProducts,
-  //   getProduct,
+  getProducts,
+  getProduct,
   createProduct,
-  //   updateProduct,
+  updateProduct,
   deleteProduct,
   bulkCreateProduct,
-  //   updateProductStatus,
+  softDeleteProduct,
+  updateProductStatus,
 } from "../controllers/admin/product.controller.js";
 import { validate } from "../middleware/validation.middleware.js";
 import { productSchema } from "../validations/product.validation.js";
@@ -58,8 +59,8 @@ const router = express.Router();
 
 router.get("/dashboard", getDashboard);
 
-// router.get("/products", getProducts);
-// router.get("/products/:id", getProduct);
+router.post("/products", getProducts);
+router.get("/products/:id", getProduct);
 router.post("/products", createProduct);
 router.post(
   "/",
@@ -68,10 +69,11 @@ router.post(
   validate(productSchema),
   createProduct,
 );
-// router.patch("/products/:id", updateProduct);
-// router.patch("/products/:id/status", updateProductStatus);
+router.patch("/products/:id", validate(productSchema), updateProduct);
+router.patch("/products/:id/status", updateProductStatus);
 router.delete("/products/:id", deleteProduct);
 router.post("/bulk/products", bulkCreateProduct);
+router.patch("/products/:id/soft-delete", softDeleteProduct);
 
 // router.get("/categories", getCategories);
 // router.post("/categories", createCategory);

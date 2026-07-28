@@ -21,6 +21,7 @@
     "joi": "^18.2.1",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.6.1",
+    "mongoose-paginate-v2": "^1.9.5",
     "nodemailer": "^9.0.1",
     "slugify": "^1.6.9"
   },

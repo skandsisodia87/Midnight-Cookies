@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 import slugify from "slugify";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const cookieSchema = new Schema(
   {
@@ -40,6 +41,19 @@ const cookieSchema = new Schema(
       type: Number,
       default: 0,
     },
+    isFeatured: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
@@ -54,5 +68,7 @@ cookieSchema.pre("save", function () {
     });
   }
 });
+
+cookieSchema.plugin(mongoosePaginate);
 
 export default model("Cookie", cookieSchema);

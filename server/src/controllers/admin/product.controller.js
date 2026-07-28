@@ -13,7 +13,7 @@ export const createProduct = async (req, res) => {
     if (existingCookie) {
       return res.status(400).json({
         success: false,
-        message: "Cookie already exists",
+        message: "Product already exists",
       });
     }
 
@@ -41,7 +41,7 @@ export const createProduct = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: "Cookie created successfully",
+      message: "Product created successfully",
     });
   } catch (error) {
     return res.status(500).json({
@@ -164,6 +164,65 @@ export const bulkCreateProduct = async (req, res) => {
   }
 };
 
+export const updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const updatedCookie = await Cookie.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedCookie) {
+      return res.status(404).json({
+        success: false,
+        message: "Cookie not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Cookie updated successfully",
+      cookie: updatedCookie,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const softDeleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const cookie = await Cookie.findById(id);
+
+    if (!cookie) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    cookie.isDeleted = true;
+    cookie.isActive = false;
+    cookie.isFeatured = false;
+
+    await cookie.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Product deleted successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 export const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
@@ -172,7 +231,7 @@ export const deleteProduct = async (req, res) => {
     if (!cookie) {
       return res.status(404).json({
         success: false,
-        message: "Cookie not found",
+        message: "Product not found",
       });
     }
 
@@ -184,7 +243,139 @@ export const deleteProduct = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Cookie deleted successfully",
+      message: "Product deleted successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const updateProductStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const cookie = await Cookie.findById(id);
+
+    if (!cookie) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    const newStatus = !cookie.isActive;
+
+    const dataToUpdate = {
+      isActive: newStatus,
+    };
+
+    if (!newStatus) {
+      dataToUpdate.isFeatured = false;
+    }
+
+    cookie.isActive && (dataToUpdate.isFeatured = false);
+    const updatedCookie = await Cookie.findByIdAndUpdate(id, dataToUpdate);
+
+    return res.status(200).json({
+      success: true,
+      message: "Product status updated successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getProducts = async (req, res) => {
+  try {
+    const {
+      isActive,
+      category,
+      isFeatured,
+      slug,
+      page = 1,
+      limit = 10,
+    } = req.body;
+
+    const query = {};
+
+    if (isActive !== undefined) {
+      query.isActive = isActive;
+    }
+
+    if (isFeatured !== undefined) {
+      query.isFeatured = isFeatured;
+    }
+
+    if (category) {
+      query.category = category;
+    }
+
+    if (slug) {
+      query.slug = slug.trim();
+    }
+
+    const options = {
+      page: Number(page),
+      limit: Number(limit),
+      sort: { createdAt: -1 },
+      lean: true,
+    };
+
+    const products = await Cookie.paginate(query, options);
+
+    return res.status(200).json({
+      success: true,
+      message: "Products fetched successfully",
+      data: products.docs,
+      pagination: {
+        totalDocs: products.totalDocs,
+        totalPages: products.totalPages,
+        // page: products.page,
+        // limit: products.limit,
+        hasPrevPage: products.hasPrevPage,
+        hasNextPage: products.hasNextPage,
+        prevPage: products.prevPage,
+        nextPage: products.nextPage,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const cookie = await Cookie.findById(id, "-__v -updatedAt").lean();
+
+    if (!cookie) {
+      return res.status(404).json({
+        success: false,
+        message: "Cookie not found",
+      });
+    }
+
+    const variants = await CookieVariant.find({
+      cookieId: cookie._id,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Product fetched successfully.",
+      product: {
+        ...cookie,
+        variants,
+      },
     });
   } catch (error) {
     return res.status(500).json({
