@@ -42,11 +42,14 @@ import {
   getCoupons,
   getCoupon,
   createCoupon,
-  // updateCoupon,
-  // deleteCoupon,
+  updateCoupon,
+  deleteCoupon,
 } from "../controllers/admin/coupon.controller.js";
 import validateObjectId from "../middleware/validateObjectId.js";
-import { couponSchema } from "../validations/coupon.validation.js";
+import {
+  couponSchema,
+  updateCouponSchema,
+} from "../validations/coupon.validation.js";
 
 // import {
 //   getSubscribers,
@@ -101,8 +104,11 @@ router.patch("/products/:id/soft-delete", softDeleteProduct);
 router.get("/coupons", getCoupons);
 router.get("/coupons/:id", validateObjectId(), getCoupon);
 router.post("/coupons", validate(couponSchema), createCoupon);
-// router.patch("/coupons/:id", updateCoupon);
-// router.delete("/coupons/:id", deleteCoupon);
+router
+  .route("/coupons/:id")
+  .all(validateObjectId())
+  .patch(validate(updateCouponSchema), updateCoupon)
+  .delete(deleteCoupon);
 
 // router.get("/newsletter", getSubscribers);
 // router.delete("/newsletter/:id", deleteSubscriber);

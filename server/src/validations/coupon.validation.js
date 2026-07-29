@@ -59,3 +59,51 @@ export const couponSchema = Joi.object({
 
   isActive: Joi.boolean().default(true),
 });
+
+export const updateCouponSchema = Joi.object({
+  description: Joi.string().trim().allow("").messages({
+    "string.base": "Description must be a string",
+  }),
+
+  discountType: Joi.string().valid("percentage", "fixed").messages({
+    "string.base": "Discount type must be a string",
+    "any.only": "Discount type must be either 'percentage' or 'fixed'",
+  }),
+
+  discountValue: Joi.number().min(0).messages({
+    "number.base": "Discount value must be a number",
+    "number.min": "Discount value cannot be less than 0",
+  }),
+
+  minimumOrderAmount: Joi.number().min(0).messages({
+    "number.base": "Minimum order amount must be a number",
+    "number.min": "Minimum order amount cannot be less than 0",
+  }),
+
+  maximumDiscount: Joi.number().min(0).messages({
+    "number.base": "Maximum discount must be a number",
+    "number.min": "Maximum discount cannot be less than 0",
+  }),
+
+  usageLimit: Joi.number().integer().min(1).messages({
+    "number.base": "Usage limit must be a number",
+    "number.integer": "Usage limit must be an integer",
+    "number.min": "Usage limit must be at least 1",
+  }),
+
+  startDate: Joi.date().messages({
+    "date.base": "Start date must be a valid date",
+  }),
+
+  expiryDate: Joi.date().messages({
+    "date.base": "Expiry date must be a valid date",
+  }),
+
+  isActive: Joi.boolean().messages({
+    "boolean.base": "isActive must be a boolean",
+  }),
+})
+  .min(1)
+  .messages({
+    "object.min": "Please provide at least one field to update",
+  });
