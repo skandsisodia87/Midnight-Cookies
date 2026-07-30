@@ -2,6 +2,7 @@ import express from "express";
 
 import verifyJWT from "../middleware/auth.middleware.js";
 import verifyAdmin from "../middleware/admin.middleware.js";
+import upload from "../middleware/upload.middleware.js";
 import { getDashboard } from "../controllers/admin/dashboard.controller.js";
 
 import {
@@ -65,9 +66,9 @@ const router = express.Router();
 
 router.get("/dashboard", getDashboard);
 
-router.post("/products", getProducts);
+router.post("/products/search", getProducts);
 router.get("/products/:id", validateObjectId(), getProduct);
-router.post("/products", createProduct);
+router.post("/products", upload.single("cookie_image"), createProduct);
 router.post(
   "/",
   verifyJWT,

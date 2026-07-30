@@ -21,7 +21,8 @@ const cookieSchema = new Schema(
     },
     images: [
       {
-        type: String,
+        url: String,
+        public_id: String,
       },
     ],
     category: {
