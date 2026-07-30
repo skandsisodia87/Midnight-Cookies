@@ -1,10 +1,20 @@
 import Cookie from "../../models/cookie.model.js";
 import CookieVariant from "../../models/cookieVariant.model.js";
+import { uploadOnCloudinary } from "../../services/cloudinary.service.js";
+import mongoose from "mongoose";
 
 export const createProduct = async (req, res) => {
   try {
-    const { name, description, images, category, ingredients, variants } =
-      req.body;
+    const { name, description, category, ingredients, variants } = req.body;
+
+    const file = req.file;
+
+    if (!file || !file.path) {
+      return res.status(400).json({
+        success: false,
+        message: "Image not found",
+      });
+    }
 
     const existingCookie = await Cookie.findOne({
       name,
@@ -17,27 +27,44 @@ export const createProduct = async (req, res) => {
       });
     }
 
-    const cookie = await Cookie.create({
-      name,
-      description,
-      images,
-      category,
-      ingredients,
-    });
+    const session = await mongoose.startSession();
 
-    const variantsToInsert = variants.map((variant) => ({
-      cookieId: cookie._id,
-      weight: variant.weight,
-      price: variant.price,
-      discountPrice: variant.discountPrice,
-      stock: variant.stock,
-      isAvailable: variant.isAvailable ?? true,
-      sku: `${cookie.name}-${variant.weight}`
-        .replace(/\s+/g, "-")
-        .toUpperCase(),
-    }));
+    try {
+      session.startTransaction();
 
-    await CookieVariant.insertMany(variantsToInsert);
+      const cookie = await Cookie.create(
+        [
+          {
+            name,
+            description,
+            images: [uploadedImage],
+            category,
+            ingredients,
+          },
+        ],
+        { session },
+      );
+
+      const variantsToInsert = variants.map((variant) => ({
+        cookieId: cookie._id,
+        weight: variant.weight,
+        price: variant.price,
+        discountPrice: variant.discountPrice,
+        stock: variant.stock,
+        isAvailable: variant.isAvailable ?? true,
+        sku: `${cookie.name}-${variant.weight}`
+          .replace(/\s+/g, "-")
+          .toUpperCase(),
+      }));
+
+      await CookieVariant.insertMany(variantsToInsert, { session });
+
+      await session.commitTransaction();
+    } catch (err) {
+      await session.abortTransaction();
+    } finally {
+      session.endSession();
+    }
 
     return res.status(201).json({
       success: true,
