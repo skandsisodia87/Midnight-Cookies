@@ -52,10 +52,10 @@ import {
   updateCouponSchema,
 } from "../validations/coupon.validation.js";
 
-// import {
-//   getSubscribers,
-//   deleteSubscriber,
-// } from "../controllers/admin/newsletter.controller.js";
+import {
+  getSubscribers,
+  deleteSubscriber,
+} from "../controllers/admin/newsletter.controller.js";
 
 // import { getAnalytics } from "../controllers/admin/analytics.controller.js";
 
@@ -111,8 +111,8 @@ router
   .patch(validate(updateCouponSchema), updateCoupon)
   .delete(deleteCoupon);
 
-// router.get("/newsletter", getSubscribers);
-// router.delete("/newsletter/:id", deleteSubscriber);
+router.post("/newsletter", getSubscribers);
+router.delete("/newsletter/:id", validateObjectId(), deleteSubscriber);
 
 // router.get("/analytics", getAnalytics);
 

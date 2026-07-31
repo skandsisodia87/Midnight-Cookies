@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const newsletterSchema = new mongoose.Schema(
   {
@@ -26,5 +27,7 @@ const newsletterSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
+
+newsletterSchema.plugin(mongoosePaginate);
 
 export default mongoose.model("Newsletter", newsletterSchema);

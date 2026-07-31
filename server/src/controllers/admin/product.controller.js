@@ -321,8 +321,8 @@ export const getProducts = async (req, res) => {
     }
 
     const options = {
-      page: Number(page),
-      limit: Number(limit),
+      page: Math.max(Number(page), 1),
+      limit: Math.max(Number(limit), 1),
       sort: { createdAt: -1 },
       lean: true,
     };
