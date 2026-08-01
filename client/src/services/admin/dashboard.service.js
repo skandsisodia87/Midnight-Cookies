@@ -12,8 +12,8 @@ const transformDashboardData = (data) => {
     const tempData = {};
 
     tempData.welcomeCard = {
-      sales: 12,
-      newCustomer: 12,
+      sales: data.todaySales || 0,
+      usersEnrolledToday: data.usersEnrolledToday || 0,
     };
 
     tempData.dashboardStats = {

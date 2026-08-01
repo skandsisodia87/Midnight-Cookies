@@ -5,6 +5,11 @@ import CookieVariant from "../../models/cookieVariant.model.js";
 
 export const getDashboard = async (req, res) => {
   try {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
     const [
       totalProducts,
       totalCustomers,
@@ -19,6 +24,8 @@ export const getDashboard = async (req, res) => {
       lowStockProducts,
       recentOrders,
       topSellingProducts,
+      usersEnrolledToday,
+      todaySales,
     ] = await Promise.all([
       Cookies.countDocuments(),
       User.countDocuments({ role: "user" }),
@@ -98,6 +105,31 @@ export const getDashboard = async (req, res) => {
           },
         },
       ]),
+      User.countDocuments({
+        role: "user",
+        createdAt: {
+          $gte: startOfDay,
+          $lte: endOfDay,
+        },
+      }),
+      Order.aggregate([
+        {
+          $match: {
+            createdAt: {
+              $gte: startOfDay,
+              $lte: endOfDay,
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            sales: {
+              $sum: "$totalAmount",
+            },
+          },
+        },
+      ]),
     ]);
 
     return res.status(200).json({
@@ -107,16 +139,19 @@ export const getDashboard = async (req, res) => {
         totalProducts,
         totalCustomers,
         totalOrders,
-        totalRevenue: totalRevenue[0].totalRevenue,
+        totalRevenue: totalRevenue[0]?.totalRevenue ?? 0,
         shippedOrders,
         confirmedOrders,
         bakingOrders,
         placedOrders,
         deliveredOrders,
         cancelledOrders,
+        usersEnrolledToday,
+        todaySales,
         lowStockProducts,
         recentOrders,
         topSellingProducts,
+        todaySales: todaySales[0]?.sales ?? 0,
       },
     });
   } catch (error) {

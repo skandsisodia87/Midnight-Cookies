@@ -4,6 +4,7 @@ import {
   FaUsers,
   FaRupeeSign,
 } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const cards = [
   {
@@ -14,6 +15,7 @@ const cards = [
     bg: "bg-amber-100",
     text: "text-amber-700",
     accent: "bg-amber-50",
+    redirect: "",
   },
   {
     key: "orders",
@@ -23,6 +25,7 @@ const cards = [
     bg: "bg-sky-100",
     text: "text-sky-700",
     accent: "bg-sky-50",
+    redirect: "/admin/orders",
   },
   {
     key: "products",
@@ -32,6 +35,7 @@ const cards = [
     bg: "bg-orange-100",
     text: "text-orange-700",
     accent: "bg-orange-50",
+    redirect: "/admin/products",
   },
   {
     key: "customers",
@@ -40,16 +44,19 @@ const cards = [
     bg: "bg-violet-100",
     text: "text-violet-700",
     accent: "bg-violet-50",
+    redirect: "/admin/customers",
   },
 ];
 
 export default function DashboardStats({ stats }) {
+  const navigate = useNavigate();
   return (
     <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
       {cards.map((card) => (
         <div
           key={card.title}
-          className="bg-white border border-slate-100 rounded-3xl p-5 sm:p-6 shadow-sm"
+          className={`bg-white border border-slate-100 rounded-3xl p-5 sm:p-6 shadow-sm ${card.redirect !== "" && "cursor-pointer"} `}
+          onClick={card.redirect !== "" ? () => navigate(card.redirect) : null}
         >
           <div className="flex items-start justify-between gap-4">
             <div>

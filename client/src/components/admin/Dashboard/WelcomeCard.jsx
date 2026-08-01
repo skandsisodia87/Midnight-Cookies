@@ -8,7 +8,7 @@ import {
   FaUsers,
 } from "react-icons/fa";
 
-export default function WelcomeCard() {
+export default function WelcomeCard({ stats }) {
   return (
     <div className="rounded-[2.5rem] bg-linear-to-r from-amber-700 to-orange-500 p-6 sm:p-8 text-white shadow-xl">
       <div className="grid gap-6 lg:grid-cols-[1.7fr_1fr] items-center">
@@ -30,13 +30,15 @@ export default function WelcomeCard() {
             <p className="text-sm uppercase tracking-[0.25em] text-amber-100/80">
               Today's sales
             </p>
-            <p className="mt-4 text-2xl font-semibold">₹18,500</p>
+            <p className="mt-4 text-2xl font-semibold">{stats.sales}</p>
           </div>
           <div className="rounded-3xl border border-white/15 bg-white/10 p-4">
             <p className="text-sm uppercase tracking-[0.25em] text-amber-100/80">
               New customers
             </p>
-            <p className="mt-4 text-2xl font-semibold">10</p>
+            <p className="mt-4 text-2xl font-semibold">
+              {stats.usersEnrolledToday}
+            </p>
           </div>
         </div>
       </div>

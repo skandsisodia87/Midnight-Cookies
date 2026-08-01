@@ -10,7 +10,11 @@ import { getDashboard } from "../../services/admin/dashboard.service";
 import ErrorPage from "../../common/ErrorPage";
 
 export default function Dashboard() {
-  const { data:dashboardData, isLoading, isError } = useQuery({
+  const {
+    data: dashboardData,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["dashboard-data"],
     queryFn: getDashboard,
     staleTime: 3 * 60 * 1000,
@@ -38,9 +42,9 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6 px-4 sm:px-6">
-      <WelcomeCard />
+      <WelcomeCard stats={dashboardData.data.welcomeCard} />
 
-      <DashboardStats stats={dashboardData.data.dashboardStats}/>
+      <DashboardStats stats={dashboardData.data.dashboardStats} />
 
       <div className="grid gap-6 lg:grid-cols-12">
         <div className="lg:col-span-8">
@@ -48,13 +52,13 @@ export default function Dashboard() {
         </div>
 
         <div className="lg:col-span-4">
-          <OrderStatus stats={dashboardData.data.orderStats}/>
+          <OrderStatus stats={dashboardData.data.orderStats} />
         </div>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.8fr_1fr]">
         <RecentOrders recentOrders={dashboardData.data.recentOrders} />
-        <LowStockProducts />
+        <LowStockProducts products={dashboardData.data.lowStockProducts} />
       </div>
     </div>
   );
