@@ -177,7 +177,6 @@ const CookieDetails = () => {
           mx-auto
         "
       >
-        {/* Main Section */}
         <div
           className="
             grid
@@ -186,7 +185,6 @@ const CookieDetails = () => {
             items-start
           "
         >
-          {/* Left */}
           <div>
             <div
               className="
@@ -197,7 +195,7 @@ const CookieDetails = () => {
               "
             >
               <img
-                src={cookie?.images?.[0] || placeholderCookie}
+                src={cookie?.images?.[0]?.url || placeholderCookie}
                 alt={cookie?.name}
                 className="
                   w-full
@@ -208,9 +206,7 @@ const CookieDetails = () => {
             </div>
           </div>
 
-          {/* Right */}
           <div>
-            {/* Category */}
             <span
               className="
                 bg-[#FFF1DD]
@@ -225,7 +221,6 @@ const CookieDetails = () => {
               {cookie?.category}
             </span>
 
-            {/* Title */}
             <h1
               className="
                 text-5xl
@@ -238,7 +233,6 @@ const CookieDetails = () => {
               {cookie?.name}
             </h1>
 
-            {/* Rating */}
             <div
               className="
                 flex
@@ -275,7 +269,6 @@ const CookieDetails = () => {
               </span>
             </div>
 
-            {/* Description */}
             <p
               className="
                 mt-8
@@ -287,7 +280,6 @@ const CookieDetails = () => {
               {cookie?.description}
             </p>
 
-            {/* Price */}
             <div
               className="
                 mt-8
@@ -317,7 +309,6 @@ const CookieDetails = () => {
               </span>
             </div>
 
-            {/* Weight */}
             <div className="mt-8">
               <h3
                 className="

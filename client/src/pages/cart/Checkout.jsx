@@ -243,7 +243,7 @@ export default function CheckoutPage() {
               {cartItems?.map((item) => (
                 <div key={item.cookieId} className="flex items-center gap-4">
                   <img
-                    src={item.image}
+                    src={item.image.url}
                     alt="cookie"
                     className="w-20 h-20 object-cover rounded-2xl"
                   />

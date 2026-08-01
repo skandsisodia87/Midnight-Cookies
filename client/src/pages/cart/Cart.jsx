@@ -142,8 +142,8 @@ const Cart = () => {
                 "
               >
                 <img
-                  src={item.image}
-                  alt={item.name}
+                  src={item.image.url}
+                  alt={item.name.url}
                   className="
                     w-full
                     md:w-40

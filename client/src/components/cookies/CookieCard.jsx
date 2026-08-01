@@ -74,7 +74,7 @@ const CookieCard = ({ cookie }) => {
     >
       <div className="overflow-hidden h-48 sm:h-56 lg:h-64">
         <img
-          src={cookie.images?.[0] || placeholderCookie}
+          src={cookie.images?.[0]?.url || placeholderCookie}
           alt={cookie.name}
           className="
             w-full

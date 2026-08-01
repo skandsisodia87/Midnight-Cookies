@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import Cookie from "../models/cookie.model.js";
-import Order from "../models/order.model.js";
 import slugify from "slugify";
 import CookieVariant from "../models/cookieVariant.model.js";
 
@@ -107,9 +106,45 @@ export const getSingleCookie = async (req, res) => {
 
 export const getFeaturedCookies = async (req, res) => {
   try {
-    const featuredCookies = await Cookie.find({
-      isFeatured: true,
-    });
+    let featuredCookies = await Cookie.aggregate([
+      {
+        $match: {
+          isFeatured: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "cookievariants",
+          localField: "_id",
+          foreignField: "cookieId",
+          as: "variants",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          slug: 1,
+          description: 1,
+          images: 1,
+          category: 1,
+          defaultVariant: {
+            $arrayElemAt: [
+              {
+                $filter: {
+                  input: "$variants",
+                  as: "variant",
+                  cond: {
+                    $eq: ["$$variant.weight", "500g"],
+                  },
+                },
+              },
+              0,
+            ],
+          },
+        },
+      },
+    ]);
 
     return res.status(200).json({
       success: true,
