@@ -19,6 +19,13 @@ const Contact = lazy(() => import("./pages/misc/Contact"));
 const NotFound = lazy(() => import("./pages/misc/NotFound"));
 
 const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
+const AdminOrders = lazy(() => import("./pages/admin/Orders"));
+const Customers = lazy(() => import("./pages/admin/Customers"));
+const Products = lazy(() => import("./pages/admin/Products"));
+const Coupons = lazy(() => import("./pages/admin/Coupons"));
+const Newsletter = lazy(() => import("./pages/admin/Newsletter"));
+const Settings = lazy(() => import("./pages/admin/Settings"));
+const Analytics = lazy(() => import("./pages/admin/Analytics"));
 
 import useAuthStore from "./store/authStore";
 import VerifyEmailRoute from "./routes/VerifyEmailRoute";
@@ -111,6 +118,13 @@ const App = () => {
         <Route element={<AdminRoute />}>
           <Route element={<AdminLayout />}>
             <Route path="/admin" element={<Dashboard />} />
+            <Route path="/admin/orders" element={<AdminOrders />} />
+            <Route path="/admin/products" element={<Products />} />
+            <Route path="/admin/customers" element={<Customers />} />
+            <Route path="/admin/coupons" element={<Coupons />} />
+            <Route path="/admin/newsletter" element={<Newsletter />} />
+            <Route path="/admin/analytics" element={<Analytics />} />
+            <Route path="/admin/settings" element={<Settings />} />
           </Route>
         </Route>
         <Route

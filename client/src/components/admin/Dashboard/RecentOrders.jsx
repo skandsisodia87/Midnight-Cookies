@@ -1,4 +1,5 @@
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 function StatusBadge({ status }) {
   const map = {
@@ -22,6 +23,7 @@ function StatusBadge({ status }) {
 }
 
 export default function RecentOrders({ recentOrders = [] }) {
+  const navigation = useNavigate();
   return (
     <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -33,7 +35,10 @@ export default function RecentOrders({ recentOrders = [] }) {
             Latest sales and customer activity.
           </p>
         </div>
-        <button className="rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-900 transition hover:bg-amber-200">
+        <button
+          className="rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-900 transition hover:bg-amber-200 cursor-pointer"
+          onClick={() => navigation("/admin/orders")}
+        >
           View all orders
         </button>
       </div>
