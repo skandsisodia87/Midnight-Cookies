@@ -12,7 +12,7 @@ const Header = ({ setSidebarOpen }) => {
             <FiMenu size={24} />
           </button>
 
-          <div className="relative w-full max-w-md">
+          {/* <div className="relative w-full max-w-md">
             <FiSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#D98B2B]" />
 
             <input
@@ -20,7 +20,7 @@ const Header = ({ setSidebarOpen }) => {
               placeholder="Search orders, customers..."
               className="h-11 w-full rounded-full border border-[#F1DCC7] bg-white pl-11 pr-4 text-sm text-[#2B1D16] outline-none placeholder:text-gray-400 focus:border-[#D98B2B]"
             />
-          </div>
+          </div> */}
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">

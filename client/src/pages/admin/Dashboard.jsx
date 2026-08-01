@@ -1,10 +1,10 @@
-import DashboardStats from "../../components/admin/Dashboard/DashboardStats";
-import SalesChart from "../../components/admin/Dashboard/SalesChart";
-import RecentOrders from "../../components/admin/Dashboard/RecentOrders";
-import LowStockProducts from "../../components/admin/Dashboard/LowStockProducts";
-import OrderStatus from "../../components/admin/Dashboard/OrderStatus";
-import WelcomeCard from "../../components/admin/Dashboard/WelcomeCard";
-import DashboardSkeleton from "../../components/admin/Dashboard/DashboardSkeleton";
+import DashboardStats from "../../components/admin/dashboard/DashboardStats";
+import SalesChart from "../../components/admin/dashboard/SalesChart";
+import RecentOrders from "../../components/admin/dashboard/RecentOrders";
+import LowStockProducts from "../../components/admin/dashboard/LowStockProducts";
+import OrderStatus from "../../components/admin/dashboard/OrderStatus";
+import WelcomeCard from "../../components/admin/dashboard/WelcomeCard";
+import DashboardSkeleton from "../../components/admin/dashboard/DashboardSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import { getDashboard } from "../../services/admin/dashboard.service";
 import ErrorPage from "../../common/ErrorPage";

@@ -18,12 +18,12 @@ import {
 import { validate } from "../middleware/validation.middleware.js";
 import { productSchema } from "../validations/product.validation.js";
 
-// import {
-//   getOrders,
-//   getOrder,
-//   updateOrderStatus,
-//   deleteOrder,
-// } from "../controllers/admin/order.controller.js";
+import {
+  getOrders,
+  // getOrder,
+  // updateOrderStatus,
+  // deleteOrder,
+} from "../controllers/admin/order.controller.js";
 
 // import {
 //   getCustomers,
@@ -92,7 +92,7 @@ router.patch("/products/:id/soft-delete", softDeleteProduct);
 // router.patch("/categories/:id", updateCategory);
 // router.delete("/categories/:id", deleteCategory);
 
-// router.get("/orders", getOrders);
+router.post("/orders", getOrders);
 // router.get("/orders/:id", getOrder);
 // router.patch("/orders/:id/status", updateOrderStatus);
 // router.delete("/orders/:id", deleteOrder);

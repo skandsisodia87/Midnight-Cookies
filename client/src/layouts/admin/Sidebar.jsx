@@ -1,4 +1,5 @@
-import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import {
   FiGrid,
@@ -10,7 +11,12 @@ import {
   FiSettings,
   FiBarChart2,
   FiX,
+  FiLogOut,
 } from "react-icons/fi";
+import useAuthStore from "../../store/authStore";
+import { logoutUser } from "../../services/auth.service";
+import { toast } from "sonner";
+import useCartStore from "../../store/cartStore";
 
 const menus = [
   {
@@ -56,6 +62,29 @@ const menus = [
 ];
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
+  const { logout } = useAuthStore();
+  const { clearCart } = useCartStore();
+  const [btnDisable, setBtnDisable] = useState(false);
+  const navigate = useNavigate();
+
+  const logoutHandler = async () => {
+    try {
+      setBtnDisable(true);
+      await toast.promise(logoutUser(), {
+        loading: "Logging out...",
+        success: () => {
+          logout();
+          clearCart();
+          navigate("/login");
+          return "Logout successful 🍪";
+        },
+        error: (error) => error.response?.data?.message || "Logout failed",
+      });
+    } finally {
+      setBtnDisable(false);
+    }
+  };
+
   return (
     <>
       <div
@@ -124,7 +153,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           ))}
         </nav>
 
-        <div className="border-t border-[#34261D] p-4">
+        <div className="border-t border-[#34261D] p-4 space-y-4">
           <div className="rounded-2xl bg-[#2A1C15] p-4 text-sm text-[#F4E7D3]">
             <p className="font-semibold">Store Status</p>
 
@@ -135,6 +164,15 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
               </span>
             </div>
           </div>
+
+          <button
+            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[#4E3A2D] bg-[#D98B2B] px-4 py-3 text-sm font-semibold text-[#1F140F] transition hover:bg-[#c97818] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+            onClick={logoutHandler}
+            disabled={btnDisable}
+          >
+            <FiLogOut size={16} />
+            Logout
+          </button>
         </div>
       </aside>
     </>
