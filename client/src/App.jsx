@@ -31,7 +31,7 @@ import AdminRoute from "./routes/AdminRoutes";
 import AdminLayout from "./layouts/AdminLayout";
 
 const App = () => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
   const { setCartItems, clearCart, setError } = useCartStore();
   const [cartLoading, setCartLoading] = useState(false);
 
@@ -113,7 +113,10 @@ const App = () => {
             <Route path="/admin" element={<Dashboard />} />
           </Route>
         </Route>
-        <Route path="*" element={<NotFound />} />
+        <Route
+          path="*"
+          element={<NotFound isAdmin={user?.role === "admin"} />}
+        />
       </Routes>
     </Suspense>
   );

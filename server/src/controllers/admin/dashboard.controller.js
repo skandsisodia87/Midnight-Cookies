@@ -10,8 +10,11 @@ export const getDashboard = async (req, res) => {
       totalCustomers,
       totalOrders,
       totalRevenue,
-      pendingOrders,
       deliveredOrders,
+      shippedOrders,
+      bakingOrders,
+      confirmedOrders,
+      placedOrders,
       cancelledOrders,
       lowStockProducts,
       recentOrders,
@@ -36,10 +39,11 @@ export const getDashboard = async (req, res) => {
           },
         },
       ]),
-      Order.countDocuments({
-        orderStatus: { $in: ["confirmed", "placed", "baking", "shipped"] },
-      }),
       Order.countDocuments({ orderStatus: "delivered" }),
+      Order.countDocuments({ orderStatus: "shipped" }),
+      Order.countDocuments({ orderStatus: "baking" }),
+      Order.countDocuments({ orderStatus: "confirmed" }),
+      Order.countDocuments({ orderStatus: "placed" }),
       Order.countDocuments({ orderStatus: "cancelled" }),
       CookieVariant.find({
         stock: { $lte: 5 },
@@ -53,7 +57,7 @@ export const getDashboard = async (req, res) => {
       Order.find()
         .sort({ createdAt: -1 })
         .limit(5)
-        .populate("userId", "name email")
+        .populate("userId", "name")
         .select("orderId totalAmount orderStatus paymentStatus createdAt"),
       Order.aggregate([
         {
@@ -104,7 +108,10 @@ export const getDashboard = async (req, res) => {
         totalCustomers,
         totalOrders,
         totalRevenue: totalRevenue[0].totalRevenue,
-        pendingOrders,
+        shippedOrders,
+        confirmedOrders,
+        bakingOrders,
+        placedOrders,
         deliveredOrders,
         cancelledOrders,
         lowStockProducts,

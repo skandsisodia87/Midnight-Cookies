@@ -1,6 +1,6 @@
 import ErrorPage from "../../common/ErrorPage";
 
-const NotFound = () => {
+const NotFound = ({ isAdmin = false }) => {
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-linear-to-br from-[#FFF7ED] via-[#FFECCB] to-[#FCEFD7] px-4 py-20">
       <div className="absolute -top-40 -left-40 w-80 h-80 bg-[#FFD9A8] rounded-full opacity-60 filter blur-3xl transform rotate-12"></div>
@@ -13,8 +13,8 @@ const NotFound = () => {
           message={
             "The page you're looking for doesn't exist or has been moved. Check the URL or return to the homepage."
           }
-          buttonText="Go Home"
-          redirectLink="/"
+          buttonText={isAdmin ? "Back to Dashboard" : "Go Home"}
+          redirectLink={isAdmin ? "/admin" : "/"}
         />
       </div>
     </div>
