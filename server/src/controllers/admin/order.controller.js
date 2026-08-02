@@ -19,7 +19,10 @@ export const getOrders = async (req, res) => {
       };
     }
 
-    const [orders, stats] = await Promise.all([
+    const [newOrders, orders, stats] = await Promise.all([
+      Order.countDocuments({
+        createdAt: { $gt: new Date().setHours(0, 0, 0, 0) },
+      }),
       Order.aggregate([
         {
           $match: query,
@@ -104,6 +107,7 @@ export const getOrders = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Orders fetched successfully",
+      newOrders,
       orders,
       stats: stats[0] || {
         totalOrders: 0,

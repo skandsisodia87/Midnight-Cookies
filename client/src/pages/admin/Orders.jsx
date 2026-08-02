@@ -48,7 +48,7 @@ const Orders = () => {
           </div>
 
           <div className="inline-flex w-fit items-center rounded-full border border-[#F2D8BE] bg-[#FFF8EF] px-3 py-1.5 text-sm font-medium text-[#A15C38]">
-            24 new orders
+            {data.newOrders} new orders
           </div>
         </div>
       </div>

@@ -25,12 +25,12 @@ import {
   // deleteOrder,
 } from "../controllers/admin/order.controller.js";
 
-// import {
-//   getCustomers,
-//   getCustomer,
-//   updateCustomerStatus,
-//   deleteCustomer,
-// } from "../controllers/admin/customer.controller.js";
+import {
+  getCustomers,
+  // getCustomer,
+  // updateCustomerStatus,
+  // deleteCustomer,
+} from "../controllers/admin/customer.controller.js";
 
 // import {
 //   getCategories,
@@ -97,7 +97,7 @@ router.post("/orders", getOrders);
 // router.patch("/orders/:id/status", updateOrderStatus);
 // router.delete("/orders/:id", deleteOrder);
 
-// router.get("/customers", getCustomers);
+router.get("/customers", getCustomers);
 // router.get("/customers/:id", getCustomer);
 // router.patch("/customers/:id/status", updateCustomerStatus);
 // router.delete("/customers/:id", deleteCustomer);
