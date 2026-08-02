@@ -1,8 +1,10 @@
 import { FiEye, FiEdit } from "react-icons/fi";
 import OrderStatusBadge from "./OrderStatusBadge";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 export default function OrdersTable({ orders }) {
+  const navigate = useNavigate();
   return (
     <div className="overflow-hidden rounded-3xl border border-[#F3E4D4] bg-white shadow-sm">
       <div className="overflow-x-auto">
@@ -55,7 +57,10 @@ export default function OrdersTable({ orders }) {
                       <FiEye size={16} />
                     </button>
 
-                    <button className="rounded-full bg-[#FFF4E6] p-2 text-[#A15C38] transition hover:bg-[#FDE8CF] hover:text-[#7A3E22]">
+                    <button
+                      className="rounded-full bg-[#FFF4E6] p-2 text-[#A15C38] transition hover:bg-[#FDE8CF] hover:text-[#7A3E22]"
+                      onClick={() => navigate("/admin/orders/edit")}
+                    >
                       <FiEdit size={16} />
                     </button>
                   </div>
