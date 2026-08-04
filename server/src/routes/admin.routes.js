@@ -27,9 +27,9 @@ import {
 
 import {
   getCustomers,
-  // getCustomer,
-  // updateCustomerStatus,
-  // deleteCustomer,
+  getCustomer,
+  updateCustomerStatus,
+  deleteCustomer,
 } from "../controllers/admin/customer.controller.js";
 
 // import {
@@ -98,9 +98,9 @@ router.post("/orders", getOrders);
 // router.delete("/orders/:id", deleteOrder);
 
 router.get("/customers", getCustomers);
-// router.get("/customers/:id", getCustomer);
-// router.patch("/customers/:id/status", updateCustomerStatus);
-// router.delete("/customers/:id", deleteCustomer);
+router.get("/customers/:id", validateObjectId(), getCustomer);
+router.patch("/customers/:id/status", validateObjectId(), updateCustomerStatus);
+router.delete("/customers/:id", validateObjectId(), deleteCustomer);
 
 router.get("/coupons", getCoupons);
 router.get("/coupons/:id", validateObjectId(), getCoupon);
