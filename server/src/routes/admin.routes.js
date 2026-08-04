@@ -57,7 +57,7 @@ import {
   deleteSubscriber,
 } from "../controllers/admin/newsletter.controller.js";
 
-// import { getAnalytics } from "../controllers/admin/analytics.controller.js";
+import { getAnalytics } from "../controllers/admin/analytics.controller.js";
 
 const router = express.Router();
 
@@ -114,6 +114,6 @@ router
 router.post("/newsletter", getSubscribers);
 router.delete("/newsletter/:id", validateObjectId(), deleteSubscriber);
 
-// router.get("/analytics", getAnalytics);
+router.get("/analytics", getAnalytics);
 
 export default router;
