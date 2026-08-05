@@ -74,7 +74,7 @@ const verifyToken = async (req, res, next) => {
       res.cookie("accessToken", newAccessToken, {
         httpOnly: true,
         secure: env.NODE_ENV === "production",
-        sameSite: "none", // for same domain use sameSite: "strict"
+        // sameSite: "none", // for same domain use sameSite: "strict"
       });
 
       req.user = user;

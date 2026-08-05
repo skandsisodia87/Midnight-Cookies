@@ -19,18 +19,18 @@ const useCartStore = create((set, get) => ({
     });
   },
 
-  addToCart: (product) => {
+  addToCart: (cookie) => {
     const existing = get().cartItems.find(
-      (item) => item.variantId === product.variantId,
+      (item) => item.variantId === cookie.variantId,
     );
 
     if (existing) {
-      get().increaseQuantity(product.variantId);
+      get().increaseQuantity(cookie.variantId);
       return;
     }
 
     set((state) => ({
-      cartItems: [...state.cartItems, product],
+      cartItems: [...state.cartItems, cookie],
     }));
   },
 

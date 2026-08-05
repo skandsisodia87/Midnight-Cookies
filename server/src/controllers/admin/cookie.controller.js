@@ -3,7 +3,7 @@ import CookieVariant from "../../models/cookieVariant.model.js";
 import { uploadOnCloudinary } from "../../services/cloudinary.service.js";
 import mongoose from "mongoose";
 
-export const createProduct = async (req, res) => {
+export const createCookie = async (req, res) => {
   try {
     const { name, description, category, ingredients, variants } = req.body;
 
@@ -23,7 +23,7 @@ export const createProduct = async (req, res) => {
     if (existingCookie) {
       return res.status(400).json({
         success: false,
-        message: "Product already exists",
+        message: "Cookie already exists",
       });
     }
 
@@ -68,7 +68,7 @@ export const createProduct = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: "Product created successfully",
+      message: "Cookie created successfully",
     });
   } catch (error) {
     return res.status(500).json({
@@ -78,7 +78,7 @@ export const createProduct = async (req, res) => {
   }
 };
 
-export const bulkCreateProduct = async (req, res) => {
+export const bulkCreateCookies = async (req, res) => {
   const session = await mongoose.startSession();
 
   session.startTransaction();
@@ -191,7 +191,7 @@ export const bulkCreateProduct = async (req, res) => {
   }
 };
 
-export const updateProduct = async (req, res) => {
+export const updateCookie = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -220,7 +220,7 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-export const softDeleteProduct = async (req, res) => {
+export const softDeleteCookie = async (req, res) => {
   try {
     const { id } = req.params;
     const cookie = await Cookie.findById(id);
@@ -228,7 +228,7 @@ export const softDeleteProduct = async (req, res) => {
     if (!cookie) {
       return res.status(404).json({
         success: false,
-        message: "Product not found",
+        message: "Cookie not found",
       });
     }
 
@@ -240,7 +240,7 @@ export const softDeleteProduct = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Product deleted successfully",
+      message: "Cookie deleted successfully",
     });
   } catch (error) {
     return res.status(500).json({
@@ -250,7 +250,7 @@ export const softDeleteProduct = async (req, res) => {
   }
 };
 
-export const deleteProduct = async (req, res) => {
+export const deleteCookie = async (req, res) => {
   try {
     const { id } = req.params;
     const cookie = await Cookie.findById(id);
@@ -258,7 +258,7 @@ export const deleteProduct = async (req, res) => {
     if (!cookie) {
       return res.status(404).json({
         success: false,
-        message: "Product not found",
+        message: "Cookie not found",
       });
     }
 
@@ -270,7 +270,7 @@ export const deleteProduct = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Product deleted successfully",
+      message: "Cookie deleted successfully",
     });
   } catch (error) {
     return res.status(500).json({
@@ -280,7 +280,7 @@ export const deleteProduct = async (req, res) => {
   }
 };
 
-export const updateProductStatus = async (req, res) => {
+export const updateCookieStatus = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -289,7 +289,7 @@ export const updateProductStatus = async (req, res) => {
     if (!cookie) {
       return res.status(404).json({
         success: false,
-        message: "Product not found",
+        message: "Cookie not found",
       });
     }
 
@@ -308,7 +308,7 @@ export const updateProductStatus = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Product status updated successfully",
+      message: "Cookie status updated successfully",
     });
   } catch (error) {
     return res.status(500).json({
@@ -318,7 +318,7 @@ export const updateProductStatus = async (req, res) => {
   }
 };
 
-export const getProducts = async (req, res) => {
+export const getCookies = async (req, res) => {
   try {
     const {
       isActive,
@@ -354,21 +354,21 @@ export const getProducts = async (req, res) => {
       lean: true,
     };
 
-    const products = await Cookie.paginate(query, options);
+    const cookies = await Cookie.paginate(query, options);
 
     return res.status(200).json({
       success: true,
-      message: "Products fetched successfully",
-      data: products.docs,
+      message: "Cookies fetched successfully",
+      data: cookies.docs,
       pagination: {
-        totalDocs: products.totalDocs,
-        totalPages: products.totalPages,
-        // page: products.page,
-        // limit: products.limit,
-        hasPrevPage: products.hasPrevPage,
-        hasNextPage: products.hasNextPage,
-        prevPage: products.prevPage,
-        nextPage: products.nextPage,
+        totalDocs: cookies.totalDocs,
+        totalPages: cookies.totalPages,
+        // page: cookies.page,
+        // limit: cookies.limit,
+        hasPrevPage: cookies.hasPrevPage,
+        hasNextPage: cookies.hasNextPage,
+        prevPage: cookies.prevPage,
+        nextPage: cookies.nextPage,
       },
     });
   } catch (error) {
@@ -379,7 +379,7 @@ export const getProducts = async (req, res) => {
   }
 };
 
-export const getProduct = async (req, res) => {
+export const getCookie = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -398,8 +398,8 @@ export const getProduct = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Product fetched successfully.",
-      product: {
+      message: "Cookie fetched successfully.",
+      data: {
         ...cookie,
         variants,
       },

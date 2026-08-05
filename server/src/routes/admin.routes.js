@@ -6,17 +6,17 @@ import upload from "../middleware/upload.middleware.js";
 import { getDashboard } from "../controllers/admin/dashboard.controller.js";
 
 import {
-  getProducts,
-  getProduct,
-  createProduct,
-  updateProduct,
-  deleteProduct,
-  bulkCreateProduct,
-  softDeleteProduct,
-  updateProductStatus,
-} from "../controllers/admin/product.controller.js";
+  getCookie,
+  getCookies,
+  createCookie,
+  updateCookie,
+  deleteCookie,
+  bulkCreateCookies,
+  softDeleteCookie,
+  updateCookieStatus,
+} from "../controllers/admin/cookie.controller.js";
 import { validate } from "../middleware/validation.middleware.js";
-import { productSchema } from "../validations/product.validation.js";
+import { cookieSchema } from "../validations/cookie.validation.js";
 
 import {
   getOrders,
@@ -32,12 +32,12 @@ import {
   deleteCustomer,
 } from "../controllers/admin/customer.controller.js";
 
-// import {
-//   getCategories,
-//   createCategory,
-//   updateCategory,
-//   deleteCategory,
-// } from "../controllers/admin/category.controller.js";
+import {
+  // getCategories,
+  createCategory,
+  // updateCategory,
+  // deleteCategory,
+} from "../controllers/admin/category.controller.js";
 
 import {
   getCoupons,
@@ -66,29 +66,28 @@ const router = express.Router();
 
 router.get("/dashboard", getDashboard);
 
-router.post("/products/search", getProducts);
-router.get("/products/:id", validateObjectId(), getProduct);
-router.post("/products", upload.single("cookie_image"), createProduct);
+router.post("/cookies/search", getCookies);
+router.get("/cookies/:id", validateObjectId(), getCookie);
 router.post(
-  "/",
-  verifyJWT,
-  verifyAdmin,
-  validate(productSchema),
-  createProduct,
+  "/cookies",
+  upload.single("cookie_image"),
+  validate(cookieSchema),
+  createCookie,
 );
+
 router.patch(
-  "/products/:id",
+  "/cookies/:id",
   validateObjectId(),
-  validate(productSchema),
-  updateProduct,
+  validate(cookieSchema),
+  updateCookie,
 );
-router.patch("/products/:id/status", validateObjectId(), updateProductStatus);
-router.delete("/products/:id", validateObjectId(), deleteProduct);
-router.post("/bulk/products", bulkCreateProduct);
-router.patch("/products/:id/soft-delete", softDeleteProduct);
+router.patch("/cookies/:id/status", validateObjectId(), updateCookieStatus);
+router.delete("/cookies/:id", validateObjectId(), deleteCookie);
+router.post("/bulk/cookies", bulkCreateCookies);
+router.patch("/cookies/:id/soft-delete", softDeleteCookie);
 
 // router.get("/categories", getCategories);
-// router.post("/categories", createCategory);
+router.post("/categories", createCategory);
 // router.patch("/categories/:id", updateCategory);
 // router.delete("/categories/:id", deleteCategory);
 
