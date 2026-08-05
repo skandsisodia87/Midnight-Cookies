@@ -1,12 +1,12 @@
 import Joi from "joi";
 
-export const productSchema = Joi.object({
+export const cookieSchema = Joi.object({
   name: Joi.string().trim().min(2).max(200).required().messages({
-    "string.base": "Product name must be a string",
-    "string.empty": "Product name is required",
-    "string.min": "Product name must be at least 2 characters",
-    "string.max": "Product name cannot exceed 200 characters",
-    "any.required": "Product name is required",
+    "string.base": "Cookie name must be a string",
+    "string.empty": "Cookie name is required",
+    "string.min": "Cookie name must be at least 2 characters",
+    "string.max": "Cookie name cannot exceed 200 characters",
+    "any.required": "Cookie name is required",
   }),
 
   description: Joi.string().trim().min(10).required().messages({
@@ -28,11 +28,11 @@ export const productSchema = Joi.object({
     "any.required": "Stock is required",
   }),
 
-  images: Joi.array().items(Joi.string()).min(1).required().messages({
-    "array.base": "Images must be an array",
-    "array.min": "At least one image is required",
-    "any.required": "Product image is required",
-  }),
+  // images: Joi.array().items(Joi.string()).min(1).required().messages({
+  //   "array.base": "Images must be an array",
+  //   "array.min": "At least one image is required",
+  //   "any.required": "Cookie image is required",
+  // }),
 
   ingredients: Joi.array()
     .items(Joi.string().trim())
