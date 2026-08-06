@@ -33,10 +33,10 @@ import {
 } from "../controllers/admin/customer.controller.js";
 
 import {
-  // getCategories,
+  getCategories,
   createCategory,
-  // updateCategory,
-  // deleteCategory,
+  updateCategory,
+  deleteCategory,
 } from "../controllers/admin/category.controller.js";
 
 import {
@@ -58,6 +58,7 @@ import {
 } from "../controllers/admin/newsletter.controller.js";
 
 import { getAnalytics } from "../controllers/admin/analytics.controller.js";
+import categorySchema from "../validations/category.validation.js";
 
 const router = express.Router();
 
@@ -86,10 +87,20 @@ router.delete("/cookies/:id", validateObjectId(), deleteCookie);
 router.post("/bulk/cookies", bulkCreateCookies);
 router.patch("/cookies/:id/soft-delete", softDeleteCookie);
 
-// router.get("/categories", getCategories);
-router.post("/categories", createCategory);
-// router.patch("/categories/:id", updateCategory);
-// router.delete("/categories/:id", deleteCategory);
+router
+  .route("/categories")
+  .get(getCategories)
+  .post(
+    upload.single("category_image"),
+    validate(categorySchema),
+    createCategory,
+  );
+
+router
+  .route("/categories/:id")
+  .all(validateObjectId())
+  .patch(updateCategory)
+  .delete(deleteCategory);
 
 router.post("/orders", getOrders);
 // router.get("/orders/:id", getOrder);
@@ -97,9 +108,12 @@ router.post("/orders", getOrders);
 // router.delete("/orders/:id", deleteOrder);
 
 router.get("/customers", getCustomers);
-router.get("/customers/:id", validateObjectId(), getCustomer);
+router
+  .route("/customers/:id")
+  .all(validateObjectId())
+  .get(getCustomer)
+  .delete(deleteCustomer);
 router.patch("/customers/:id/status", validateObjectId(), updateCustomerStatus);
-router.delete("/customers/:id", validateObjectId(), deleteCustomer);
 
 router.get("/coupons", getCoupons);
 router.get("/coupons/:id", validateObjectId(), getCoupon);
