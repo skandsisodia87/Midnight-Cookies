@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import placeholderCookie from "../../assets/images/placeholder-cookie.png";
 import { addToCart, getCart } from "../../services/cart.service";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import useCartStore from "../../store/cartStore";
 import useCartSync from "../../common/useCartSync";

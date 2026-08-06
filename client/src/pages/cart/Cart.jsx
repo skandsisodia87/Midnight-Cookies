@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { FiMinus, FiPlus, FiTrash2 } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import useCartStore from "../../store/cartStore";
