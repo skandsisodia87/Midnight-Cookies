@@ -62,7 +62,7 @@ export const createOrder = async (req, res) => {
         variantId: updatedVariant._id,
         sku: updatedVariant.sku,
         name: cookie.name,
-        image: cookie.images?.[0] || null,
+        image: cookie.images?.[0]?.url || null,
         quantity: item.quantity,
         weight: updatedVariant.weight,
         originalPrice: updatedVariant.price,
