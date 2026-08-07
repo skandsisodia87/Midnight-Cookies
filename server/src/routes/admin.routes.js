@@ -20,9 +20,9 @@ import { cookieSchema } from "../validations/cookie.validation.js";
 
 import {
   getOrders,
-  // getOrder,
-  // updateOrderStatus,
-  // deleteOrder,
+  getOrder,
+  updateOrderStatus,
+  deleteOrder,
 } from "../controllers/admin/order.controller.js";
 
 import {
@@ -103,9 +103,12 @@ router
   .delete(deleteCategory);
 
 router.post("/orders", getOrders);
-// router.get("/orders/:id", getOrder);
-// router.patch("/orders/:id/status", updateOrderStatus);
-// router.delete("/orders/:id", deleteOrder);
+router
+  .route("/orders/:id")
+  .all(validateObjectId())
+  .get(getOrder)
+  .delete(deleteOrder);
+router.patch("/orders/:id/status", validateObjectId(), updateOrderStatus);
 
 router.get("/customers", getCustomers);
 router

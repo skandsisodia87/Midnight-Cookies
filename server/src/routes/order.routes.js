@@ -6,8 +6,6 @@ import {
   createOrder,
   getMyOrders,
   getSingleOrder,
-  updateOrderStatus,
-  getAllOrders,
 } from "../controllers/order.controller.js";
 import { validate } from "../middleware/validation.middleware.js";
 import {
@@ -25,15 +23,5 @@ router.post("/", validate(createOrderSchema), createOrder);
 router.get("/my-orders", getMyOrders);
 
 router.get("/:orderId", getSingleOrder);
-
-router.get("/admin/all", verifyAdmin, getAllOrders);
-
-router.put(
-  "/admin/:id",
-  verifyAdmin,
-  validate(orderStatusSchema),
-  validateObjectId(),
-  updateOrderStatus,
-);
 
 export default router;

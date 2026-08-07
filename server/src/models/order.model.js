@@ -51,6 +51,10 @@ const orderItemSchema = new Schema(
       required: true,
       min: 0,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { _id: false },
 );
