@@ -5,6 +5,7 @@ import env from "../config/env.js";
 import { sendEmail } from "../services/email.service.js";
 import newsletterSubscribeTemplate from "../templates/newsletterSubscribeTemplate.js";
 import mongoose from "mongoose";
+import asyncHandler from "../utils/asyncHandler.js";
 
 export const subscribeNewsletter = async (req, res) => {
   const session = await mongoose.startSession();
@@ -81,34 +82,27 @@ export const subscribeNewsletter = async (req, res) => {
   }
 };
 
-export const verifyNewsletter = async (req, res) => {
-  try {
-    const { token } = req.params;
+export const verifyNewsletter = asyncHandler(async (req, res) => {
+  const { token } = req.params;
 
-    const subscriber = await Newsletter.findOne({
-      verificationToken: token,
-    });
+  const subscriber = await Newsletter.findOne({
+    verificationToken: token,
+  });
 
-    if (!subscriber) {
-      return res.status(404).json({
-        success: false,
-        message: "Invalid or expired verification link.",
-      });
-    }
-
-    subscriber.isVerified = true;
-    subscriber.verificationToken = null;
-
-    await subscriber.save();
-
-    return res.status(200).json({
-      success: true,
-      message: "Email verified successfully.",
-    });
-  } catch (error) {
-    return res.status(500).json({
+  if (!subscriber) {
+    return res.status(404).json({
       success: false,
-      message: error.message,
+      message: "Invalid or expired verification link.",
     });
   }
-};
+
+  subscriber.isVerified = true;
+  subscriber.verificationToken = null;
+
+  await subscriber.save();
+
+  return res.status(200).json({
+    success: true,
+    message: "Email verified successfully.",
+  });
+});

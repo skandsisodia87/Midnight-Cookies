@@ -7,6 +7,7 @@ import { generateOrderId } from "../utils/generateOrderId.js";
 import { orderStatusEmailTemplate } from "../templates/orderEmailTemplate.js";
 import { sendEmail } from "../services/email.service.js";
 import env from "../config/env.js";
+import asyncHandler from "../utils/asyncHandler.js";
 
 export const createOrder = async (req, res) => {
   const session = await mongoose.startSession();
@@ -129,65 +130,51 @@ export const createOrder = async (req, res) => {
   }
 };
 
-export const getMyOrders = async (req, res) => {
-  try {
-    const orders = await Order.find(
-      { userId: req.user._id },
-      "-_id -userId",
-    ).sort({
-      createdAt: -1,
-    });
+export const getMyOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find(
+    { userId: req.user._id },
+    "-_id -userId",
+  ).sort({
+    createdAt: -1,
+  });
 
-    return res.status(200).json({
-      success: true,
-      total: orders.length,
-      orders,
-    });
-  } catch (error) {
-    return res.status(500).json({
+  return res.status(200).json({
+    success: true,
+    total: orders.length,
+    orders,
+  });
+});
+
+export const getSingleOrder = asyncHandler(async (req, res) => {
+  const { orderId } = req.params;
+  const userId = req.user._id;
+
+  const order = await Order.findOne({
+    orderId,
+    userId, // Ensure user owns the order
+  }).lean();
+
+  if (!order) {
+    return res.status(404).json({
       success: false,
-      message: error.message,
+      message: "Order not found",
     });
   }
-};
 
-export const getSingleOrder = async (req, res) => {
-  try {
-    const { orderId } = req.params;
-    const userId = req.user._id;
+  const cookieIds = [
+    ...new Set(order.items.map((item) => item.cookieId.toString())),
+  ];
 
-    const order = await Order.findOne({
-      orderId,
-      userId, // Ensure user owns the order
-    }).lean();
+  const itemReviews = await Review.find({
+    userId,
+    cookieId: { $in: cookieIds },
+  })
+    .select("cookieId rating review")
+    .lean();
 
-    if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: "Order not found",
-      });
-    }
-
-    const cookieIds = [
-      ...new Set(order.items.map((item) => item.cookieId.toString())),
-    ];
-
-    const itemReviews = await Review.find({
-      userId,
-      cookieId: { $in: cookieIds },
-    })
-      .select("cookieId rating review")
-      .lean();
-
-    return res.status(200).json({
-      success: true,
-      order,
-      itemReviews,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
+  return res.status(200).json({
+    success: true,
+    order,
+    itemReviews,
+  });
+});
