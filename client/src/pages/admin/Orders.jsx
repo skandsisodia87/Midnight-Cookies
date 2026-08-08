@@ -5,6 +5,7 @@ import OrdersSkeleton from "../../components/admin/order/OrdersSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import { getOrders } from "../../services/admin/order.service";
 import ErrorPage from "../../common/ErrorPage";
+import EmptyState from "../../common/EmptyState";
 
 const Orders = () => {
   const { data, isError, isLoading } = useQuery({
@@ -26,6 +27,24 @@ const Orders = () => {
             title="Unable to load orders"
             message="We couldn’t fetch the latest orders right now. Please refresh the page or return to the admin dashboard."
             buttonText="Go Back"
+            redirectLink="/admin"
+          />
+        </div>
+      </div>
+    );
+  }
+
+  const orders = data?.orders || [];
+
+  if (orders.length === 0) {
+    return (
+      <div className="min-h-screen px-4 py-12 bg-[#FFF6EC]">
+        <div className="max-w-4xl mx-auto">
+          <EmptyState
+            icon="📦"
+            title="No orders yet"
+            message="There are no orders to display right now. Once customers place an order, it will appear here."
+            buttonText="Back to Dashboard"
             redirectLink="/admin"
           />
         </div>

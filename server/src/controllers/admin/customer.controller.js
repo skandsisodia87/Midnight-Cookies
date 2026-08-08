@@ -13,9 +13,9 @@ export const getCustomers = asyncHandler(async (req, res) => {
   return res.status(200).json({
     success: true,
     message: "Customers fetched successfully.",
-    data: customers,
+    customers,
   });
-});
+}); 
 
 export const getCustomer = asyncHandler(async (req, res) => {
   const { id } = req.params;
