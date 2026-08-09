@@ -6,8 +6,8 @@ import OrderStatus from "../../components/admin/dashboard/OrderStatus";
 import WelcomeCard from "../../components/admin/dashboard/WelcomeCard";
 import DashboardSkeleton from "../../components/admin/dashboard/DashboardSkeleton";
 import { useQuery } from "@tanstack/react-query";
-import { getDashboard } from "../../services/admin/dashboard.service";
 import ErrorPage from "../../common/ErrorPage";
+import { getDashboard } from "../../services/admin.service";
 
 export default function Dashboard() {
   const {

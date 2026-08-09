@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getCustomers } from "../../services/admin/customer.service";
 import ErrorPage from "../../common/ErrorPage";
 import EmptyState from "../../common/EmptyState";
 import CustomersSkeleton from "../../components/admin/customer/CustomersSkeleton";
 import CustomersTable from "../../components/admin/customer/CustomersTable";
+import { getCustomers } from "../../services/admin.service";
 
 const Customers = () => {
   const { data, isError, isLoading } = useQuery({

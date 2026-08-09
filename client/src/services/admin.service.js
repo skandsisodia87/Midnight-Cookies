@@ -57,3 +57,13 @@ export const getDashboard = async () => {
   const response = await api.get("/admin/dashboard");
   return transformDashboardData(response.data?.data);
 };
+
+export const getCustomers = async () => {
+  const response = await api.get("/admin/customers");
+  return response.data;
+};
+
+export const getOrders = async () => {
+  const response = await api.post("/admin/orders", {});
+  return response.data;
+};

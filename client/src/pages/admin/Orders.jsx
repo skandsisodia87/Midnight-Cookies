@@ -3,9 +3,9 @@ import OrdersTable from "../../components/admin/order/OrdersTable";
 import OrderStats from "../../components/admin/order/OrderStats";
 import OrdersSkeleton from "../../components/admin/order/OrdersSkeleton";
 import { useQuery } from "@tanstack/react-query";
-import { getOrders } from "../../services/admin/order.service";
 import ErrorPage from "../../common/ErrorPage";
 import EmptyState from "../../common/EmptyState";
+import { getOrders } from "../../services/admin.service";
 
 const Orders = () => {
   const { data, isError, isLoading } = useQuery({
