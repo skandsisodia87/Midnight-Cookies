@@ -1,4 +1,20 @@
 import { FiCalendar, FiPercent, FiTag, FiX } from "react-icons/fi";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createCoupon } from "../../../services/admin.service";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
+const emptyCoupon = {
+  code: "",
+  discountType: "percentage",
+  discountValue: "",
+  minimumOrderAmount: "",
+  maximumDiscount: "",
+  usageLimit: "",
+  startDate: "",
+  expiryDate: "",
+  isActive: true,
+};
 
 const FormField = ({
   label,
@@ -47,16 +63,121 @@ const inputClass = (error = false) => {
   `;
 };
 
-export default function CouponModal({
-  isOpen,
-  editingCoupon,
-  formData,
-  errors,
-  handleChange,
-  handleSubmit,
-  closeModal,
-}) {
+export default function CouponModal({ isOpen, editingCoupon, closeModal }) {
   if (!isOpen) return null;
+  const [formData, setFormData] = useState(emptyCoupon);
+  const [errors, setErrors] = useState({});
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (editingCoupon) {
+      setFormData({
+        code: editingCoupon.code,
+        discountType: editingCoupon.discountType,
+        discountValue: editingCoupon.discountValue,
+        minimumOrderAmount: editingCoupon.minimumOrderAmount,
+        maximumDiscount: editingCoupon.maximumDiscount || "",
+        usageLimit: editingCoupon.usageLimit,
+        startDate: editingCoupon.startDate,
+        expiryDate: editingCoupon.expiryDate,
+        isActive: editingCoupon.isActive,
+      });
+    } else {
+      setFormData(emptyCoupon);
+      setErrors({});
+    }
+  }, [editingCoupon]);
+
+  const { mutate, isPending, reset } = useMutation({
+    mutationFn: createCoupon,
+    onSuccess: (data) => {
+      toast.success(data.message || "Coupon created successfully.");
+      queryClient.invalidateQueries(["coupons"]);
+      closeModal();
+    },
+    onError: (error) => {
+      toast.error(
+        error.response?.data?.message ||
+          error.message ||
+          "Failed to create coupon.",
+      );
+    },
+  });
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    mutate(formData);
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.code.trim()) {
+      newErrors.code = "Coupon code is required.";
+    }
+
+    if (!formData.discountValue) {
+      newErrors.discountValue = "Discount value is required.";
+    } else if (Number(formData.discountValue) <= 0) {
+      newErrors.discountValue = "Enter a valid discount.";
+    }
+
+    if (
+      formData.discountType === "percentage" &&
+      Number(formData.discountValue) > 100
+    ) {
+      newErrors.discountValue = "Percentage cannot be greater than 100.";
+    }
+
+    if (!formData.minimumOrderAmount) {
+      newErrors.minimumOrderAmount = "Minimum order amount is required.";
+    }
+
+    if (!formData.usageLimit) {
+      newErrors.usageLimit = "Usage limit is required.";
+    }
+
+    if (!formData.startDate) {
+      newErrors.startDate = "Start date is required.";
+    }
+
+    if (!formData.expiryDate) {
+      newErrors.expiryDate = "Expiry date is required.";
+    }
+
+    if (
+      formData.startDate &&
+      formData.expiryDate &&
+      new Date(formData.expiryDate) < new Date(formData.startDate)
+    ) {
+      newErrors.expiryDate = "Expiry date must be after start date.";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2D1B16]/50 p-4 backdrop-blur-sm">
@@ -215,6 +336,7 @@ export default function CouponModal({
                   value={formData.startDate}
                   onChange={handleChange}
                   className={inputClass(errors.startDate) + " pl-9"}
+                  min={new Date().toISOString().split("T")[0]}
                 />
               </div>
             </FormField>
@@ -232,6 +354,7 @@ export default function CouponModal({
                   value={formData.expiryDate}
                   onChange={handleChange}
                   className={inputClass(errors.expiryDate) + " pl-9"}
+                  min={formData.startDate}
                 />
               </div>
             </FormField>
@@ -278,7 +401,11 @@ export default function CouponModal({
               type="submit"
               className="rounded-xl bg-[#4E342E] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#3E2723]"
             >
-              {editingCoupon ? "Update Coupon" : "Create Coupon"}
+              {editingCoupon
+                ? "Update Coupon"
+                : isPending
+                  ? "Creating..."
+                  : "Create Coupon"}
             </button>
           </div>
         </form>

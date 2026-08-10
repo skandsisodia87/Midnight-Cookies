@@ -8,10 +8,6 @@ export const couponSchema = Joi.object({
     "any.required": "Coupon code is required",
   }),
 
-  description: Joi.string().trim().allow("").max(500).messages({
-    "string.max": "Description cannot exceed 500 characters",
-  }),
-
   discountType: Joi.string().valid("percentage", "fixed").required().messages({
     "any.only": "Discount type must be either 'percentage' or 'fixed'",
     "any.required": "Discount type is required",
@@ -32,6 +28,10 @@ export const couponSchema = Joi.object({
     }),
 
   minimumOrderAmount: Joi.number().min(0).default(0).messages({
+    "number.min": "Minimum order amount cannot be negative",
+  }),
+
+  maximumDiscount: Joi.number().allow(null).default(0).messages({
     "number.min": "Minimum order amount cannot be negative",
   }),
 

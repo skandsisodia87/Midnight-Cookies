@@ -78,7 +78,7 @@ const App = () => {
       }
     };
 
-    if (isAuthenticated) {
+    if (isAuthenticated && user.role !== "admin") {
       fetchCart();
     } else {
       clearCart();

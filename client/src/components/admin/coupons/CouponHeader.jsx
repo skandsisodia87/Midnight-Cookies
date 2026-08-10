@@ -16,7 +16,7 @@ const CouponHeader = ({ onCreate }) => {
       <button
         type="button"
         onClick={onCreate}
-        className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#4E342E] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#3E2723] active:scale-[0.98]"
+        className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#4E342E] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#3E2723] active:scale-[0.98] cursor-pointer"
       >
         <FiPlus size={18} />
         Create Coupon

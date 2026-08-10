@@ -67,3 +67,32 @@ export const getOrders = async () => {
   const response = await api.post("/admin/orders", {});
   return response.data;
 };
+
+export const getCoupons = async () => {
+  const response = await api.get("/admin/coupons");
+  return response.data;
+};
+
+export const createCoupon = async (data) => {
+  const transformedData = {
+    ...data,
+    code: data.code.trim().toUpperCase(),
+    discountValue: Number(data.discountValue),
+    minimumOrderAmount: Number(data.minimumOrderAmount),
+    maximumDiscount:
+      data.maximumDiscount === "" ? null : Number(data.maximumDiscount),
+    usageLimit: Number(data.usageLimit),
+  };
+  const response = await api.post("/admin/coupons", transformedData);
+  return response.data;
+};
+
+export const toggleCouponStatus = async (couponId) => {
+  const response = await api.patch(`/admin/coupons/${couponId}/status`);
+  return response.data;
+};
+
+export const deleteCouponById = async (couponId) => {
+  const response = await api.delete(`/admin/coupons/${couponId}`);
+  return response.data;
+};

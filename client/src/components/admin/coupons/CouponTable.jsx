@@ -6,15 +6,13 @@ import {
   FiTag,
   FiTrash2,
 } from "react-icons/fi";
+import { formatDate, getDiscountText, renderStatus } from "./coupon.helper.jsx";
 
 const CouponTable = ({
   coupons,
   openEditModal,
   handleToggleStatus,
   setDeleteCoupon,
-  renderStatus,
-  getDiscountText,
-  formatDate,
 }) => {
   return (
     <div className="hidden overflow-x-auto lg:block">

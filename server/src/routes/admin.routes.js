@@ -41,7 +41,7 @@ import {
 
 import {
   getCoupons,
-  getCoupon,
+  toggleCouponStatus,
   createCoupon,
   updateCoupon,
   deleteCoupon,
@@ -119,7 +119,7 @@ router
 router.patch("/customers/:id/status", validateObjectId(), updateCustomerStatus);
 
 router.get("/coupons", getCoupons);
-router.get("/coupons/:id", validateObjectId(), getCoupon);
+router.patch("/coupons/:id/status", validateObjectId(), toggleCouponStatus);
 router.post("/coupons", validate(couponSchema), createCoupon);
 router
   .route("/coupons/:id")

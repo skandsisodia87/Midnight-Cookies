@@ -1,13 +1,11 @@
 import { FiEdit2, FiPower, FiTag, FiTrash2 } from "react-icons/fi";
+import { getDiscountText, renderStatus, formatDate } from "./coupon.helper.jsx";
 
 const CouponMobileList = ({
   coupons,
   openEditModal,
   handleToggleStatus,
   setDeleteCoupon,
-  renderStatus,
-  getDiscountText,
-  formatDate,
 }) => {
   return (
     <div className="divide-y divide-[#F3E4D4] lg:hidden">

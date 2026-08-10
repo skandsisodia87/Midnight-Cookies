@@ -2,19 +2,58 @@ import Coupon from "../../models/coupon.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 
 export const getCoupons = asyncHandler(async (_, res) => {
-  const coupons = await Coupon.find().sort({ createdAt: -1 });
+  const [coupons, totalCoupons, activeCoupons, expiredCoupons, usageResult] =
+    await Promise.all([
+      Coupon.find({ isDeleted: false }).sort({ createdAt: -1 }),
+
+      Coupon.countDocuments({ isDeleted: false }),
+
+      Coupon.countDocuments({
+        isActive: true,
+        isDeleted: false,
+      }),
+
+      Coupon.countDocuments({
+        expiryDate: { $lt: new Date() },
+        isDeleted: false,
+      }),
+
+      Coupon.aggregate([
+        {
+          $match: {
+            isDeleted: false,
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            totalUsage: {
+              $sum: "$usedCount",
+            },
+          },
+        },
+      ]),
+    ]);
+
+  const totalUsage = usageResult[0]?.totalUsage || 0;
 
   return res.status(200).json({
     success: true,
     message: "Coupons fetched successfully.",
-    data: coupons,
+    coupons,
+    stats: {
+      totalUsage,
+      totalCoupons,
+      activeCoupons,
+      expiredCoupons,
+    },
   });
 });
 
-export const getCoupon = asyncHandler(async (req, res) => {
+export const toggleCouponStatus = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const coupon = await Coupon.findById(id);
+  const coupon = await Coupon.findByIdAndUpdate(id);
 
   if (!coupon) {
     return res.status(404).json({
@@ -23,9 +62,12 @@ export const getCoupon = asyncHandler(async (req, res) => {
     });
   }
 
+  coupon.isActive = !coupon.isActive;
+  await coupon.save();
+
   return res.status(200).json({
     success: true,
-    message: "Coupon fetched successfully.",
+    message: "Coupon status updated successfully.",
     data: coupon,
   });
 });

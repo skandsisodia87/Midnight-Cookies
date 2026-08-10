@@ -9,10 +9,6 @@ const couponSchema = new mongoose.Schema(
       uppercase: true,
       trim: true,
     },
-    description: {
-      type: String,
-      trim: true,
-    },
     discountType: {
       type: String,
       required: true,
@@ -26,6 +22,10 @@ const couponSchema = new mongoose.Schema(
     minimumOrderAmount: {
       type: Number,
       default: 0,
+    },
+    maximumDiscount: {
+      type: Number,
+      default: null,
     },
     usageLimit: {
       type: Number,
