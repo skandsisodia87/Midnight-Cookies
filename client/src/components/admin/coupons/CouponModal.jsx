@@ -1,6 +1,7 @@
+import moment from "moment";
 import { FiCalendar, FiPercent, FiTag, FiX } from "react-icons/fi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createCoupon } from "../../../services/admin.service";
+import { saveCoupon } from "../../../services/admin.service";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -78,8 +79,8 @@ export default function CouponModal({ isOpen, editingCoupon, closeModal }) {
         minimumOrderAmount: editingCoupon.minimumOrderAmount,
         maximumDiscount: editingCoupon.maximumDiscount || "",
         usageLimit: editingCoupon.usageLimit,
-        startDate: editingCoupon.startDate,
-        expiryDate: editingCoupon.expiryDate,
+        startDate: moment(editingCoupon.startDate).format("YYYY-MM-DD"),
+        expiryDate: moment(editingCoupon.expiryDate).format("YYYY-MM-DD"),
         isActive: editingCoupon.isActive,
       });
     } else {
@@ -89,7 +90,7 @@ export default function CouponModal({ isOpen, editingCoupon, closeModal }) {
   }, [editingCoupon]);
 
   const { mutate, isPending, reset } = useMutation({
-    mutationFn: createCoupon,
+    mutationFn: saveCoupon,
     onSuccess: (data) => {
       toast.success(data.message || "Coupon created successfully.");
       queryClient.invalidateQueries(["coupons"]);
@@ -127,7 +128,7 @@ export default function CouponModal({ isOpen, editingCoupon, closeModal }) {
       return;
     }
 
-    mutate(formData);
+    mutate({ formData, couponId: editingCoupon?._id });
   };
 
   const validateForm = () => {

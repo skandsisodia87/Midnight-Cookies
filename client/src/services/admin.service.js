@@ -73,17 +73,26 @@ export const getCoupons = async () => {
   return response.data;
 };
 
-export const createCoupon = async (data) => {
+export const saveCoupon = async ({ formData, couponId = null }) => {
   const transformedData = {
-    ...data,
-    code: data.code.trim().toUpperCase(),
-    discountValue: Number(data.discountValue),
-    minimumOrderAmount: Number(data.minimumOrderAmount),
+    ...formData,
+    discountValue: Number(formData.discountValue),
+    minimumOrderAmount: Number(formData.minimumOrderAmount),
     maximumDiscount:
-      data.maximumDiscount === "" ? null : Number(data.maximumDiscount),
-    usageLimit: Number(data.usageLimit),
+      formData.maximumDiscount === "" ? null : Number(formData.maximumDiscount),
+    usageLimit: Number(formData.usageLimit),
   };
-  const response = await api.post("/admin/coupons", transformedData);
+
+  if (couponId) {
+    delete transformedData.code;
+  } else {
+    transformedData.code = formData.code.trim().toUpperCase();
+  }
+
+  const response = couponId
+    ? await api.patch(`/admin/coupons/${couponId}`, transformedData)
+    : await api.post("/admin/coupons", transformedData);
+
   return response.data;
 };
 

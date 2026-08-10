@@ -86,7 +86,6 @@ export const updateCoupon = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const {
-    description,
     discountType,
     discountValue,
     minimumOrderAmount,
@@ -108,8 +107,6 @@ export const updateCoupon = asyncHandler(async (req, res) => {
       message: "Coupon not found",
     });
   }
-
-  if (description !== undefined) coupon.description = description;
 
   if (discountType !== undefined) coupon.discountType = discountType;
 
