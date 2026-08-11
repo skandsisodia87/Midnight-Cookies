@@ -68,6 +68,26 @@ export const getOrders = async () => {
   return response.data;
 };
 
+export const getCategories = async () => {
+  const response = await api.get("/admin/categories");
+  return response.data;
+};
+
+export const createCategory = async (formData) => {
+  const response = await api.post("/admin/categories", formData);
+  return response.data;
+};
+
+export const updateCategory = async ({ categoryId, payload }) => {
+  const response = await api.patch(`/admin/categories/${categoryId}`, payload);
+  return response.data;
+};
+
+export const deleteCategoryById = async (categoryId) => {
+  const response = await api.delete(`/admin/categories/${categoryId}`);
+  return response.data;
+};
+
 export const getCoupons = async () => {
   const response = await api.get("/admin/coupons");
   return response.data;

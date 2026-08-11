@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 
 import {
   FiGrid,
+  FiLayers,
   FiPackage,
   FiShoppingBag,
   FiUsers,
@@ -28,6 +29,11 @@ const menus = [
     name: "Products",
     icon: <FiPackage />,
     path: "/admin/products",
+  },
+  {
+    name: "Categories",
+    icon: <FiLayers />,
+    path: "/admin/categories",
   },
   {
     name: "Orders",
@@ -132,7 +138,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           </div>
         </div>
 
-        <nav className="mt-4 flex-1 space-y-1 overflow-y-auto px-3">
+        <nav className="mt-3 flex-1 space-y-1 overflow-y-auto px-3 pb-6">
           {menus.map((item) => (
             <NavLink
               key={item.name}

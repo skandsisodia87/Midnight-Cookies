@@ -22,6 +22,7 @@ const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
 const AdminOrders = lazy(() => import("./pages/admin/Orders"));
 const Customers = lazy(() => import("./pages/admin/Customers"));
 const Products = lazy(() => import("./pages/admin/Products"));
+const Categories = lazy(() => import("./pages/admin/Categories.jsx"));
 const Coupons = lazy(() => import("./pages/admin/Coupons"));
 const Newsletter = lazy(() => import("./pages/admin/Newsletter"));
 const Settings = lazy(() => import("./pages/admin/Settings"));
@@ -125,6 +126,7 @@ const App = () => {
             <Route path="/admin/orders" element={<AdminOrders />} />
             <Route path="/admin/orders/edit" element={<EditOrder />} />
             <Route path="/admin/products" element={<Products />} />
+            <Route path="/admin/categories" element={<Categories />} />
             <Route path="/admin/customers" element={<Customers />} />
             <Route path="/admin/coupons" element={<Coupons />} />
             <Route path="/admin/newsletter" element={<Newsletter />} />
