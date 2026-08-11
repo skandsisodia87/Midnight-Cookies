@@ -1,10 +1,7 @@
 import express from "express";
-
 import verifyJWT from "../middleware/auth.middleware.js";
-import verifyAdmin from "../middleware/admin.middleware.js";
 import upload from "../middleware/upload.middleware.js";
 import { getDashboard } from "../controllers/admin/dashboard.controller.js";
-
 import {
   getCookie,
   getCookies,
@@ -15,23 +12,24 @@ import {
   softDeleteCookie,
   updateCookieStatus,
 } from "../controllers/admin/cookie.controller.js";
-import { validate } from "../middleware/validation.middleware.js";
+import {
+  validate,
+  validateObjectId,
+  validateUserRole,
+} from "../middleware/validation.middleware.js";
 import { cookieSchema } from "../validations/cookie.validation.js";
-
 import {
   getOrders,
   getOrder,
   updateOrderStatus,
   deleteOrder,
 } from "../controllers/admin/order.controller.js";
-
 import {
   getCustomers,
   getCustomer,
   updateCustomerStatus,
   deleteCustomer,
 } from "../controllers/admin/customer.controller.js";
-
 import {
   getCategories,
   createCategory,
@@ -46,24 +44,21 @@ import {
   updateCoupon,
   deleteCoupon,
 } from "../controllers/admin/coupon.controller.js";
-import validateObjectId from "../middleware/validateObjectId.js";
 import {
   couponSchema,
   updateCouponSchema,
 } from "../validations/coupon.validation.js";
-
 import {
   getSubscribers,
   deleteSubscriber,
 } from "../controllers/admin/newsletter.controller.js";
-
 import { getAnalytics } from "../controllers/admin/analytics.controller.js";
 import categorySchema from "../validations/category.validation.js";
 
 const router = express.Router();
 
-// router.use(verifyJWT);
-// router.use(verifyAdmin);
+router.use(verifyJWT);
+router.use(validateUserRole("admin"));
 
 router.get("/dashboard", getDashboard);
 
@@ -95,7 +90,6 @@ router
     validate(categorySchema),
     createCategory,
   );
-
 router
   .route("/categories/:id")
   .all(validateObjectId())

@@ -8,11 +8,15 @@ import {
   removeCartItem,
   clearCart,
 } from "../controllers/cart.controller.js";
-import validateObjectId from "../middleware/validateObjectId.js";
+import {
+  validateObjectId,
+  validateUserRole,
+} from "../middleware/validation.middleware.js";
 
 const router = Router();
 
 router.use(verifyToken);
+router.use(validateUserRole("user"));
 
 router.post("/add", addToCart);
 

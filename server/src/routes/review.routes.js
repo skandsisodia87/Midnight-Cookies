@@ -5,14 +5,23 @@ import {
   getCookieReviews,
   deleteReview,
 } from "../controllers/review.controller.js";
-import validateObjectId from "../middleware/validateObjectId.js";
+import {
+  validateObjectId,
+  validateUserRole,
+} from "../middleware/validation.middleware.js";
 
 const router = express.Router();
 
 router.get("/:cookieId", validateObjectId("cookieId"), getCookieReviews);
 
-router.post("/", verifyJWT, createReview);
+router.post("/", verifyJWT, validateUserRole("user"), createReview);
 
-router.delete("/:id", verifyJWT, validateObjectId(), deleteReview);
+router.delete(
+  "/:id",
+  verifyJWT,
+  validateUserRole("user"),
+  validateObjectId(),
+  deleteReview,
+);
 
 export default router;

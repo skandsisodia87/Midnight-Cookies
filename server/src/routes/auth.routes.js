@@ -18,7 +18,10 @@ import {
   resetPasswordSchema,
   verifyEmailOtpSchema,
 } from "../validations/auth.validation.js";
-import { validate } from "../middleware/validation.middleware.js";
+import {
+  validate,
+  validateUserRole,
+} from "../middleware/validation.middleware.js";
 
 const router = express.Router();
 
@@ -38,9 +41,14 @@ router.post(
   verifyEmailOtp,
 );
 
-router.post("/logout", verifyJWT, logoutUser);
+router.post(
+  "/logout",
+  verifyJWT,
+  validateUserRole("user", "admin"),
+  logoutUser,
+);
 
-router.get("/me", verifyJWT, getCurrentUser);
+router.get("/me", verifyJWT, validateUserRole("user", "admin"), getCurrentUser);
 
 router.post("/refresh-token", refreshAccessToken);
 

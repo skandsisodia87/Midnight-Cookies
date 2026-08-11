@@ -7,24 +7,25 @@ import {
   getAddressById,
 } from "../controllers/address.controller.js";
 import verifyToken from "../middleware/auth.middleware.js";
-import { validate } from "../middleware/validation.middleware.js";
+import {
+  validate,
+  validateObjectId,
+  validateUserRole,
+} from "../middleware/validation.middleware.js";
 import { addressSchema } from "../validations/address.validation.js";
-import validateObjectId from "../middleware/validateObjectId.js";
 
 const router = express.Router();
 
 router.use(verifyToken);
+router.use(validateUserRole("user"));
 
-router
-  .route("/")
-  .post(validate(addressSchema), addAddress)
-  .get(validate(addressSchema), getAddresses);
+router.route("/").post(validate(addressSchema), addAddress).get(getAddresses);
 
 router
   .route("/:addressId")
   .all(validateObjectId("addressId"))
   .get(getAddressById)
-  .put(updateAddress)
+  .put(validate(addressSchema), updateAddress)
   .delete(deleteAddress);
 
 export default router;

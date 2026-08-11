@@ -31,6 +31,7 @@ import useAuthStore from "./store/authStore";
 import VerifyEmailRoute from "./routes/VerifyEmailRoute";
 import ProtectedRoute from "./routes/ProtectedRoutes";
 import PublicRoute from "./routes/PublicRoutes";
+import NonAdminRoute from "./routes/NonAdminRoute";
 import { getCart } from "./services/cart.service";
 import useCartStore from "./store/cartStore";
 import LandingPageLoader from "./pages/misc/LandingPageLoader";
@@ -89,31 +90,33 @@ const App = () => {
   return (
     <Suspense fallback={<LandingPageLoader />}>
       <Routes>
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/cookies" element={<Cookies />} />
-          <Route path="/cookies/:slug" element={<CookieDetails />} />
-        </Route>
-
-        <Route element={<PublicRoute />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
-        </Route>
-
-        <Route element={<VerifyEmailRoute />}>
-          <Route path="/verify-email" element={<VerifyEmail />} />
-        </Route>
-
-        <Route element={<ProtectedRoute />}>
+        <Route element={<NonAdminRoute />}>
           <Route element={<MainLayout />}>
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/orders" element={<Orders />} />
-            <Route path="/orders/:orderId" element={<OrderDetails />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/cookies" element={<Cookies />} />
+            <Route path="/cookies/:slug" element={<CookieDetails />} />
           </Route>
-          <Route path="/checkout" element={<CheckoutPage />} />
+
+          <Route element={<PublicRoute />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
+          </Route>
+
+          <Route element={<VerifyEmailRoute />}>
+            <Route path="/verify-email" element={<VerifyEmail />} />
+          </Route>
+
+          <Route element={<ProtectedRoute />}>
+            <Route element={<MainLayout />}>
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/orders" element={<Orders />} />
+              <Route path="/orders/:orderId" element={<OrderDetails />} />
+            </Route>
+            <Route path="/checkout" element={<CheckoutPage />} />
+          </Route>
         </Route>
 
         <Route element={<AdminRoute />}>
