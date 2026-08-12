@@ -37,7 +37,7 @@ const Categories = () => {
 
   const categories = data?.categories || [];
 
-  const { mutate: addCategory, isLoading: isCreating } = useMutation({
+  const { mutate: addCategory, isPending: isCreating } = useMutation({
     mutationFn: createCategory,
     onSuccess: (response) => {
       toast.success(response.message || "Category created successfully.");
@@ -55,7 +55,7 @@ const Categories = () => {
     },
   });
 
-  const { mutate: removeCategory, isLoading: isDeleting } = useMutation({
+  const { mutate: removeCategory, isPending: isDeleting } = useMutation({
     mutationFn: deleteCategoryById,
     onSuccess: (response) => {
       toast.success(response.message || "Category deleted successfully.");
@@ -155,7 +155,7 @@ const Categories = () => {
             <button
               type="button"
               onClick={handleOpenModal}
-              className="inline-flex items-center gap-2 rounded-2xl bg-[#4E342E] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#3E2723]"
+              className="inline-flex items-center gap-2 rounded-2xl bg-[#4E342E] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#3E2723] cursor-pointer"
             >
               <FiPlus size={18} />
               Add category

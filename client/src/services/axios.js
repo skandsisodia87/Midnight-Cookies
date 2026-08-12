@@ -3,15 +3,20 @@ import useAuthStore from "../store/authStore";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-
-  headers: {
-    "Content-Type": "application/json",
-  },
-
   withCredentials: true,
 });
 
-// RESPONSE INTERCEPTOR
+api.interceptors.request.use((config) => {
+  if (config.data instanceof FormData) {
+    // Let Axios/browser set Content-Type + boundary
+    delete config.headers["Content-Type"];
+  } else {
+    config.headers["Content-Type"] = "application/json";
+  }
+
+  return config;
+});
+
 api.interceptors.response.use(
   (response) => response,
 

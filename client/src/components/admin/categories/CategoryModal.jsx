@@ -38,13 +38,6 @@ const CategoryModal = ({
               Add a new category for your store.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-full border border-[#E4D7C8] px-4 py-2 text-sm font-medium text-[#4E342E] transition hover:bg-[#FFF4E6]"
-          >
-            Cancel
-          </button>
         </div>
 
         <form onSubmit={onSubmit} className="space-y-5 p-6">
@@ -132,7 +125,7 @@ const CategoryModal = ({
             <button
               type="submit"
               disabled={submitting}
-              className="rounded-2xl bg-[#4E342E] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#3E2723] disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-2xl bg-[#4E342E] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#3E2723] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
             >
               {submitting ? "Saving..." : "Create Category"}
             </button>

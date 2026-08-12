@@ -32,10 +32,12 @@ const categorySchema = new Schema(
       type: Boolean,
       default: true,
     },
-
     sortOrder: {
       type: Number,
       default: 0,
+    },
+    isDefault: {
+      type: Boolean,
     },
   },
   { timestamps: true },

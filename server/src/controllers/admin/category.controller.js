@@ -1,4 +1,5 @@
 import Category from "../../models/category.model.js";
+import Cookie from "../../models/cookie.model.js";
 import {
   deleteFromCloudinary,
   uploadOnCloudinary,
@@ -80,7 +81,7 @@ export const updateCategory = asyncHandler(async (req, res) => {
 
 export const getCategories = asyncHandler(async (req, res) => {
   const categories = await Category.find({}).select(
-    "name slug description image ",
+    "name slug description image isDefault",
   );
 
   return res.status(200).json({
@@ -107,6 +108,17 @@ export const deleteCategory = asyncHandler(async (req, res) => {
   }
 
   await category.deleteOne();
+
+  // Update category of cookies
+  // const defaultCategory = await Category.findOne({ isDefault: true }).lean();
+  // await Cookie.updateMany(
+  //   { category: id },
+  //   {
+  //     $set: {
+  //       category: defaultCategory._id,
+  //     },
+  //   },
+  // );
 
   return res.status(200).json({
     success: true,
