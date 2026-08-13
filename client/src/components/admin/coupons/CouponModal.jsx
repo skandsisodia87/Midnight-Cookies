@@ -89,10 +89,10 @@ export default function CouponModal({ isOpen, editingCoupon, closeModal }) {
     }
   }, [editingCoupon]);
 
-  const { mutate, isPending, reset } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: saveCoupon,
     onSuccess: (data) => {
-      toast.success(data.message || "Coupon created successfully.");
+      toast.success(data.message || "Coupon saved successfully.");
       queryClient.invalidateQueries(["coupons"]);
       closeModal();
     },
@@ -124,14 +124,14 @@ export default function CouponModal({ isOpen, editingCoupon, closeModal }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!validateForm()) {
+    if (!validateForm(editingCoupon === null)) {
       return;
     }
 
     mutate({ formData, couponId: editingCoupon?._id });
   };
 
-  const validateForm = () => {
+  const validateForm = (newCoupon) => {
     const newErrors = {};
 
     if (!formData.code.trim()) {
@@ -337,7 +337,11 @@ export default function CouponModal({ isOpen, editingCoupon, closeModal }) {
                   value={formData.startDate}
                   onChange={handleChange}
                   className={inputClass(errors.startDate) + " pl-9"}
-                  min={new Date().toISOString().split("T")[0]}
+                  min={
+                    editingCoupon
+                      ? formData.startDate
+                      : new Date().toISOString().split("T")[0]
+                  }
                 />
               </div>
             </FormField>
@@ -400,12 +404,13 @@ export default function CouponModal({ isOpen, editingCoupon, closeModal }) {
 
             <button
               type="submit"
-              className="rounded-xl bg-[#4E342E] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#3E2723]"
+              className="rounded-xl bg-[#4E342E] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#3E2723] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+              disabled={isPending}
             >
-              {editingCoupon
-                ? "Update Coupon"
-                : isPending
-                  ? "Creating..."
+              {isPending
+                ? "Saving..."
+                : editingCoupon
+                  ? "Update Coupon"
                   : "Create Coupon"}
             </button>
           </div>

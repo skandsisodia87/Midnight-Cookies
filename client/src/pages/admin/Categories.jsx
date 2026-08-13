@@ -9,23 +9,14 @@ import CategoryModal from "../../components/admin/categories/CategoryModal";
 import CategoryCard from "../../components/admin/categories/CategoryCard";
 import CategoriesSkeleton from "../../components/admin/categories/CategoriesSkeleton";
 import {
-  createCategory,
   deleteCategoryById,
   getCategories,
 } from "../../services/admin.service";
 
-const initialForm = {
-  name: "",
-  slug: "",
-  description: "",
-  image: null,
-};
-
 const Categories = () => {
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState(initialForm);
-  const [errors, setErrors] = useState({});
+  const [editingCategory, setEditingCategory] = useState(null);
   const [deleteCategory, setDeleteCategory] = useState(null);
 
   const { data, isLoading, isError, refetch } = useQuery({
@@ -36,24 +27,6 @@ const Categories = () => {
   });
 
   const categories = data?.categories || [];
-
-  const { mutate: addCategory, isPending: isCreating } = useMutation({
-    mutationFn: createCategory,
-    onSuccess: (response) => {
-      toast.success(response.message || "Category created successfully.");
-      queryClient.invalidateQueries(["admin-categories"]);
-      setIsModalOpen(false);
-      setFormData(initialForm);
-      setErrors({});
-    },
-    onError: (error) => {
-      toast.error(
-        error.response?.data?.message ||
-          error.message ||
-          "Failed to create category.",
-      );
-    },
-  });
 
   const { mutate: removeCategory, isPending: isDeleting } = useMutation({
     mutationFn: deleteCategoryById,
@@ -70,50 +43,6 @@ const Categories = () => {
       );
     },
   });
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required.";
-    }
-
-    if (!formData.slug.trim()) {
-      newErrors.slug = "Slug is required.";
-    } else if (!/^[a-z0-9-]+$/.test(formData.slug)) {
-      newErrors.slug =
-        "Slug can only contain lowercase letters, numbers, and hyphens.";
-    }
-
-    if (!formData.image) {
-      newErrors.image = "Category image is required.";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleOpenModal = () => {
-    setFormData(initialForm);
-    setErrors({});
-    setIsModalOpen(true);
-  };
-
-  const handleCreateCategory = (event) => {
-    event.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
-
-    const payload = new FormData();
-    payload.append("name", formData.name.trim());
-    payload.append("slug", formData.slug.trim());
-    payload.append("description", formData.description.trim());
-    payload.append("category_image", formData.image);
-
-    addCategory(payload);
-  };
 
   const confirmDelete = () => {
     if (!deleteCategory) return;
@@ -154,7 +83,7 @@ const Categories = () => {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <button
               type="button"
-              onClick={handleOpenModal}
+              onClick={() => setIsModalOpen(true)}
               className="inline-flex items-center gap-2 rounded-2xl bg-[#4E342E] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#3E2723] cursor-pointer"
             >
               <FiPlus size={18} />
@@ -179,7 +108,7 @@ const Categories = () => {
               title="No categories yet"
               message="Add your first category to organize your store."
               buttonText="Add category"
-              onButtonClick={handleOpenModal}
+              onButtonClick={() => setIsModalOpen(true)}
               className="max-w-xl mx-auto"
             />
           </div>
@@ -191,6 +120,10 @@ const Categories = () => {
               key={category._id}
               category={category}
               onDelete={setDeleteCategory}
+              onEdit={(category) => {
+                setEditingCategory(category);
+                setIsModalOpen(true);
+              }}
             />
           ))}
         </div>
@@ -198,12 +131,11 @@ const Categories = () => {
 
       <CategoryModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        formData={formData}
-        setFormData={setFormData}
-        errors={errors}
-        onSubmit={handleCreateCategory}
-        submitting={isCreating}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingCategory(null);
+        }}
+        editingCategory={editingCategory}
       />
 
       <DeleteDialog

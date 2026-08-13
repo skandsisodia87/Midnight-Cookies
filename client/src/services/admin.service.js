@@ -79,7 +79,13 @@ export const createCategory = async (formData) => {
 };
 
 export const updateCategory = async ({ categoryId, payload }) => {
-  const response = await api.patch(`/admin/categories/${categoryId}`, payload);
+  const { image, ...updatePayload } = payload;
+
+  const response = await api.patch(
+    `/admin/categories/${categoryId}`,
+    updatePayload,
+  );
+
   return response.data;
 };
 

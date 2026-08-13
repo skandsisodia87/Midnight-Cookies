@@ -9,8 +9,12 @@ const CategoryCard = ({ category, onDelete, onEdit }) => {
           style={{ backgroundImage: `url(${category.image})` }}
         />
         <div className="absolute inset-0 bg-linear-to-t from-[#1F140F]/80 via-transparent to-transparent" />
-        <span className="absolute right-4 bottom-4 inline-flex rounded-full bg-[#EEF7EA] px-3 py-1 text-xs font-semibold text-[#4F7C5B]">
-          Active
+        <span className={`absolute right-4 bottom-4 inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+          category.isActive
+            ? "bg-[#EEF7EA] text-[#4F7C5B]"
+            : "bg-[#F5E8E8] text-[#A15C4D]"
+        }`}>
+          {category.isActive ? "Active" : "In Active"}
         </span>
       </div>
 
@@ -29,7 +33,7 @@ const CategoryCard = ({ category, onDelete, onEdit }) => {
             <div className="flex flex-wrap gap-2">
               <button
                 type="button"
-                // onClick={() => onEdit(category)}
+                onClick={() => onEdit(category)}
                 className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#1B67B2]/10 text-[#1B67B2] transition hover:bg-[#E8F2FC] hover:text-[#155493] cursor-pointer"
               >
                 <FiEdit2 size={18} />

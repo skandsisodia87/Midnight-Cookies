@@ -48,13 +48,15 @@ export const createCategory = asyncHandler(async (req, res) => {
 export const updateCategory = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const { name, slug, description } = req.body;
+  const { name, slug, description, isActive } = req.body;
 
   const dataToUpdate = {};
 
   if (name) dataToUpdate.name = name;
   if (slug) dataToUpdate.slug = slug;
   if (description) dataToUpdate.description = description;
+  if (isActive !== undefined || isActive !== null)
+    dataToUpdate.isActive = isActive;
 
   const category = await Category.findByIdAndUpdate(
     id,
@@ -81,7 +83,7 @@ export const updateCategory = asyncHandler(async (req, res) => {
 
 export const getCategories = asyncHandler(async (req, res) => {
   const categories = await Category.find({}).select(
-    "name slug description image isDefault",
+    "name slug description image isDefault isActive",
   );
 
   return res.status(200).json({
