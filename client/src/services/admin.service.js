@@ -58,6 +58,11 @@ export const getDashboard = async () => {
   return transformDashboardData(response.data?.data);
 };
 
+export const getAnalytics = async () => {
+  const response = await api.get("/admin/analytics");
+  return response.data;
+};
+
 export const getCustomers = async () => {
   const response = await api.get("/admin/customers");
   return response.data;

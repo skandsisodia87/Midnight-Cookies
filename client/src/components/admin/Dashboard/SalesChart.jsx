@@ -32,7 +32,7 @@ export default function SalesChart() {
         </div>
       </div>
 
-      <div className="mt-6 h-[280px] sm:h-[340px] md:h-[380px]">
+      <div className="mt-6 h-70 sm:h-85 md:h-95">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
