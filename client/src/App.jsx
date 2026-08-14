@@ -22,11 +22,12 @@ const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
 const AdminOrders = lazy(() => import("./pages/admin/Orders"));
 const Customers = lazy(() => import("./pages/admin/Customers"));
 const Products = lazy(() => import("./pages/admin/Products"));
-const Categories = lazy(() => import("./pages/admin/Categories.jsx"));
+const Categories = lazy(() => import("./pages/admin/Categories"));
 const Coupons = lazy(() => import("./pages/admin/Coupons"));
 const Newsletter = lazy(() => import("./pages/admin/Newsletter"));
 const Settings = lazy(() => import("./pages/admin/Settings"));
 const Analytics = lazy(() => import("./pages/admin/Analytics"));
+const EditOrder = lazy(() => import("./pages/admin/EditOrder"));
 
 import useAuthStore from "./store/authStore";
 import VerifyEmailRoute from "./routes/VerifyEmailRoute";
@@ -38,8 +39,6 @@ import useCartStore from "./store/cartStore";
 import LandingPageLoader from "./pages/misc/LandingPageLoader";
 import AdminRoute from "./routes/AdminRoutes";
 import AdminLayout from "./layouts/AdminLayout";
-import EditOrder from "./pages/admin/EditOrder";
-import SocketTest from "./components/SocketTest.jsx";
 
 const App = () => {
   const { isAuthenticated, user } = useAuthStore();
@@ -122,7 +121,6 @@ const App = () => {
         </Route>
 
         <Route element={<AdminRoute />}>
-          <Route path="/chat-bot" element={<SocketTest />} />
           <Route element={<AdminLayout />}>
             <Route path="/admin" element={<Dashboard />} />
             <Route path="/admin/orders" element={<AdminOrders />} />

@@ -26,6 +26,6 @@ router.post("/", validate(createOrderSchema), createOrder);
 
 router.get("/my-orders", getMyOrders);
 
-router.get("/:orderId", validateObjectId("orderId"), getSingleOrder);
+router.get("/:orderId", getSingleOrder);
 
 export default router;
