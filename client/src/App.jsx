@@ -39,6 +39,7 @@ import LandingPageLoader from "./pages/misc/LandingPageLoader";
 import AdminRoute from "./routes/AdminRoutes";
 import AdminLayout from "./layouts/AdminLayout";
 import EditOrder from "./pages/admin/EditOrder";
+import SocketTest from "./components/SocketTest.jsx";
 
 const App = () => {
   const { isAuthenticated, user } = useAuthStore();
@@ -121,6 +122,7 @@ const App = () => {
         </Route>
 
         <Route element={<AdminRoute />}>
+          <Route path="/chat-bot" element={<SocketTest />} />
           <Route element={<AdminLayout />}>
             <Route path="/admin" element={<Dashboard />} />
             <Route path="/admin/orders" element={<AdminOrders />} />
