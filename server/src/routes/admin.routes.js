@@ -54,11 +54,12 @@ import {
 } from "../controllers/admin/newsletter.controller.js";
 import { getAnalytics } from "../controllers/admin/analytics.controller.js";
 import categorySchema from "../validations/category.validation.js";
+import contants from "../constants/constants.js";
 
 const router = express.Router();
 
 router.use(verifyJWT);
-router.use(validateUserRole("admin"));
+router.use(validateUserRole(contants.ADMIN));
 
 router.get("/dashboard", getDashboard);
 

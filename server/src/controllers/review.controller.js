@@ -1,6 +1,7 @@
 import Review from "../models/review.model.js";
 import Cookie from "../models/cookie.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
+import contants from "../constants/constants.js";
 
 export const createReview = asyncHandler(async (req, res) => {
   const { cookieId, rating, review } = req.body;
@@ -85,7 +86,7 @@ export const deleteReview = asyncHandler(async (req, res) => {
 
   if (
     review.userId.toString() !== req.user._id.toString() &&
-    req.user.role !== "admin"
+    req.user.role !== contants.ADMIN
   ) {
     return res.status(403).json({
       success: false,

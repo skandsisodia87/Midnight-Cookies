@@ -13,11 +13,12 @@ import {
   validateUserRole,
 } from "../middleware/validation.middleware.js";
 import { addressSchema } from "../validations/address.validation.js";
+import contants from "../constants/constants.js";
 
 const router = express.Router();
 
 router.use(verifyToken);
-router.use(validateUserRole("user"));
+router.use(validateUserRole(contants.USER));
 
 router.route("/").post(validate(addressSchema), addAddress).get(getAddresses);
 

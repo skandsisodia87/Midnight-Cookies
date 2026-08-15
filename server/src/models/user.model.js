@@ -2,6 +2,7 @@ import { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import env from "../config/env.js";
+import contants from "../constants/constants.js";
 
 const userSchema = new Schema(
   {
@@ -26,8 +27,8 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      enum: ["user", "admin"],
-      default: "user",
+      enum: [contants.USER, contants.ADMIN],
+      default: contants.USER,
     },
     isActive: {
       type: Boolean,

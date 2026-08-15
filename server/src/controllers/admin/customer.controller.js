@@ -1,9 +1,10 @@
+import contants from "../../constants/constants.js";
 import User from "../../models/user.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 
 export const getCustomers = asyncHandler(async (req, res) => {
   const customers = await User.find({
-    role: "user",
+    role: contants.USER,
     isDeleted: false,
   })
     .select("name email phone isActive createdAt")
@@ -15,14 +16,14 @@ export const getCustomers = asyncHandler(async (req, res) => {
     message: "Customers fetched successfully.",
     customers,
   });
-}); 
+});
 
 export const getCustomer = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const customer = await User.findOne({
     _id: id,
-    role: "user",
+    role: contants.USER,
     isDeleted: false,
   })
     .select(
@@ -49,7 +50,7 @@ export const updateCustomerStatus = asyncHandler(async (req, res) => {
 
   const customer = await User.findOne({
     _id: id,
-    role: "user",
+    role: contants.USER,
     isDeleted: false,
   });
 
@@ -80,7 +81,7 @@ export const deleteCustomer = asyncHandler(async (req, res) => {
   const customer = await User.findOneAndUpdate(
     {
       _id: id,
-      role: "user",
+      role: contants.USER,
       isDeleted: false,
     },
     {

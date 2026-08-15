@@ -1,3 +1,4 @@
+import contants from "../constants/constants.js";
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
@@ -249,7 +250,7 @@ export const getConversationMessages = asyncHandler(async (req, res) => {
     conversation.adminId &&
     conversation.adminId.toString() === userId.toString();
 
-  const isAdminUser = req.user.role === "admin";
+  const isAdminUser = req.user.role === contants.ADMIN;
 
   if (!isCustomer && !isAdmin && !isAdminUser) {
     return res.status(403).json({
@@ -287,7 +288,7 @@ export const markMessagesAsRead = asyncHandler(async (req, res) => {
     conversation.adminId &&
     conversation.adminId.toString() === userId.toString();
 
-  const isAdminUser = req.user.role === "admin";
+  const isAdminUser = req.user.role === contants.ADMIN;
 
   if (!isCustomer && !isAdmin && !isAdminUser) {
     return res.status(403).json({

@@ -22,6 +22,7 @@ import {
   validate,
   validateUserRole,
 } from "../middleware/validation.middleware.js";
+import contants from "../constants/constants.js";
 
 const router = express.Router();
 
@@ -44,11 +45,16 @@ router.post(
 router.post(
   "/logout",
   verifyJWT,
-  validateUserRole("user", "admin"),
+  validateUserRole(contants.USER, contants.ADMIN),
   logoutUser,
 );
 
-router.get("/me", verifyJWT, validateUserRole("user", "admin"), getCurrentUser);
+router.get(
+  "/me",
+  verifyJWT,
+  validateUserRole(contants.USER, contants.ADMIN),
+  getCurrentUser,
+);
 
 router.post("/refresh-token", refreshAccessToken);
 

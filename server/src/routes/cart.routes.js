@@ -12,11 +12,12 @@ import {
   validateObjectId,
   validateUserRole,
 } from "../middleware/validation.middleware.js";
+import contants from "../constants/constants.js";
 
 const router = Router();
 
 router.use(verifyToken);
-router.use(validateUserRole("user"));
+router.use(validateUserRole(contants.USER));
 
 router.post("/add", addToCart);
 

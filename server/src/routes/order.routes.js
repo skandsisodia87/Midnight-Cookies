@@ -16,11 +16,12 @@ import {
   createOrderSchema,
   orderStatusSchema,
 } from "../validations/order.validation.js";
+import contants from "../constants/constants.js";
 
 const router = express.Router();
 
 router.use(verifyJWT);
-router.use(validateUserRole("user"));
+router.use(validateUserRole(contants.USER));
 
 router.post("/", validate(createOrderSchema), createOrder);
 

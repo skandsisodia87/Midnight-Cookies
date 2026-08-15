@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Order from "../../models/order.model.js";
 import User from "../../models/user.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
+import contants from "../../constants/constants.js";
 
 export const getAnalytics = asyncHandler(async (req, res) => {
   const currentYear = new Date().getFullYear();
@@ -86,7 +87,7 @@ export const getAnalytics = asyncHandler(async (req, res) => {
       User.aggregate([
         {
           $match: {
-            role: "user",
+            role: contants.USER,
           },
         },
         {

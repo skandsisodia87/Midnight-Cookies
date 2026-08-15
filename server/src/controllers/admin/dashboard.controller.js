@@ -3,6 +3,7 @@ import Cookies from "../../models/cookie.model.js";
 import Order from "../../models/order.model.js";
 import CookieVariant from "../../models/cookieVariant.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
+import contants from "../../constants/constants.js";
 
 export const getDashboard = asyncHandler(async (req, res) => {
   const startOfDay = new Date();
@@ -28,7 +29,7 @@ export const getDashboard = asyncHandler(async (req, res) => {
     todaySales,
   ] = await Promise.all([
     Cookies.countDocuments(),
-    User.countDocuments({ role: "user" }),
+    User.countDocuments({ role: contants.USER }),
     Order.countDocuments(),
     Order.aggregate([
       {
@@ -106,7 +107,7 @@ export const getDashboard = asyncHandler(async (req, res) => {
       },
     ]),
     User.countDocuments({
-      role: "user",
+      role: contants.USER,
       createdAt: {
         $gte: startOfDay,
         $lte: endOfDay,
