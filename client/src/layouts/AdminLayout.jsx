@@ -13,7 +13,7 @@ const AdminLayout = () => {
         <Header setSidebarOpen={setSidebarOpen} />
 
         <main className="flex-1 overflow-y-auto p-6 lg:p-8">
-          <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-7xl h-full">
             <Outlet />
           </div>
         </main>

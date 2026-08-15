@@ -3,7 +3,7 @@ import { FiMail, FiPhone, FiUser } from "react-icons/fi";
 
 export default function CustomersTable({ customers }) {
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-3xl border border-[#F3E4D4] bg-white shadow-sm">
+    <div className="flex h-[80%] min-h-0 flex-col overflow-hidden rounded-3xl border border-[#F3E4D4] bg-white shadow-sm">
       <div className="min-h-0 overflow-auto">
         <div className="overflow-x-auto">
           <table className="min-w-190 w-full">

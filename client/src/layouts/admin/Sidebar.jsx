@@ -13,6 +13,7 @@ import {
   FiBarChart2,
   FiX,
   FiLogOut,
+  FiMessageCircle,
 } from "react-icons/fi";
 import useAuthStore from "../../store/authStore";
 import { logoutUser } from "../../services/auth.service";
@@ -54,6 +55,11 @@ const menus = [
     name: "Newsletter",
     icon: <FiMail />,
     path: "/admin/newsletter",
+  },
+  {
+    name: "Chat",
+    icon: <FiMessageCircle />,
+    path: "/admin/chat",
   },
   {
     name: "Analytics",

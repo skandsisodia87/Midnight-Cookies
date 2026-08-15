@@ -28,6 +28,7 @@ const Newsletter = lazy(() => import("./pages/admin/Newsletter"));
 const Settings = lazy(() => import("./pages/admin/Settings"));
 const Analytics = lazy(() => import("./pages/admin/Analytics"));
 const EditOrder = lazy(() => import("./pages/admin/EditOrder"));
+const AdminChatPage = lazy(() => import("./pages/admin/AdminChatPage"));
 
 import useAuthStore from "./store/authStore";
 import VerifyEmailRoute from "./routes/VerifyEmailRoute";
@@ -125,6 +126,7 @@ const App = () => {
             <Route path="/admin" element={<Dashboard />} />
             <Route path="/admin/orders" element={<AdminOrders />} />
             <Route path="/admin/orders/edit" element={<EditOrder />} />
+            <Route path="/admin/chat" element={<AdminChatPage />} />
             <Route path="/admin/products" element={<Products />} />
             <Route path="/admin/categories" element={<Categories />} />
             <Route path="/admin/customers" element={<Customers />} />
