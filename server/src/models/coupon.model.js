@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import constants from "../constants/constants.js";
 
 const couponSchema = new mongoose.Schema(
   {
@@ -12,7 +13,7 @@ const couponSchema = new mongoose.Schema(
     discountType: {
       type: String,
       required: true,
-      enum: ["percentage", "fixed"],
+      enum: [constants.PERCENTAGE, constants.FIXED],
     },
     discountValue: {
       type: Number,

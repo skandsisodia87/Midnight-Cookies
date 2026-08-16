@@ -1,4 +1,5 @@
 import Joi from "joi";
+import constants from "../constants/constants.js";
 
 export const couponSchema = Joi.object({
   code: Joi.string().trim().uppercase().min(3).max(20).required().messages({
@@ -8,16 +9,19 @@ export const couponSchema = Joi.object({
     "any.required": "Coupon code is required",
   }),
 
-  discountType: Joi.string().valid("percentage", "fixed").required().messages({
-    "any.only": "Discount type must be either 'percentage' or 'fixed'",
-    "any.required": "Discount type is required",
-  }),
+  discountType: Joi.string()
+    .valid(constants.PERCENTAGE, constants.FIXED)
+    .required()
+    .messages({
+      "any.only": "Discount type must be either 'percentage' or 'fixed'",
+      "any.required": "Discount type is required",
+    }),
 
   discountValue: Joi.number()
     .positive()
     .required()
     .when("discountType", {
-      is: "percentage",
+      is: constants.PERCENTAGE,
       then: Joi.number().max(100),
     })
     .messages({
@@ -61,10 +65,12 @@ export const couponSchema = Joi.object({
 });
 
 export const updateCouponSchema = Joi.object({
-  discountType: Joi.string().valid("percentage", "fixed").messages({
-    "string.base": "Discount type must be a string",
-    "any.only": "Discount type must be either 'percentage' or 'fixed'",
-  }),
+  discountType: Joi.string()
+    .valid(constants.PERCENTAGE, constants.FIXED)
+    .messages({
+      "string.base": "Discount type must be a string",
+      "any.only": "Discount type must be either 'percentage' or 'fixed'",
+    }),
 
   discountValue: Joi.number().min(0).messages({
     "number.base": "Discount value must be a number",

@@ -1,7 +1,7 @@
 import Review from "../models/review.model.js";
 import Cookie from "../models/cookie.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import contants from "../constants/constants.js";
+import constants from "../constants/constants.js";
 
 export const createReview = asyncHandler(async (req, res) => {
   const { cookieId, rating, review } = req.body;
@@ -11,7 +11,7 @@ export const createReview = asyncHandler(async (req, res) => {
   if (!cookie) {
     return res.status(404).json({
       success: false,
-      message: "Cookie not found",
+      message: constants.COOKIE_NOT_FOUND,
     });
   }
 
@@ -86,7 +86,7 @@ export const deleteReview = asyncHandler(async (req, res) => {
 
   if (
     review.userId.toString() !== req.user._id.toString() &&
-    req.user.role !== contants.ADMIN
+    req.user.role !== constants.ADMIN
   ) {
     return res.status(403).json({
       success: false,

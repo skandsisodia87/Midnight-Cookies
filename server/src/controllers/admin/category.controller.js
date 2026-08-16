@@ -1,3 +1,4 @@
+import constants from "../../constants/constants.js";
 import Category from "../../models/category.model.js";
 import Cookie from "../../models/cookie.model.js";
 import {
@@ -13,7 +14,7 @@ export const createCategory = asyncHandler(async (req, res) => {
   if (!file || !file.path) {
     return res.status(400).json({
       success: false,
-      message: "Image not found",
+      message: constants.IMAGE_NOT_FOUND,
     });
   }
 
@@ -72,7 +73,7 @@ export const updateCategory = asyncHandler(async (req, res) => {
   if (!category) {
     return res.status(404).json({
       success: false,
-      message: "Category not found.",
+      message: constants.CATEGORY_NOT_FOUND,
     });
   }
 
@@ -101,7 +102,7 @@ export const deleteCategory = asyncHandler(async (req, res) => {
   if (!category) {
     return res.status(404).json({
       success: false,
-      message: "Category not found",
+      message: constants.CATEGORY_NOT_FOUND,
     });
   }
 

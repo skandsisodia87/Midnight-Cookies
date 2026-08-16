@@ -1,4 +1,5 @@
 import env from "../../config/env.js";
+import constants from "../../constants/constants.js";
 import Order from "../../models/order.model.js";
 import { sendEmail } from "../../services/email.service.js";
 import { orderStatusEmailTemplate } from "../../templates/orderEmailTemplate.js";
@@ -78,7 +79,10 @@ export const getOrders = asyncHandler(async (req, res) => {
             $sum: {
               $cond: [
                 {
-                  $in: ["$orderStatus", ["placed", "confirmed", "baking"]],
+                  $in: [
+                    "$orderStatus",
+                    [constants.PLACED, constants.CONFIRMED, constants.BAKING],
+                  ],
                 },
                 1,
                 0,
@@ -88,13 +92,13 @@ export const getOrders = asyncHandler(async (req, res) => {
 
           delivered: {
             $sum: {
-              $cond: [{ $eq: ["$orderStatus", "delivered"] }, 1, 0],
+              $cond: [{ $eq: ["$orderStatus", constants.DELIVERED] }, 1, 0],
             },
           },
 
           shipped: {
             $sum: {
-              $cond: [{ $eq: ["$orderStatus", "shipped"] }, 1, 0],
+              $cond: [{ $eq: ["$orderStatus", constants.SHIPPED] }, 1, 0],
             },
           },
         },
@@ -151,7 +155,7 @@ export const deleteOrder = asyncHandler(async (req, res) => {
     {
       $set: {
         isDeleted: true,
-        orderStatus: "cancelled",
+        orderStatus: constants.CANCELLED,
       },
     },
     {
@@ -162,7 +166,7 @@ export const deleteOrder = asyncHandler(async (req, res) => {
   if (!order) {
     return res.status(404).json({
       success: false,
-      message: "Order not found",
+      message: constants.ORDER_NOT_FOUND,
     });
   }
 
@@ -182,11 +186,14 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
   if (!order) {
     return res.status(404).json({
       success: false,
-      message: "Order not found",
+      message: constants.ORDER_NOT_FOUND,
     });
   }
 
-  if (order.orderStatus === "delivered" || order.orderStatus === "cancelled") {
+  if (
+    order.orderStatus === constants.DELIVERED ||
+    order.orderStatus === constants.CANCELLED
+  ) {
     return res.status(400).json({
       success: false,
       message: "Finalized orders cannot be updated",
@@ -194,7 +201,8 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
   }
 
   order.orderStatus = orderStatus;
-  order.orderStatus === "delivered" && (order.paymentStatus = "paid");
+  order.orderStatus === constants.DELIVERED &&
+    (order.paymentStatus = constants.PAID);
 
   await order.save();
 
@@ -202,16 +210,16 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
 
   if (customer) {
     if (
-      order.orderStatus === "delivered" ||
-      order.orderStatus === "cancelled" ||
-      order.orderStatus === "confirmed"
+      order.orderStatus === constants.DELIVERED ||
+      order.orderStatus === constants.CANCELLED ||
+      order.orderStatus === constants.CONFIRMED
     ) {
       try {
         const subjectMap = {
           // placed: "Order Placed 🍪",
-          confirmed: "Order Confirmed ✅",
-          delivered: "Order Delivered ❤️",
-          cancelled: "Order Cancelled ❌",
+          [constants.CONFIRMED]: "Order Confirmed ✅",
+          [constants.DELIVERED]: "Order Delivered ❤️",
+          [constants.CANCELLED]: "Order Cancelled ❌",
         };
         await sendEmail({
           to: customer.email,
@@ -226,7 +234,7 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
           }),
         });
       } catch (emailError) {
-        console.log("Email sending failed:", emailError.message);
+        console.log(`${constants.EMAIL_SENDING_FAILED}:`, emailError.message);
       }
     }
   }

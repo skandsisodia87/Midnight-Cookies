@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import env from "../config/env.js";
+import constants from "../constants/constants.js";
 
 const verifyToken = async (req, res, next) => {
   try {
@@ -25,7 +26,7 @@ const verifyToken = async (req, res, next) => {
       if (!user) {
         return res.status(401).json({
           success: false,
-          message: "User not found",
+          message: constants.USER_NOT_FOUND,
           code: "LOGOUT_USER",
         });
       }
@@ -56,7 +57,7 @@ const verifyToken = async (req, res, next) => {
       if (!user) {
         return res.status(401).json({
           success: false,
-          message: "Invalid refresh token",
+          message: constants.INVALID_REFRESH_TOKEN,
           code: "LOGOUT_USER",
         });
       }
@@ -73,7 +74,7 @@ const verifyToken = async (req, res, next) => {
 
       res.cookie("accessToken", newAccessToken, {
         httpOnly: true,
-        secure: env.NODE_ENV === "production",
+        secure: env.NODE_ENV === constants.PRODUCTION,
         // sameSite: "none", // for same domain use sameSite: "strict"
       });
 

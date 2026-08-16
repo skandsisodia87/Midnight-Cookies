@@ -1,4 +1,5 @@
 import Joi from "joi";
+import constants from "../constants/constants.js";
 
 export const cookieSchema = Joi.object({
   name: Joi.string().trim().min(2).max(200).required().messages({
@@ -10,7 +11,7 @@ export const cookieSchema = Joi.object({
   }),
 
   description: Joi.string().trim().min(10).required().messages({
-    "string.base": "Description must be a string",
+    "string.base": constants.DESCRIPTION_TYPE,
     "string.empty": "Description is required",
     "string.min": "Description must be at least 10 characters",
     "any.required": "Description is required",

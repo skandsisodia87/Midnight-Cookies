@@ -1,4 +1,5 @@
 import { model, Schema } from "mongoose";
+import constants from "../constants/constants.js";
 
 const messageSchema = new Schema(
   {
@@ -24,7 +25,7 @@ const messageSchema = new Schema(
 
     messageType: {
       type: String,
-      enum: ["text", "image", "file"],
+      enum: [constants.TEXT, constants.IMAGE, constants.FILE],
       default: "text",
     },
 

@@ -9,18 +9,18 @@ import {
   validateObjectId,
   validateUserRole,
 } from "../middleware/validation.middleware.js";
-import contants from "../constants/constants.js";
+import constants from "../constants/constants.js";
 
 const router = express.Router();
 
 router.get("/:cookieId", validateObjectId("cookieId"), getCookieReviews);
 
-router.post("/", verifyJWT, validateUserRole(contants.USER), createReview);
+router.post("/", verifyJWT, validateUserRole(constants.USER), createReview);
 
 router.delete(
   "/:id",
   verifyJWT,
-  validateUserRole(contants.USER),
+  validateUserRole(constants.USER),
   validateObjectId(),
   deleteReview,
 );

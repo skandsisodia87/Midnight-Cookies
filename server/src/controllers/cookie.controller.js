@@ -73,7 +73,7 @@ export const getSingleCookie = asyncHandler(async (req, res) => {
   if (!cookie) {
     return res.status(404).json({
       success: false,
-      message: "Cookie not found",
+      message: constants.COOKIE_NOT_FOUND,
     });
   }
 

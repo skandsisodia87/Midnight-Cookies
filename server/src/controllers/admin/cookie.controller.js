@@ -3,6 +3,7 @@ import CookieVariant from "../../models/cookieVariant.model.js";
 import { uploadOnCloudinary } from "../../services/cloudinary.service.js";
 import mongoose from "mongoose";
 import asyncHandler from "../../utils/asyncHandler.js";
+import constants from "../../constants/constants.js";
 
 export const createCookie = asyncHandler(async (req, res) => {
   const { name, description, category, ingredients, variants } = req.body;
@@ -12,7 +13,7 @@ export const createCookie = asyncHandler(async (req, res) => {
   if (!file || !file.path) {
     return res.status(400).json({
       success: false,
-      message: "Image not found",
+      message: IMAGE_NOT_FOUND,
     });
   }
 
@@ -196,7 +197,7 @@ export const updateCookie = asyncHandler(async (req, res) => {
   if (!updatedCookie) {
     return res.status(404).json({
       success: false,
-      message: "Cookie not found",
+      message: constants.COOKIE_NOT_FOUND,
     });
   }
 
@@ -214,7 +215,7 @@ export const softDeleteCookie = asyncHandler(async (req, res) => {
   if (!cookie) {
     return res.status(404).json({
       success: false,
-      message: "Cookie not found",
+      message: constants.COOKIE_NOT_FOUND,
     });
   }
 
@@ -237,7 +238,7 @@ export const deleteCookie = asyncHandler(async (req, res) => {
   if (!cookie) {
     return res.status(404).json({
       success: false,
-      message: "Cookie not found",
+      message: constants.COOKIE_NOT_FOUND,
     });
   }
 
@@ -261,7 +262,7 @@ export const updateCookieStatus = asyncHandler(async (req, res) => {
   if (!cookie) {
     return res.status(404).json({
       success: false,
-      message: "Cookie not found",
+      message: constants.COOKIE_NOT_FOUND,
     });
   }
 
@@ -346,7 +347,7 @@ export const getCookie = asyncHandler(async (req, res) => {
   if (!cookie) {
     return res.status(404).json({
       success: false,
-      message: "Cookie not found",
+      message: constants.COOKIE_NOT_FOUND,
     });
   }
 

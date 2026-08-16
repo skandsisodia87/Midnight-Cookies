@@ -22,7 +22,7 @@ import {
   validate,
   validateUserRole,
 } from "../middleware/validation.middleware.js";
-import contants from "../constants/constants.js";
+import constants from "../constants/constants.js";
 
 const router = express.Router();
 
@@ -45,14 +45,14 @@ router.post(
 router.post(
   "/logout",
   verifyJWT,
-  validateUserRole(contants.USER, contants.ADMIN),
+  validateUserRole(constants.USER, constants.ADMIN),
   logoutUser,
 );
 
 router.get(
   "/me",
   verifyJWT,
-  validateUserRole(contants.USER, contants.ADMIN),
+  validateUserRole(constants.USER, constants.ADMIN),
   getCurrentUser,
 );
 

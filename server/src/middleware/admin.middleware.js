@@ -1,7 +1,7 @@
-import contants from "../constants/constants.js";
+import constants from "../constants/constants.js";
 
 const verifyAdmin = (req, res, next) => {
-  if (!req.user || req.user.role !== contants.ADMIN) {
+  if (!req.user || req.user.role !== constants.ADMIN) {
     return res.status(403).json({
       success: false,
       message: "Access denied. Admin privileges are required.",

@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import constants from "../constants/constants.js";
 
 const orderItemSchema = new Schema(
   {
@@ -115,25 +116,25 @@ const orderSchema = new Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ["COD", "ONLINE"],
-      default: "COD",
+      enum: [constants.COD, constants.ONLINE],
+      default: constants.COD,
     },
     paymentStatus: {
       type: String,
-      enum: ["pending", "paid", "failed"],
-      default: "pending",
+      enum: [constants.PENDING, constants.PAID, constants.FAILED],
+      default: constants.PENDING,
     },
     orderStatus: {
       type: String,
       enum: [
-        "placed",
-        "confirmed",
-        "baking",
-        "shipped",
-        "delivered",
-        "cancelled",
+        constants.PLACED,
+        constants.CONFIRMED,
+        constants.BAKING,
+        constants.SHIPPED,
+        constants.DELIVERED,
+        constants.CANCELLED,
       ],
-      default: "placed",
+      default: constants.PLACED,
     },
     shippingAddress: shippingAddressSchema,
     notes: {

@@ -1,4 +1,4 @@
-import contants from "../constants/constants.js";
+import constants from "../constants/constants.js";
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
@@ -8,7 +8,7 @@ export const createConversation = asyncHandler(async (req, res) => {
 
   let conversation = await Conversation.findOne({
     customerId,
-    status: "open",
+    status: constants.OPEN,
   })
     .populate("customerId", "name email")
     .populate("adminId", "name email");
@@ -24,7 +24,7 @@ export const createConversation = asyncHandler(async (req, res) => {
   conversation = await Conversation.create({
     customerId,
     adminId: null,
-    status: "open",
+    status: constants.OPEN,
   });
 
   conversation = await Conversation.findById(conversation._id)
@@ -43,7 +43,7 @@ export const getMyConversation = asyncHandler(async (req, res) => {
 
   const conversation = await Conversation.findOne({
     customerId,
-    status: "open",
+    status: constants.OPEN,
   })
     .populate("customerId", "name email")
     .populate("adminId", "name email");
@@ -109,7 +109,7 @@ export const assignConversation = asyncHandler(async (req, res) => {
     });
   }
 
-  if (conversation.status === "closed") {
+  if (conversation.status === constants.CLOSED) {
     return res.status(400).json({
       success: false,
       message: "Cannot assign a closed conversation",
@@ -143,14 +143,14 @@ export const closeConversation = asyncHandler(async (req, res) => {
     });
   }
 
-  if (conversation.status === "closed") {
+  if (conversation.status === constants.CLOSED) {
     return res.status(400).json({
       success: false,
       message: "Conversation is already closed",
     });
   }
 
-  conversation.status = "closed";
+  conversation.status = constants.CLOSED;
 
   await conversation.save();
 
@@ -175,7 +175,7 @@ export const createMessage = asyncHandler(async (req, res) => {
     });
   }
 
-  if (conversation.status === "closed") {
+  if (conversation.status === constants.CLOSED) {
     return res.status(400).json({
       success: false,
       message: "This conversation is closed",
@@ -250,7 +250,7 @@ export const getConversationMessages = asyncHandler(async (req, res) => {
     conversation.adminId &&
     conversation.adminId.toString() === userId.toString();
 
-  const isAdminUser = req.user.role === contants.ADMIN;
+  const isAdminUser = req.user.role === constants.ADMIN;
 
   if (!isCustomer && !isAdmin && !isAdminUser) {
     return res.status(403).json({
@@ -288,7 +288,7 @@ export const markMessagesAsRead = asyncHandler(async (req, res) => {
     conversation.adminId &&
     conversation.adminId.toString() === userId.toString();
 
-  const isAdminUser = req.user.role === contants.ADMIN;
+  const isAdminUser = req.user.role === constants.ADMIN;
 
   if (!isCustomer && !isAdmin && !isAdminUser) {
     return res.status(403).json({

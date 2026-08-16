@@ -1,3 +1,4 @@
+import constants from "../../constants/constants.js";
 import Coupon from "../../models/coupon.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 
@@ -58,7 +59,7 @@ export const toggleCouponStatus = asyncHandler(async (req, res) => {
   if (!coupon) {
     return res.status(404).json({
       success: false,
-      message: "Coupon not found",
+      message: constants.COUPON_NOT_FOUND,
     });
   }
 
@@ -104,7 +105,7 @@ export const updateCoupon = asyncHandler(async (req, res) => {
   if (!coupon) {
     return res.status(404).json({
       success: false,
-      message: "Coupon not found",
+      message: constants.COUPON_NOT_FOUND,
     });
   }
 
@@ -140,7 +141,7 @@ export const deleteCoupon = asyncHandler(async (req, res) => {
   if (!coupon) {
     return res.status(404).json({
       success: false,
-      message: "Coupon not found",
+      message: constants.COUPON_NOT_FOUND,
     });
   }
 

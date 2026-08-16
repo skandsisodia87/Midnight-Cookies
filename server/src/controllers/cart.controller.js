@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Cart from "../models/cart.model.js";
 import Cookie from "../models/cookie.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
+import constants from "../constants/constants.js";
 
 export const addToCart = asyncHandler(async (req, res) => {
   const { cookieId, quantity = 1, variantId } = req.body;
@@ -18,7 +19,7 @@ export const addToCart = asyncHandler(async (req, res) => {
   if (!cookie) {
     return res.status(404).json({
       success: false,
-      message: "Cookie not found",
+      message: constants.COOKIE_NOT_FOUND,
     });
   }
 

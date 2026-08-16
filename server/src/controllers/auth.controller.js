@@ -9,6 +9,7 @@ import verifyEmailTemplate from "../templates/verifyEmailTemplate.js";
 import bcrypt from "bcrypt";
 import { forgotPasswordTemplate } from "../templates/forgotPasswordTemplate.js";
 import asyncHandler from "../utils/asyncHandler.js";
+import constants from "../constants/constants.js";
 
 export const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, phone } = req.body;
@@ -48,7 +49,7 @@ export const loginUser = asyncHandler(async (req, res) => {
   if (!user) {
     return res.status(404).json({
       success: false,
-      message: "User not found",
+      message: constants.USER_NOT_FOUND,
     });
   }
 
@@ -75,7 +76,7 @@ export const loginUser = asyncHandler(async (req, res) => {
 
   const cookieOptions = {
     httpOnly: true,
-    secure: env.NODE_ENV === "production",
+    secure: env.NODE_ENV === constants.PRODUCTION,
     // sameSite: "none",  // for same domain use sameSite: "strict"
   };
 
@@ -142,7 +143,7 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
   if (!user) {
     return res.status(401).json({
       success: false,
-      message: "Invalid refresh token",
+      message: constants.INVALID_REFRESH_TOKEN,
     });
   }
 
@@ -174,7 +175,7 @@ export const sendVerificationOtp = asyncHandler(async (req, res) => {
   if (!user) {
     return res.status(404).json({
       success: false,
-      message: "User not found",
+      message: constants.USER_NOT_FOUND,
     });
   }
 
@@ -213,7 +214,9 @@ export const verifyEmailOtp = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    return res.status(404).json({ success: false, message: "No user found" });
+    return res
+      .status(404)
+      .json({ success: false, message: constants.USER_NOT_FOUND });
   }
 
   if (user.emailVerificationCode !== otp) {

@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import constants from "../constants/constants.js";
 
 const conversationSchema = new Schema(
   {
@@ -16,8 +17,8 @@ const conversationSchema = new Schema(
 
     status: {
       type: String,
-      enum: ["open", "closed"],
-      default: "open",
+      enum: [constants.OPEN, constants.CLOSED],
+      default: constants.OPEN,
     },
 
     lastMessage: {

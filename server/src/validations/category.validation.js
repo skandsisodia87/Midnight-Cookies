@@ -1,10 +1,11 @@
 import Joi from "joi";
+import constants from "../constants/constants.js";
 
 const categorySchema = Joi.object({
   name: Joi.string().trim().required().messages({
     "string.base": "Name must be a string.",
-    "string.empty": "Name is required.",
-    "any.required": "Name is required.",
+    "string.empty": constants.NAME_REQUIRED,
+    "any.required": constants.NAME_REQUIRED,
   }),
 
   slug: Joi.string()
@@ -21,7 +22,7 @@ const categorySchema = Joi.object({
     }),
 
   description: Joi.string().trim().allow("").messages({
-    "string.base": "Description must be a string.",
+    "string.base": constants.DESCRIPTION_TYPE,
   }),
 });
 

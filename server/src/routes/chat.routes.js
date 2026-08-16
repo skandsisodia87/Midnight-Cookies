@@ -18,7 +18,7 @@ import {
   getConversationMessages,
   markMessagesAsRead,
 } from "../controllers/chat.controller.js";
-import contants from "../constants/constants.js";
+import constants from "../constants/constants.js";
 
 const router = Router();
 
@@ -26,32 +26,32 @@ router.use(verifyToken);
 
 router.post(
   "/conversations",
-  validateUserRole(contants.USER),
+  validateUserRole(constants.USER),
   createConversation,
 );
 
 router.get(
   "/conversations/my",
-  validateUserRole(contants.USER),
+  validateUserRole(constants.USER),
   getMyConversation,
 );
 
 router.get(
   "/conversations",
-  validateUserRole(contants.ADMIN),
+  validateUserRole(constants.ADMIN),
   getAllConversations,
 );
 
 router.get(
   "/conversations/:id",
-  validateUserRole(contants.USER, contants.ADMIN),
+  validateUserRole(constants.USER, constants.ADMIN),
   validateObjectId(),
   getConversationById,
 );
 
 router.patch(
   "/conversations/:id/assign",
-  validateUserRole(contants.ADMIN),
+  validateUserRole(constants.ADMIN),
   validateObjectId(),
   assignConversation,
 );
@@ -60,21 +60,21 @@ router.patch("/conversations/:id/close", validateObjectId(), closeConversation);
 
 router.post(
   "/conversations/:conversationId/messages",
-  validateUserRole(contants.USER, contants.ADMIN),
+  validateUserRole(constants.USER, constants.ADMIN),
   validateObjectId("conversationId"),
   createMessage,
 );
 
 router.get(
   "/conversations/:conversationId/messages",
-  validateUserRole(contants.USER, contants.ADMIN),
+  validateUserRole(constants.USER, constants.ADMIN),
   validateObjectId("conversationId"),
   getConversationMessages,
 );
 
 router.patch(
   "/conversations/:conversationId/messages/read",
-  validateUserRole(contants.USER, contants.ADMIN),
+  validateUserRole(constants.USER, constants.ADMIN),
   validateObjectId("conversationId"),
   markMessagesAsRead,
 );

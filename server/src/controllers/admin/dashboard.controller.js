@@ -3,7 +3,7 @@ import Cookies from "../../models/cookie.model.js";
 import Order from "../../models/order.model.js";
 import CookieVariant from "../../models/cookieVariant.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
-import contants from "../../constants/constants.js";
+import constants from "../../constants/constants.js";
 
 export const getDashboard = asyncHandler(async (req, res) => {
   const startOfDay = new Date();
@@ -29,13 +29,13 @@ export const getDashboard = asyncHandler(async (req, res) => {
     todaySales,
   ] = await Promise.all([
     Cookies.countDocuments(),
-    User.countDocuments({ role: contants.USER }),
+    User.countDocuments({ role: constants.USER }),
     Order.countDocuments(),
     Order.aggregate([
       {
         $match: {
-          paymentStatus: "paid",
-          orderStatus: "delivered",
+          paymentStatus: constants.PAID,
+          orderStatus: constants.DELIVERED,
         },
       },
       {
@@ -47,12 +47,12 @@ export const getDashboard = asyncHandler(async (req, res) => {
         },
       },
     ]),
-    Order.countDocuments({ orderStatus: "delivered" }),
-    Order.countDocuments({ orderStatus: "shipped" }),
-    Order.countDocuments({ orderStatus: "baking" }),
-    Order.countDocuments({ orderStatus: "confirmed" }),
-    Order.countDocuments({ orderStatus: "placed" }),
-    Order.countDocuments({ orderStatus: "cancelled" }),
+    Order.countDocuments({ orderStatus: constants.DELIVERED }),
+    Order.countDocuments({ orderStatus: constants.SHIPPED }),
+    Order.countDocuments({ orderStatus: constants.SHIPPED }),
+    Order.countDocuments({ orderStatus: constants.CONFIRMED }),
+    Order.countDocuments({ orderStatus: constants.PLACED }),
+    Order.countDocuments({ orderStatus: constants.CANCELLED }),
     CookieVariant.find({
       stock: { $lte: 5 },
     })
@@ -107,7 +107,7 @@ export const getDashboard = asyncHandler(async (req, res) => {
       },
     ]),
     User.countDocuments({
-      role: contants.USER,
+      role: constants.USER,
       createdAt: {
         $gte: startOfDay,
         $lte: endOfDay,

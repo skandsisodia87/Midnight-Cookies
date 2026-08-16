@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import Order from "../../models/order.model.js";
 import User from "../../models/user.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
-import contants from "../../constants/constants.js";
+import constants from "../../constants/constants.js";
 
 export const getAnalytics = asyncHandler(async (req, res) => {
   const currentYear = new Date().getFullYear();
@@ -12,7 +12,7 @@ export const getAnalytics = asyncHandler(async (req, res) => {
       Order.aggregate([
         {
           $match: {
-            paymentStatus: "paid",
+            paymentStatus: constants.PAID,
             createdAt: {
               $gte: new Date(`${currentYear}-01-01`),
               $lte: new Date(`${currentYear}-12-31`),
@@ -87,7 +87,7 @@ export const getAnalytics = asyncHandler(async (req, res) => {
       User.aggregate([
         {
           $match: {
-            role: contants.USER,
+            role: constants.USER,
           },
         },
         {
@@ -132,12 +132,12 @@ export const getAnalytics = asyncHandler(async (req, res) => {
   });
 
   const status = {
-    pending: 0,
-    confirmed: 0,
-    baking: 0,
-    shipped: 0,
-    delivered: 0,
-    cancelled: 0,
+    [constants.PENDING]: 0,
+    [constants.CONFIRMED]: 0,
+    [constants.BAKING]: 0,
+    [constants.SHIPPED]: 0,
+    [constants.DELIVERED]: 0,
+    [constants.CANCELLED]: 0,
   };
 
   orderStatus.forEach((item) => {

@@ -8,6 +8,7 @@ import { orderStatusEmailTemplate } from "../templates/orderEmailTemplate.js";
 import { sendEmail } from "../services/email.service.js";
 import env from "../config/env.js";
 import asyncHandler from "../utils/asyncHandler.js";
+import constants from "../constants/constants.js";
 
 export const createOrder = async (req, res) => {
   const session = await mongoose.startSession();
@@ -28,7 +29,7 @@ export const createOrder = async (req, res) => {
         .session(session);
 
       if (!cookie) {
-        throw new Error("Cookie not found");
+        throw new Error(constants.COOKIE_NOT_FOUND);
       }
 
       const updatedVariant = await CookieVariant.findOneAndUpdate(
@@ -111,7 +112,7 @@ export const createOrder = async (req, res) => {
         }),
       });
     } catch (emailError) {
-      console.log("Email sending failed:", emailError.message);
+      console.log(`${constants.EMAIL_SENDING_FAILED}:`, emailError.message);
     }
 
     return res.status(201).json({
@@ -157,7 +158,7 @@ export const getSingleOrder = asyncHandler(async (req, res) => {
   if (!order) {
     return res.status(404).json({
       success: false,
-      message: "Order not found",
+      message: constants.ORDER_NOT_FOUND,
     });
   }
 

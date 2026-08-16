@@ -1,10 +1,10 @@
-import contants from "../../constants/constants.js";
+import constants from "../../constants/constants.js";
 import User from "../../models/user.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 
 export const getCustomers = asyncHandler(async (req, res) => {
   const customers = await User.find({
-    role: contants.USER,
+    role: constants.USER,
     isDeleted: false,
   })
     .select("name email phone isActive createdAt")
@@ -23,7 +23,7 @@ export const getCustomer = asyncHandler(async (req, res) => {
 
   const customer = await User.findOne({
     _id: id,
-    role: contants.USER,
+    role: constants.USER,
     isDeleted: false,
   })
     .select(
@@ -34,7 +34,7 @@ export const getCustomer = asyncHandler(async (req, res) => {
   if (!customer) {
     return res.status(404).json({
       success: false,
-      message: "Customer not found.",
+      message: constants.CUSTOMER_NOT_FOUND,
     });
   }
 
@@ -50,14 +50,14 @@ export const updateCustomerStatus = asyncHandler(async (req, res) => {
 
   const customer = await User.findOne({
     _id: id,
-    role: contants.USER,
+    role: constants.USER,
     isDeleted: false,
   });
 
   if (!customer) {
     return res.status(404).json({
       success: false,
-      message: "Customer not found.",
+      message: constants.CUSTOMER_NOT_FOUND,
     });
   }
 
@@ -81,7 +81,7 @@ export const deleteCustomer = asyncHandler(async (req, res) => {
   const customer = await User.findOneAndUpdate(
     {
       _id: id,
-      role: contants.USER,
+      role: constants.USER,
       isDeleted: false,
     },
     {
@@ -97,7 +97,7 @@ export const deleteCustomer = asyncHandler(async (req, res) => {
   if (!customer) {
     return res.status(404).json({
       success: false,
-      message: "Customer not found.",
+      message: constants.CUSTOMER_NOT_FOUND,
     });
   }
 

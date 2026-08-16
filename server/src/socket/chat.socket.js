@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import env from "../config/env.js";
 import { parseCookie } from "cookie";
 import Conversation from "../models/conversation.model.js";
-import contants from "../constants/constants.js";
+import constants from "../constants/constants.js";
 
 const chatSocket = (io) => {
   io.use((socket, next) => {
@@ -59,7 +59,7 @@ const chatSocket = (io) => {
         const isAssignedAdmin =
           conversation.adminId?.toString() === userId.toString();
 
-        const isAdmin = userRole === contants.ADMIN;
+        const isAdmin = userRole === constants.ADMIN;
 
         /*
          Customer can only join their own conversation.
