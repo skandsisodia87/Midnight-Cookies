@@ -144,7 +144,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           </div>
         </div>
 
-        <nav className="mt-3 flex-1 space-y-1 overflow-y-auto px-3 pb-6">
+        <nav className="scrollbar-hide mt-3 flex-1 space-y-1 overflow-y-auto px-3 pb-6">
           {menus.map((item) => (
             <NavLink
               key={item.name}

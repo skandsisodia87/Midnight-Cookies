@@ -136,3 +136,13 @@ export const deleteCouponById = async (couponId) => {
   const response = await api.delete(`/admin/coupons/${couponId}`);
   return response.data;
 };
+
+export const getSubscribers = async () => {
+  const response = await api.post(`/admin/newsletter`, {});
+  return response.data.data;
+};
+
+export const removeSubscriber = async (id) => {
+  const response = await api.delete(`/admin/newsletter/${id}`);
+  return response.data;
+};

@@ -50,7 +50,7 @@ import {
 } from "../validations/coupon.validation.js";
 import {
   getSubscribers,
-  deleteSubscriber,
+  removeSubscriber,
 } from "../controllers/admin/newsletter.controller.js";
 import { getAnalytics } from "../controllers/admin/analytics.controller.js";
 import categorySchema from "../validations/category.validation.js";
@@ -123,7 +123,7 @@ router
   .delete(deleteCoupon);
 
 router.post("/newsletter", getSubscribers);
-router.delete("/newsletter/:id", validateObjectId(), deleteSubscriber);
+router.delete("/newsletter/:id", validateObjectId(), removeSubscriber);
 
 router.get("/analytics", getAnalytics);
 

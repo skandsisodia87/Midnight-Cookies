@@ -19,51 +19,11 @@ import StatCard from "../../components/admin/newsletter/StatCard";
 import SubscribersList from "../../components/admin/newsletter/SubscribersList";
 import NewsletterModal from "../../components/admin/newsletter/NewsletterModal";
 import DeleteDialog from "../../common/DeleteDialog";
-
-const initialSubscribers = [
-  {
-    _id: "1",
-    email: "rahul@example.com",
-    isVerified: true,
-    isUser: true,
-    createdAt: "2026-08-01T10:30:00",
-  },
-  {
-    _id: "2",
-    email: "neha@example.com",
-    isVerified: true,
-    isUser: false,
-    createdAt: "2026-08-02T12:15:00",
-  },
-  {
-    _id: "3",
-    email: "arjun@example.com",
-    isVerified: false,
-    isUser: false,
-    createdAt: "2026-08-03T09:45:00",
-  },
-  {
-    _id: "4",
-    email: "priya@example.com",
-    isVerified: true,
-    isUser: true,
-    createdAt: "2026-08-04T14:20:00",
-  },
-  {
-    _id: "5",
-    email: "aman@example.com",
-    isVerified: false,
-    isUser: false,
-    createdAt: "2026-08-05T11:10:00",
-  },
-  {
-    _id: "6",
-    email: "kavya@example.com",
-    isVerified: true,
-    isUser: false,
-    createdAt: "2026-08-06T16:30:00",
-  },
-];
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import ErrorPage from "../../common/ErrorPage";
+import { getSubscribers, removeSubscriber } from "../../services/admin.service";
+import NewsletterSkeleton from "../../components/admin/newsletter/NewsletterSkeleton";
+import { toast } from "sonner";
 
 const emptyNewsletter = {
   subject: "",
@@ -73,21 +33,42 @@ const emptyNewsletter = {
 };
 
 const Newsletter = () => {
-  const [subscribers, setSubscribers] = useState(initialSubscribers);
-
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
-
   const [statusFilter, setStatusFilter] = useState("all");
-
   const [typeFilter, setTypeFilter] = useState("all");
-
   const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
-
-  const [deleteSubscriber, setDeleteSubscriber] = useState(null);
-
+  const [selectedSubscriber, setSelectedSubscriber] = useState(null);
   const [newsletter, setNewsletter] = useState(emptyNewsletter);
-
   const [errors, setErrors] = useState({});
+
+  const {
+    data: subscribers = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["newsletter"],
+    queryFn: getSubscribers,
+    staleTime: 1 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+  });
+
+  const { mutate: deleteSubscriberMutation, isPending: isDeleting } =
+    useMutation({
+      mutationFn: removeSubscriber,
+      onSuccess: (res) => {
+        toast.success(res?.message || "Subscriber removed successfully");
+        queryClient.invalidateQueries(["newsletter"]);
+        setSelectedSubscriber(null);
+      },
+      onError: (error) => {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.message ||
+            "Failed to remove subscriber",
+        );
+      },
+    });
 
   const stats = useMemo(() => {
     const total = subscribers.length;
@@ -143,13 +124,8 @@ const Newsletter = () => {
   };
 
   const handleDeleteSubscriber = () => {
-    if (!deleteSubscriber) return;
-
-    setSubscribers((prev) =>
-      prev.filter((subscriber) => subscriber._id !== deleteSubscriber._id),
-    );
-
-    setDeleteSubscriber(null);
+    if (!selectedSubscriber) return;
+    deleteSubscriberMutation(selectedSubscriber._id);
   };
 
   const handleNewsletterChange = (e) => {
@@ -209,6 +185,28 @@ const Newsletter = () => {
     setErrors({});
   };
 
+  if (isLoading) {
+    return <NewsletterSkeleton />;
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen px-4 py-12 bg-[#FFF6EC]">
+        <div className="max-w-4xl mx-auto">
+          <ErrorPage
+            title="Unable to load newsletter"
+            message="There was an issue fetching your admin data. Please try again or return to the admin home page."
+            buttonText="Go Back"
+            redirectLink="/admin"
+          />
+        </div>
+      </div>
+    );
+  }
+
+  {
+    console.log(subscribers, "subscribers");
+  }
   return (
     <div className="pb-4">
       <div className="mx-auto max-w-7xl">
@@ -240,10 +238,6 @@ const Newsletter = () => {
             Send Newsletter
           </button>
         </div>
-
-        {/* ==================================
-            STATS
-        ================================== */}
 
         <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
@@ -280,7 +274,7 @@ const Newsletter = () => {
           setStatusFilter={setStatusFilter}
           typeFilter={typeFilter}
           setTypeFilter={setTypeFilter}
-          setDeleteSubscriber={setDeleteSubscriber}
+          setSelectedSubscriber={setSelectedSubscriber}
           formatDate={formatDate}
         />
       </div>
@@ -296,13 +290,13 @@ const Newsletter = () => {
       />
 
       <DeleteDialog
-        open={Boolean(deleteSubscriber)}
-        onClose={() => setDeleteSubscriber(null)}
+        open={Boolean(selectedSubscriber)}
+        onClose={() => setSelectedSubscriber(null)}
         onConfirm={handleDeleteSubscriber}
         title="Remove Subscriber?"
         message={
-          deleteSubscriber
-            ? `Are you sure you want to remove ${deleteSubscriber.email} from your newsletter subscribers?`
+          selectedSubscriber
+            ? `Are you sure you want to remove ${selectedSubscriber.email} from your newsletter subscribers?`
             : ""
         }
         confirmLabel="Remove Subscriber"

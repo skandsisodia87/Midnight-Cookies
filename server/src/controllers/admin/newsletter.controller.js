@@ -36,7 +36,7 @@ export const getSubscribers = asyncHandler(async (req, res) => {
   });
 });
 
-export const deleteSubscriber = asyncHandler(async (req, res) => {
+export const removeSubscriber = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const subscriber = await Newsletter.findByIdAndDelete(id);
@@ -50,6 +50,6 @@ export const deleteSubscriber = asyncHandler(async (req, res) => {
 
   return res.status(200).json({
     success: true,
-    message: "Subscriber deleted successfully",
+    message: "Subscriber removed successfully",
   });
 });

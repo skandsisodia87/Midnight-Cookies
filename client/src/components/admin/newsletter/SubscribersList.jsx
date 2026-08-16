@@ -19,16 +19,12 @@ const SubscribersList = ({
   setStatusFilter,
   typeFilter,
   setTypeFilter,
-  setDeleteSubscriber,
+  setSelectedSubscriber,
   formatDate,
 }) => {
   return (
     <div className="overflow-hidden rounded-3xl border border-[#F3E4D4] bg-white shadow-sm">
-      {/* Toolbar */}
-
       <div className="flex flex-col gap-4 border-b border-[#F3E4D4] p-4 sm:p-5 xl:flex-row xl:items-center xl:justify-between">
-        {/* Search */}
-
         <div className="relative w-full xl:max-w-sm">
           <FiSearch
             className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#A58D80]"
@@ -43,8 +39,6 @@ const SubscribersList = ({
             className="w-full rounded-xl border border-[#EBDDCF] bg-[#FFFDFB] py-2.5 pl-10 pr-4 text-sm text-[#4E342E] outline-none transition placeholder:text-[#B7A49A] focus:border-[#D98B2B] focus:ring-2 focus:ring-[#D98B2B]/10"
           />
         </div>
-
-        {/* Filters */}
 
         <div className="flex flex-col gap-3 sm:flex-row">
           <select
@@ -72,10 +66,6 @@ const SubscribersList = ({
           </select>
         </div>
       </div>
-
-      {/* ==================================
-          DESKTOP TABLE
-      ================================== */}
 
       <div className="hidden overflow-x-auto lg:block">
         <table className="w-full min-w-212.5">
@@ -109,8 +99,6 @@ const SubscribersList = ({
                 key={subscriber._id}
                 className="transition hover:bg-[#FFFCF9]"
               >
-                {/* Email */}
-
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#FFF3E5] text-[#D98B2B]">
@@ -129,8 +117,6 @@ const SubscribersList = ({
                   </div>
                 </td>
 
-                {/* Type */}
-
                 <td className="px-5 py-4">
                   {subscriber.isUser ? (
                     <span className="inline-flex items-center gap-1.5 rounded-full border border-[#D6E8CE] bg-[#EEF7EA] px-3 py-1 text-xs font-semibold text-[#5F8D4E]">
@@ -144,8 +130,6 @@ const SubscribersList = ({
                     </span>
                   )}
                 </td>
-
-                {/* Verification */}
 
                 <td className="px-5 py-4">
                   {subscriber.isVerified ? (
@@ -171,13 +155,11 @@ const SubscribersList = ({
                   </div>
                 </td>
 
-                {/* Actions */}
-
                 <td className="px-5 py-4">
                   <div className="flex justify-end">
                     <button
                       type="button"
-                      onClick={() => setDeleteSubscriber(subscriber)}
+                      onClick={() => setSelectedSubscriber(subscriber)}
                       title="Delete subscriber"
                       className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#EBDDCF] text-[#6D5549] transition hover:border-[#B85C5C] hover:bg-[#FFF0F0] hover:text-[#B85C5C]"
                     >
@@ -190,10 +172,6 @@ const SubscribersList = ({
           </tbody>
         </table>
       </div>
-
-      {/* ==================================
-          MOBILE CARDS
-      ================================== */}
 
       <div className="divide-y divide-[#F3E4D4] lg:hidden">
         {filteredSubscribers.map((subscriber) => (
@@ -247,7 +225,7 @@ const SubscribersList = ({
             <div className="mt-4 flex justify-end border-t border-[#F3E4D4] pt-4">
               <button
                 type="button"
-                onClick={() => setDeleteSubscriber(subscriber)}
+                onClick={() => setSelectedSubscriber(subscriber)}
                 className="inline-flex items-center gap-1.5 rounded-lg border border-[#EBDDCF] px-3 py-2 text-xs font-semibold text-[#6D5549] transition hover:border-[#B85C5C] hover:bg-[#FFF0F0] hover:text-[#B85C5C]"
               >
                 <FiTrash2 size={14} />
@@ -257,10 +235,6 @@ const SubscribersList = ({
           </div>
         ))}
       </div>
-
-      {/* ==================================
-          EMPTY STATE
-      ================================== */}
 
       {filteredSubscribers.length === 0 && (
         <div className="px-6 py-16 text-center">
@@ -277,8 +251,6 @@ const SubscribersList = ({
           </p>
         </div>
       )}
-
-      {/* Footer */}
 
       {filteredSubscribers.length > 0 && (
         <div className="border-t border-[#F3E4D4] bg-[#FFFDFB] px-5 py-3">
