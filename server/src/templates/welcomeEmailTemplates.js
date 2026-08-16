@@ -1,3 +1,5 @@
+import constants from "../constants/constants.js";
+
 export const welcomeEmailTemplate = (name, url) => {
   return `
   <div
@@ -20,7 +22,7 @@ export const welcomeEmailTemplate = (name, url) => {
         <!-- Header -->
         <div style="background: #2b1d16; padding: 30px; text-align: center">
           <h1 style="color: #ffffff; margin: 0; font-size: 32px">
-            Midnight Cookies 🍪
+            ${constants.APPICATION_NAME} 🍪
           </h1>
 
           <p style="color: #f3d7b6; margin-top: 10px; font-size: 16px">
@@ -33,7 +35,7 @@ export const welcomeEmailTemplate = (name, url) => {
           <h2 style="margin-top: 0">Welcome, ${name}! 👋</h2>
           <p style="line-height: 1.2">
             Thank you for joining
-            <strong>Midnight Cookies</strong>.
+            <strong>${constants.APPICATION_NAME}</strong>.
           </p>
           <p style="line-height: 1.2">
             We’re excited to serve you freshly baked, soft, and delicious
@@ -62,7 +64,7 @@ export const welcomeEmailTemplate = (name, url) => {
           <p style="line-height: 1.2">
             Thank you for being part of our journey 🍪
           </p>
-          <p>Team Midnight Cookies</p>
+          <p>Team ${constants.APPICATION_NAME}</p>
         </div>
 
         <!-- Footer -->
@@ -75,7 +77,7 @@ export const welcomeEmailTemplate = (name, url) => {
             color: #777;
           "
         >
-          © ${new Date().getFullYear()} Midnight Cookies. All rights reserved.
+          © ${new Date().getFullYear()} ${constants.APPICATION_NAME}. All rights reserved.
         </div>
       </div>
     </div>

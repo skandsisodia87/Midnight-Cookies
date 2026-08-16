@@ -6,6 +6,7 @@ import { sendEmail } from "../services/email.service.js";
 import newsletterSubscribeTemplate from "../templates/newsletterSubscribeTemplate.js";
 import mongoose from "mongoose";
 import asyncHandler from "../utils/asyncHandler.js";
+import constants from "../constants/constants.js";
 
 export const subscribeNewsletter = async (req, res) => {
   const session = await mongoose.startSession();
@@ -57,7 +58,7 @@ export const subscribeNewsletter = async (req, res) => {
 
       await sendEmail({
         to: email,
-        subject: "🍪 Confirm Your Midnight Cookies Subscription",
+        subject: `🍪 Confirm Your ${constants.APPICATION_NAME} Subscription`,
         html: newsletterSubscribeTemplate(verificationUrl),
       });
     }
@@ -67,7 +68,7 @@ export const subscribeNewsletter = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: isVerified
-        ? "You've successfully subscribed to Midnight Cookies notifications!"
+        ? `You've successfully subscribed to ${constants.APPICATION_NAME} notifications!`
         : "Subscription successful! Please check your email to confirm your subscription.",
     });
   } catch (error) {

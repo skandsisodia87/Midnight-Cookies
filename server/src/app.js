@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import env from "./config/env.js";
 import mongoose from "mongoose";
 import { Server } from "socket.io";
+import constants from "./constants/constants.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -39,7 +40,7 @@ app.get("/api/health", async (req, res) => {
   res.status(200).json({
     success: true,
 
-    database: dbState === 1 ? "connected" : "disconnected",
+    database: dbState === 1 ? constants.CONNECTED : constants.DISCONNECTED,
 
     uptime: process.uptime(),
 

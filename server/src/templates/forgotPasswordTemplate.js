@@ -1,3 +1,5 @@
+import constants from "../constants/constants.js";
+
 export const forgotPasswordTemplate = (name, resetUrl) => {
   return `
   <div
@@ -33,7 +35,7 @@ export const forgotPasswordTemplate = (name, resetUrl) => {
             font-size: 32px;
           "
         >
-          Midnight Cookies 🍪
+          ${constants.APPICATION_NAME} 🍪
         </h1>
 
         <p
@@ -90,7 +92,7 @@ export const forgotPasswordTemplate = (name, resetUrl) => {
             "
         >
             We received a request to reset the password for your
-            <strong>Midnight Cookies</strong> account.
+            <strong>${constants.APPICATION_NAME}</strong> account.
         </p>
 
         <p
@@ -161,7 +163,7 @@ export const forgotPasswordTemplate = (name, resetUrl) => {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             "
         >
-            Team Midnight Cookies 🍪
+            Team ${constants.APPICATION_NAME} 🍪
         </p>
 
         </div>
@@ -176,7 +178,7 @@ export const forgotPasswordTemplate = (name, resetUrl) => {
           color: #777;
         "
       >
-        © ${new Date().getFullYear()} Midnight Cookies.
+        © ${new Date().getFullYear()} ${constants.APPICATION_NAME}.
         All rights reserved.
       </div>
 

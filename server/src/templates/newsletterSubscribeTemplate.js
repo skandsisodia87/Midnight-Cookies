@@ -1,3 +1,5 @@
+import constants from "../constants/constants.js";
+
 const newsletterSubscribeTemplate = (verificationUrl) => {
   return `
     <div
@@ -32,7 +34,7 @@ const newsletterSubscribeTemplate = (verificationUrl) => {
               font-size:32px;
             "
           >
-            Midnight Cookies 🍪
+            ${constants.APPICATION_NAME} 🍪
           </h1>
 
           <p
@@ -64,7 +66,7 @@ const newsletterSubscribeTemplate = (verificationUrl) => {
               line-height:26px;
             "
           >
-            Thank you for subscribing to <strong>Midnight Cookies</strong>!
+            Thank you for subscribing to <strong>${constants.APPICATION_NAME}</strong>!
           </p>
 
           <p
@@ -88,7 +90,7 @@ const newsletterSubscribeTemplate = (verificationUrl) => {
             <li>🍪 Fresh cookie drops</li>
             <li>🎉 New flavors and launches</li>
             <li>🔥 Limited-time offers</li>
-            <li>💛 Special updates from Midnight Cookies</li>
+            <li>💛 Special updates from ${constants.APPICATION_NAME}</li>
           </ul>
 
           <div style="text-align:center;margin:40px 0;">
@@ -160,7 +162,7 @@ const newsletterSubscribeTemplate = (verificationUrl) => {
             font-size:14px;
           "
         >
-          © 2026 Midnight Cookies. All rights reserved.
+          © ${new Date().getFullYear()} ${constants.APPICATION_NAME}. All rights reserved.
         </div>
       </div>
     </div>

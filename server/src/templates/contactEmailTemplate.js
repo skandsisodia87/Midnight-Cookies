@@ -1,3 +1,5 @@
+import constants from "../constants/constants.js";
+
 const contactEmailTemplate = ({ fullName, email, subject, message }) => {
   return `
     <div
@@ -32,7 +34,7 @@ const contactEmailTemplate = ({ fullName, email, subject, message }) => {
               font-weight: bold;
             "
           >
-            Midnight Cookies 🍪
+            ${constants.APPICATION_NAME} 🍪
           </h1>
 
           <p
@@ -197,7 +199,7 @@ const contactEmailTemplate = ({ fullName, email, subject, message }) => {
               "
             >
               This email was automatically generated from
-              the Midnight Cookies contact form.
+              the ${constants.APPICATION_NAME} contact form.
             </p>
           </div>
         </div>
@@ -212,7 +214,7 @@ const contactEmailTemplate = ({ fullName, email, subject, message }) => {
             font-size: 14px;
           "
         >
-          © 2026 Midnight Cookies. All rights reserved.
+          © ${new Date().getFullYear()} ${constants.APPICATION_NAME}. All rights reserved.
         </div>
       </div>
     </div>

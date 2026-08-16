@@ -1,3 +1,5 @@
+import constants from "../constants/constants.js";
+
 const verifyEmailTemplate = ({ name, otp }) => {
   return `
     <div
@@ -31,7 +33,7 @@ const verifyEmailTemplate = ({ name, otp }) => {
             font-size: 32px;
           "
         >
-          Midnight Cookies 🍪
+          ${constants.APPICATION_NAME} 🍪
         </h1>
 
         <p
@@ -94,7 +96,7 @@ const verifyEmailTemplate = ({ name, otp }) => {
             font-size: 14px;
           "
         >
-          © 2026 Midnight Cookies. All rights reserved.
+          © ${new Date().getFullYear()} ${constants.APPICATION_NAME}. All rights reserved.
         </div>
       </div>
     </div>

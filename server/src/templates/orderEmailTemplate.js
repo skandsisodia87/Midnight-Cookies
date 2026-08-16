@@ -1,3 +1,5 @@
+import constants from "../constants/constants.js";
+
 export const orderStatusEmailTemplate = ({
   customerName,
   orderId,
@@ -163,7 +165,7 @@ export const orderStatusEmailTemplate = ({
             font-size: 32px;
           "
         >
-          Midnight Cookies 🍪
+          ${constants.APPICATION_NAME} 🍪
         </h1>
 
         <p
@@ -238,7 +240,7 @@ export const orderStatusEmailTemplate = ({
             line-height: 1.2;
           "
         >
-          Thank you for choosing Midnight Cookies ❤️
+          Thank you for choosing ${constants.APPICATION_NAME} ❤️
         </p>
 
       </div>
@@ -255,7 +257,7 @@ export const orderStatusEmailTemplate = ({
         "
       >
         © ${new Date().getFullYear()}
-        Midnight Cookies.
+        ${constants.APPICATION_NAME}.
         All rights reserved.
       </div>
 

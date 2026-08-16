@@ -72,7 +72,7 @@ const chatSocket = (io) => {
           });
         }
 
-        const room = `conversation:${conversationId}`;
+        const room = `${constants.CONVERSATION}:${conversationId}`;
 
         socket.join(room);
 
@@ -102,7 +102,7 @@ const chatSocket = (io) => {
       if (!conversationId) {
         return;
       }
-      const room = `conversation:${conversationId}`;
+      const room = `${constants.CONVERSATION}:${conversationId}`;
 
       socket.leave(room);
 
@@ -119,7 +119,7 @@ const chatSocket = (io) => {
         return;
       }
 
-      const room = `conversation:${conversationId}`;
+      const room = `${constants.CONVERSATION}:${conversationId}`;
       socket.to(room).emit("user_typing", {
         conversationId,
         userId,
@@ -131,7 +131,7 @@ const chatSocket = (io) => {
         return;
       }
 
-      const room = `conversation:${conversationId}`;
+      const room = `${constants.CONVERSATION}:${conversationId}`;
       socket.to(room).emit("user_stop_typing", {
         conversationId,
         userId,

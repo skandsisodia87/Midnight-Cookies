@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import env from "../config/env.js";
+import constants from "../constants/constants.js";
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -17,7 +18,7 @@ const transporter = nodemailer.createTransport({
 export const sendEmail = async ({ to, subject, html }) => {
   try {
     const info = await transporter.sendMail({
-      from: `"Midnight Cookies 🍪" <${env.EMAIL_USER}>`,
+      from: `"${constants.APPICATION_NAME} 🍪" <${env.EMAIL_USER}>`,
       to,
       subject,
       html,

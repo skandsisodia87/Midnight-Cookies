@@ -1,4 +1,6 @@
 const constants = {
+  APPICATION_NAME: "Midnight Cookies",
+
   USER: "user",
   ADMIN: "admin",
   PRODUCTION: "production",
@@ -38,6 +40,10 @@ const constants = {
   CUSTOMER_NOT_FOUND: "Customer not found.",
   NAME_REQUIRED: "Name is required.",
   DESCRIPTION_TYPE: "Description must be a string.",
+
+  CONNECTED: "connected",
+  DISCONNECTED: "disconnected",
+  CONVERSATION: "conversation",
 };
 
 export default constants;

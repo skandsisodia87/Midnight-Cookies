@@ -235,7 +235,7 @@ export const verifyEmailOtp = asyncHandler(async (req, res) => {
 
   await sendEmail({
     to: user.email,
-    subject: "Welcome to Midnight Cookies",
+    subject: "Welcome to " + constants.APPICATION_NAME,
     html: welcomeEmailTemplate(user.name, env.CLIENT_URL),
   });
 
