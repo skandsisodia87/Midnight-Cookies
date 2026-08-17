@@ -46,7 +46,7 @@ const ResetPassword = () => {
       toast.success(data.message || "Password reset successful");
 
       if (data.success) {
-        navigate("/login", {
+        navigate(constants.ROUTES.LOGIN, {
           replace: true,
         });
       }

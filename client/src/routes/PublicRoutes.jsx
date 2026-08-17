@@ -11,7 +11,7 @@ const PublicRoute = () => {
   }
 
   return userRole === constants.ADMIN ? (
-    <Navigate to="/admin" replace />
+    <Navigate to={constants.ROUTES.ADMIN.DASHBOARD} replace />
   ) : (
     <Navigate to="/" replace />
   );

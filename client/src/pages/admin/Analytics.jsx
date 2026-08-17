@@ -132,7 +132,7 @@ export default function Analytics() {
             title="No Analytics Data"
             message="Analytics data is currently unavailable."
             buttonText="Go Back"
-            redirectLink="/admin"
+            redirectLink={constants.ROUTES.ADMIN.DASHBOARD}
           />
         </div>
       </div>

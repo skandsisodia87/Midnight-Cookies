@@ -6,7 +6,7 @@ const NonAdminRoute = () => {
   const { isAuthenticated, user } = useAuthStore();
 
   if (isAuthenticated && user?.role === constants.ADMIN) {
-    return <Navigate to="/admin" replace />;
+    return <Navigate to={constants.ROUTES.ADMIN.DASHBOARD} replace />;
   }
 
   return <Outlet />;

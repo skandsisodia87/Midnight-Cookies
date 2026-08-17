@@ -6,11 +6,11 @@ const ProtectedRoute = () => {
   const { isAuthenticated, user } = useAuthStore();
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to={constants.ROUTES.LOGIN} replace />;
   }
 
   if (user?.role === constants.ADMIN) {
-    return <Navigate to="/admin" replace />;
+    return <Navigate to={constants.ROUTES.ADMIN.DASHBOARD} replace />;
   }
 
   return <Outlet />;

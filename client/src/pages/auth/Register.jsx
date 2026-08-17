@@ -302,7 +302,7 @@ const Register = () => {
         <p className="text-center text-sm sm:text-base text-gray-500 mt-6 sm:mt-8">
           Already have an account?{" "}
           <Link
-            to="/login"
+            to={constants.ROUTES.LOGIN}
             className="text-[#D98B2B] font-semibold hover:underline"
           >
             Login

@@ -9,6 +9,7 @@ import {
   updateCartItemsQuantity,
 } from "../../services/cart.service";
 import useCartSync from "../../common/useCartSync";
+import constants from "../../common/constants";
 
 const Cart = () => {
   const {
@@ -82,7 +83,7 @@ const Cart = () => {
           </p>
 
           <Link
-            to="/cookies"
+            to={constants.ROUTES.COOKIES}
             className="
               inline-flex
               items-center
@@ -282,7 +283,7 @@ const Cart = () => {
               </div>
 
               <Link
-                to="/checkout"
+                to={constants.ROUTES.CHECKOUT}
                 className="
                   mt-10
                   w-full
@@ -302,7 +303,7 @@ const Cart = () => {
               </Link>
 
               <Link
-                to="/cookies"
+                to={constants.ROUTES.COOKIES}
                 className="
                   mt-4
                   w-full

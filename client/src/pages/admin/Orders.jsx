@@ -28,7 +28,7 @@ const Orders = () => {
             title="Unable to load orders"
             message="We couldn’t fetch the latest orders right now. Please refresh the page or return to the admin dashboard."
             buttonText="Go Back"
-            redirectLink="/admin"
+            redirectLink={constants.ROUTES.ADMIN.DASHBOARD}
           />
         </div>
       </div>
@@ -45,8 +45,8 @@ const Orders = () => {
             icon="📦"
             title="No orders yet"
             message="There are no orders to display right now. Once customers place an order, it will appear here."
-            buttonText="Back to Dashboard"
-            redirectLink="/admin"
+            buttonText={constants.BACK_TO_DASHBOARD}
+            redirectLink={constants.ROUTES.ADMIN.DASHBOARD}
           />
         </div>
       </div>

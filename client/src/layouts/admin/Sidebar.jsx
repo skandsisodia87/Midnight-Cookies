@@ -25,52 +25,52 @@ const menus = [
   {
     name: "Dashboard",
     icon: <FiGrid />,
-    path: "/admin",
+    path: constants.ROUTES.ADMIN.DASHBOARD,
   },
   {
     name: constants.C_PRODUCTS,
     icon: <FiPackage />,
-    path: "/admin/products",
+    path: constants.ROUTES.ADMIN.PRODUCTS,
   },
   {
     name: "Categories",
     icon: <FiLayers />,
-    path: "/admin/categories",
+    path: constants.ROUTES.ADMIN.CATEGORIES,
   },
   {
     name: "Orders",
     icon: <FiShoppingBag />,
-    path: "/admin/orders",
+    path: constants.ROUTES.ADMIN.ORDERS,
   },
   {
     name: constants.C_CUSTOMERS,
     icon: <FiUsers />,
-    path: "/admin/customers",
+    path: constants.ROUTES.ADMIN.CUSTOMERS,
   },
   {
     name: "Coupons",
     icon: <FiTag />,
-    path: "/admin/coupons",
+    path: constants.ROUTES.ADMIN.COUPONS,
   },
   {
     name: "Newsletter",
     icon: <FiMail />,
-    path: "/admin/newsletter",
+    path: constants.ROUTES.ADMIN.NEWSLETTER,
   },
   {
     name: "Chat",
     icon: <FiMessageCircle />,
-    path: "/admin/chat",
+    path: constants.ROUTES.ADMIN.CHAT,
   },
   {
     name: "Analytics",
     icon: <FiBarChart2 />,
-    path: "/admin/analytics",
+    path: constants.ROUTES.ADMIN.ANALYTICS,
   },
   {
     name: "Settings",
     icon: <FiSettings />,
-    path: "/admin/settings",
+    path: constants.ROUTES.ADMIN.SETTINGS,
   },
 ];
 
@@ -88,7 +88,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         success: () => {
           logout();
           clearCart();
-          navigate("/login");
+          navigate(constants.ROUTES.LOGIN);
           return "Logout successful 🍪";
         },
         error: (error) => error.response?.data?.message || "Logout failed",
@@ -150,7 +150,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             <NavLink
               key={item.name}
               to={item.path}
-              end={item.path === "/admin"}
+              end={item.path === constants.ROUTES.ADMIN.DASHBOARD}
               onClick={() => setSidebarOpen(false)}
               className={({ isActive }) =>
                 `flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition-all duration-200 ${

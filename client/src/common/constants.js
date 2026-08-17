@@ -42,6 +42,41 @@ const constants = {
   COOKIE_REVIEW: "cookie-review",
 
   ERROR_MSG: "Something went wrong",
+  BACK_TO_DASHBOARD: "Back to Dashboard",
+
+  ROUTES: {
+    HOME: "/",
+    CONTACT: "/contact",
+    COOKIES: "/cookies",
+    COOKIE_DETAILS: "/cookies/:slug",
+
+    LOGIN: "/login",
+    REGISTER: "/register",
+    FORGOT_PASSWORD: "/forgot-password",
+    RESET_PASSWORD: "/reset-password/:token",
+    VERIFY_EMAIL: "/verify-email",
+
+    CART: "/cart",
+    ORDERS: "/orders",
+    ORDER_DETAILS: "/orders/:orderId",
+    CHECKOUT: "/checkout",
+
+    ADMIN: {
+      DASHBOARD: "/admin",
+      ORDERS: "/admin/orders",
+      EDIT_ORDER: "/admin/orders/edit",
+      CHAT: "/admin/chat",
+      PRODUCTS: "/admin/products",
+      CATEGORIES: "/admin/categories",
+      CUSTOMERS: "/admin/customers",
+      COUPONS: "/admin/coupons",
+      NEWSLETTER: "/admin/newsletter",
+      ANALYTICS: "/admin/analytics",
+      SETTINGS: "/admin/settings",
+    },
+
+    NOT_FOUND: "*",
+  },
 };
 
 export default constants;

@@ -576,7 +576,7 @@ const CookieDetails = () => {
                 </>
               ) : (
                 <button
-                  onClick={() => navigate("/login")}
+                  onClick={() => navigate(constants.ROUTES.LOGIN)}
                   className={`
                   flex-1
                   py-5

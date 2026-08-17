@@ -102,7 +102,7 @@ const Coupon = () => {
             title="Unable to load coupons"
             message="There was an issue fetching coupons. Please refresh the page or try again later."
             buttonText="Go Back"
-            redirectLink="/admin"
+            redirectLink={constants.ROUTES.ADMIN.DASHBOARD}
           />
         </div>
       </div>

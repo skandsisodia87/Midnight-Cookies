@@ -4,6 +4,7 @@ import moment from "moment";
 import { getMyOrders } from "../../services/order.service";
 import OrderSkeleton from "../../components/order/OrderSkeleton";
 import StatusConfig from "../../common/StatusConfig";
+import constants from "../../common/constants";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -28,12 +29,12 @@ const Orders = () => {
   }, []);
 
   return (
-    <div className='min-h-screen bg-[#FFF6EC] px-6 py-12'>
-      <div className='max-w-6xl mx-auto'>
-        <div className='mb-12'>
-          <h1 className='text-5xl font-bold text-[#2B1D16]'>My Orders</h1>
+    <div className="min-h-screen bg-[#FFF6EC] px-6 py-12">
+      <div className="max-w-6xl mx-auto">
+        <div className="mb-12">
+          <h1 className="text-5xl font-bold text-[#2B1D16]">My Orders</h1>
 
-          <p className='mt-4 text-gray-600'>
+          <p className="mt-4 text-gray-600">
             Track your delicious cookie orders 🍪
           </p>
         </div>
@@ -42,28 +43,28 @@ const Orders = () => {
 
         {!loading && orders.length === 0 && (
           <div
-            className='
+            className="
               bg-white
               rounded-4xl
               shadow-lg
               py-24
               px-8
               text-center
-            '
+            "
           >
-            <div className='text-7xl mb-6'>🍪</div>
+            <div className="text-7xl mb-6">🍪</div>
 
-            <h2 className='text-3xl font-bold text-[#2B1D16]'>
+            <h2 className="text-3xl font-bold text-[#2B1D16]">
               No Orders Found
             </h2>
 
-            <p className='text-gray-500 mt-4'>
+            <p className="text-gray-500 mt-4">
               Looks like you haven’t ordered any cookies yet.
             </p>
 
             <Link
-              to='/cookies'
-              className='
+              to={constants.ROUTES.COOKIES}
+              className="
                 inline-block
                 mt-8
                 bg-[#D98B2B]
@@ -74,7 +75,7 @@ const Orders = () => {
                 rounded-full
                 font-semibold
                 transition
-              '
+              "
             >
               Start Shopping
             </Link>
@@ -82,7 +83,7 @@ const Orders = () => {
         )}
 
         {!loading && orders.length > 0 && (
-          <div className='space-y-8'>
+          <div className="space-y-8">
             {orders.map((order) => {
               const currentStatus =
                 StatusConfig[order.orderStatus] || StatusConfig.placed;
@@ -90,10 +91,10 @@ const Orders = () => {
               return (
                 <div
                   key={order.orderId}
-                  className='bg-white rounded-4xl shadow-lg overflow-hidden'
+                  className="bg-white rounded-4xl shadow-lg overflow-hidden"
                 >
                   <div
-                    className='
+                    className="
                       border-b
                       px-8
                       py-6
@@ -103,15 +104,16 @@ const Orders = () => {
                       md:items-center
                       md:justify-between
                       gap-4
-                    '
+                    "
                   >
                     <div>
-                      <h2 className='text-2xl font-bold text-[#2B1D16]'>
+                      <h2 className="text-2xl font-bold text-[#2B1D16]">
                         {order.orderId}
                       </h2>
 
-                      <p className='text-gray-500 mt-2'>
-                        Ordered on {moment(order.createdAt).format("MMMM D, YYYY h:mm A")}
+                      <p className="text-gray-500 mt-2">
+                        Ordered on{" "}
+                        {moment(order.createdAt).format("MMMM D, YYYY h:mm A")}
                       </p>
                     </div>
 
@@ -134,25 +136,25 @@ const Orders = () => {
                     </div>
                   </div>
 
-                  <div className='p-8 space-y-6'>
+                  <div className="p-8 space-y-6">
                     {order.items.map((item, index) => (
-                      <div key={index} className='flex items-center gap-5'>
+                      <div key={index} className="flex items-center gap-5">
                         <img
                           src={item.image}
                           alt={item.name}
-                          className='w-24 h-24 rounded-2xl object-cover'
+                          className="w-24 h-24 rounded-2xl object-cover"
                         />
 
-                        <div className='flex-1'>
-                          <h3 className='text-xl font-bold text-[#2B1D16]'>
+                        <div className="flex-1">
+                          <h3 className="text-xl font-bold text-[#2B1D16]">
                             {item.name}
                           </h3>
 
-                          <p className='text-sm text-gray-400 mt-1'>
+                          <p className="text-sm text-gray-400 mt-1">
                             {item.sku}
                           </p>
 
-                          <p className='text-gray-500 mt-2'>
+                          <p className="text-gray-500 mt-2">
                             Quantity: {item.quantity}
                           </p>
                         </div>
@@ -161,22 +163,22 @@ const Orders = () => {
                   </div>
 
                   <div
-                    className='
+                    className="
                       bg-[#FFF8F1]
                       px-8
                       py-5
                       flex
                       items-center
                       justify-between
-                    '
+                    "
                   >
-                    <h3 className='text-xl font-bold text-[#2B1D16]'>
+                    <h3 className="text-xl font-bold text-[#2B1D16]">
                       Total: ₹{order.totalAmount}
                     </h3>
 
                     <Link
                       to={`/orders/${order.orderId}`}
-                      className='
+                      className="
                         bg-[#D98B2B]
                         hover:bg-[#c97818]
                         text-white
@@ -185,7 +187,7 @@ const Orders = () => {
                         rounded-full
                         font-semibold
                         transition
-                      '
+                      "
                     >
                       View Details
                     </Link>

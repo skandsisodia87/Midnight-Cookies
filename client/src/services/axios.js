@@ -1,5 +1,6 @@
 import axios from "axios";
 import useAuthStore from "../store/authStore";
+import constants from "../common/constants";
 
 const api = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api/v1`,
@@ -27,7 +28,7 @@ api.interceptors.response.use(
     ) {
       useAuthStore.getState().logout();
 
-      window.location.href = "/login";
+      window.location.href = constants.ROUTES.LOGIN;
     }
 
     return Promise.reject(error);

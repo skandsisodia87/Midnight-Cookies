@@ -252,7 +252,7 @@ const OrderDetails = () => {
               </div>
 
               <Link
-                to="/contact"
+                to={constants.ROUTES.CONTACT}
                 className="rounded-full bg-[#D98B2B] px-8 py-4 font-semibold transition hover:bg-[#c97818]"
               >
                 Contact Support

@@ -198,7 +198,7 @@ const Newsletter = () => {
             title="Unable to load newsletter"
             message="There was an issue fetching your admin data. Please try again or return to the admin home page."
             buttonText="Go Back"
-            redirectLink="/admin"
+            redirectLink={constants.ROUTES.ADMIN.DASHBOARD}
           />
         </div>
       </div>

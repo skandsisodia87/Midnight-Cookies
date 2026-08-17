@@ -1,3 +1,4 @@
+import constants from "../../common/constants";
 import ErrorPage from "../../common/ErrorPage";
 
 const NotFound = ({ isAdmin = false }) => {
@@ -13,8 +14,10 @@ const NotFound = ({ isAdmin = false }) => {
           message={
             "The page you're looking for doesn't exist or has been moved. Check the URL or return to the homepage."
           }
-          buttonText={isAdmin ? "Back to Dashboard" : "Go Home"}
-          redirectLink={isAdmin ? "/admin" : "/"}
+          buttonText={isAdmin ? constants.BACK_TO_DASHBOARD : "Go Home"}
+          redirectLink={
+            isAdmin ? constants.ROUTES.ADMIN.DASHBOARD : constants.ROUTES.HOME
+          }
         />
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import HeroCookie from "../../assets/images/hero-cookie.png";
+import constants from "../../common/constants";
 
 const HeroSection = () => {
   const scrollToFeatured = () => {
@@ -48,7 +49,7 @@ const HeroSection = () => {
             </button>
 
             <Link
-              to={"/cookies"}
+              to={constants.ROUTES.COOKIES}
               className="
                 border
                 border-white

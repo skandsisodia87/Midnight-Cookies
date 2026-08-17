@@ -61,8 +61,8 @@ const Categories = () => {
           <ErrorPage
             title="Unable to load categories"
             message="There was an issue fetching categories. Please refresh the page or try again later."
-            buttonText="Back to Dashboard"
-            redirectLink="/admin"
+            buttonText={constants.BACK_TO_DASHBOARD}
+            redirectLink={constants.ROUTES.ADMIN.DASHBOARD}
           />
         </div>
       </div>

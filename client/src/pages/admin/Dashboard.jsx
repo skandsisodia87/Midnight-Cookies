@@ -34,7 +34,7 @@ export default function Dashboard() {
             title="Unable to load dashboard"
             message="There was an issue fetching your admin data. Please try again or return to the admin home page."
             buttonText="Go Back"
-            redirectLink="/admin"
+            redirectLink={constants.ROUTES.ADMIN.DASHBOARD}
           />
         </div>
       </div>

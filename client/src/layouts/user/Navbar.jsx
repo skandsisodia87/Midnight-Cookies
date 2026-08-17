@@ -67,7 +67,7 @@ const Navbar = () => {
             </button>
 
             <Link
-              to="/"
+              to={constants.ROUTES.HOME}
               className="text-2xl font-bold tracking-wide bg-linear-to-r from-[#D98B2B] via-yellow-400 to-[#D98B2B] bg-clip-text text-transparent"
               onClick={closeMenu}
             >
@@ -116,7 +116,7 @@ const Navbar = () => {
               </button>
             ) : (
               <Link
-                to="/login"
+                to={constants.ROUTES.LOGIN}
                 className="hidden rounded-full border border-[#D98B2B] px-4 py-2 transition hover:bg-[#D98B2B] md:block"
                 onClick={closeMenu}
               >
@@ -125,7 +125,11 @@ const Navbar = () => {
             )}
 
             {isAuthenticated && (
-              <Link to="/cart" className="relative" onClick={closeMenu}>
+              <Link
+                to={constants.ROUTES.CART}
+                className="relative"
+                onClick={closeMenu}
+              >
                 <IoMdCart size={24} />
                 {count > 0 && (
                   <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#D98B2B] text-xs">
@@ -221,7 +225,7 @@ const Navbar = () => {
             </button>
           ) : (
             <Link
-              to="/login"
+              to={constants.ROUTES.LOGIN}
               onClick={closeMenu}
               className="flex w-full items-center justify-center gap-2 rounded-full border border-[#D98B2B] px-4 py-2.5 text-sm font-medium text-[#F5C16C] transition hover:bg-[#D98B2B] hover:text-white"
             >
@@ -231,7 +235,7 @@ const Navbar = () => {
           )}
 
           <Link
-            to="/cart"
+            to={constants.ROUTES.CART}
             onClick={closeMenu}
             className="flex items-center justify-center gap-2 rounded-full bg-[#D98B2B] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#bf7120]"
           >

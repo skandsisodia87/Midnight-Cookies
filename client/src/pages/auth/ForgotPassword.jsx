@@ -33,7 +33,7 @@ const ForgotPassword = () => {
     onSuccess: (data) => {
       reset();
       toast.success("Reset link sent successfully");
-      navigate("/login", {
+      navigate(constants.ROUTES.LOGIN, {
         replace: true,
       });
     },
@@ -140,7 +140,7 @@ const ForgotPassword = () => {
         <p className="text-center text-sm sm:text-base text-gray-500 mt-6 sm:mt-8">
           Remember your password?{" "}
           <Link
-            to="/login"
+            to={constants.ROUTES.LOGIN}
             className="text-[#D98B2B] font-semibold hover:underline"
           >
             Back to Login

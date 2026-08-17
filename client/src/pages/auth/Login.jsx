@@ -36,7 +36,7 @@ const Login = () => {
       toast.success("Login successful 🍪");
 
       if (data?.user?.role === constants.ADMIN) {
-        navigate("/admin", {
+        navigate(constants.ROUTES.ADMIN.DASHBOARD, {
           replace: true,
         });
       } else {
@@ -168,7 +168,7 @@ const Login = () => {
 
           <div className="text-right">
             <Link
-              to="/forgot-password"
+              to={constants.ROUTES.FORGOT_PASSWORD}
               className="text-sm text-[#D98B2B] hover:underline"
             >
               Forgot Password?
@@ -225,7 +225,7 @@ const Login = () => {
         <p className="text-center text-sm sm:text-base text-gray-500 mt-6 sm:mt-8">
           Don’t have an account?{" "}
           <Link
-            to="/register"
+            to={constants.ROUTES.REGISTER}
             className="text-[#D98B2B] font-semibold hover:underline"
           >
             Create Account

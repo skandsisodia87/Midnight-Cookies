@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { verifyEmailOtp } from "../../services/auth.service";
 import useAuthStore from "../../store/authStore";
+import constants from "../../common/constants";
 
 const VerifyEmail = () => {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ const VerifyEmail = () => {
 
         toast.success("Email verified successfully");
         setRegistering(false);
-        navigate("/login", {
+        navigate(constants.ROUTES.LOGIN, {
           replace: true,
         });
       }
@@ -170,7 +171,7 @@ const VerifyEmail = () => {
         <p className="text-center text-sm sm:text-base text-gray-500 mt-6 sm:mt-8">
           <button
             onClick={() =>
-              navigate("/login", {
+              navigate(constants.ROUTES.LOGIN, {
                 replace: true,
               })
             }

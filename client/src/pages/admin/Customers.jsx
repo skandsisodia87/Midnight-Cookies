@@ -30,7 +30,7 @@ const Customers = () => {
             title="Unable to load customers"
             message="We couldn’t fetch the customer list right now. Please refresh the page or return to the admin dashboard."
             buttonText="Go Back"
-            redirectLink="/admin"
+            redirectLink={constants.ROUTES.ADMIN.DASHBOARD}
           />
         </div>
       </div>
@@ -47,8 +47,8 @@ const Customers = () => {
             icon="👥"
             title="No customers yet"
             message="No customers have registered yet. Check back later or return to the admin dashboard."
-            buttonText="Back to Dashboard"
-            redirectLink="/admin"
+            buttonText={constants.BACK_TO_DASHBOARD}
+            redirectLink={constants.ROUTES.ADMIN.DASHBOARD}
           />
         </div>
       </div>
