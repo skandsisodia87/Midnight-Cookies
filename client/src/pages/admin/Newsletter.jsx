@@ -24,19 +24,20 @@ import ErrorPage from "../../common/ErrorPage";
 import { getSubscribers, removeSubscriber } from "../../services/admin.service";
 import NewsletterSkeleton from "../../components/admin/newsletter/NewsletterSkeleton";
 import { toast } from "sonner";
+import constants from "../../common/constants";
 
 const emptyNewsletter = {
   subject: "",
   previewText: "",
   content: "",
-  audience: "all",
+  audience: constants.ALL,
 };
 
 const Newsletter = () => {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [typeFilter, setTypeFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState(constants.ALL);
+  const [typeFilter, setTypeFilter] = useState(constants.ALL);
   const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
   const [selectedSubscriber, setSelectedSubscriber] = useState(null);
   const [newsletter, setNewsletter] = useState(emptyNewsletter);
@@ -47,7 +48,7 @@ const Newsletter = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["newsletter"],
+    queryKey: [constants.NEWSLETTER],
     queryFn: getSubscribers,
     staleTime: 1 * 60 * 1000,
     gcTime: 5 * 60 * 1000,
@@ -58,7 +59,7 @@ const Newsletter = () => {
       mutationFn: removeSubscriber,
       onSuccess: (res) => {
         toast.success(res?.message || "Subscriber removed successfully");
-        queryClient.invalidateQueries(["newsletter"]);
+        queryClient.invalidateQueries([constants.NEWSLETTER]);
         setSelectedSubscriber(null);
       },
       onError: (error) => {
@@ -100,14 +101,14 @@ const Newsletter = () => {
         .includes(search.toLowerCase());
 
       const matchesStatus =
-        statusFilter === "all" ||
-        (statusFilter === "verified" && subscriber.isVerified) ||
-        (statusFilter === "pending" && !subscriber.isVerified);
+        statusFilter === constants.ALL ||
+        (statusFilter === constants.VERIFIED && subscriber.isVerified) ||
+        (statusFilter === constants.PENDING && !subscriber.isVerified);
 
       const matchesType =
-        typeFilter === "all" ||
-        (typeFilter === "user" && subscriber.isUser) ||
-        (typeFilter === "guest" && !subscriber.isUser);
+        typeFilter === constants.ALL ||
+        (typeFilter === constants.USER && subscriber.isUser) ||
+        (typeFilter === constants.GUEST && !subscriber.isUser);
 
       return matchesSearch && matchesStatus && matchesType;
     });

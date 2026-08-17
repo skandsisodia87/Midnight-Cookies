@@ -5,10 +5,11 @@ import EmptyState from "../../common/EmptyState";
 import CustomersSkeleton from "../../components/admin/customer/CustomersSkeleton";
 import CustomersTable from "../../components/admin/customer/CustomersTable";
 import { getCustomers } from "../../services/admin.service";
+import constants from "../../common/constants";
 
 const Customers = () => {
   const { data, isError, isLoading } = useQuery({
-    queryKey: ["admin-customers"],
+    queryKey: [constants.ADMIN_CUSTOMERS],
     queryFn: getCustomers,
     staleTime: 1 * 60 * 1000,
     gcTime: 10 * 60 * 1000,

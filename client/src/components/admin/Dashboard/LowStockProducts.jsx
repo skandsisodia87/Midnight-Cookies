@@ -1,3 +1,5 @@
+import constants from "../../../common/constants";
+
 const products = [
   { name: "Chocolate Cookie", remaining: 6 },
   { name: "Oreo Delight", remaining: 4 },
@@ -11,10 +13,10 @@ export default function LowStockProducts({ products }) {
       <div className="flex items-center justify-between gap-4">
         <div>
           <h2 className="text-lg font-semibold text-slate-900">
-            Low Stock Products
+            Low Stock {constants.C_PRODUCTS}
           </h2>
           <p className="mt-2 text-sm text-slate-500">
-            Products that need restocking soon.
+            {constants.C_PRODUCTS} that need restocking soon.
           </p>
         </div>
         <span className="rounded-full bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">

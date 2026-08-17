@@ -10,6 +10,7 @@ import useCartStore from "../../store/cartStore";
 import { getCookieReviews } from "../../services/review.service";
 import { useQuery } from "@tanstack/react-query";
 import useAuthStore from "../../store/authStore";
+import constants from "../../common/constants";
 
 const CookieDetails = () => {
   const navigate = useNavigate();
@@ -102,7 +103,7 @@ const CookieDetails = () => {
   };
 
   const { data: reviews } = useQuery({
-    queryKey: ["cookie-review", cookie?._id],
+    queryKey: [constants.COOKIE_REVIEW, cookie?._id],
     queryFn: () => getCookieReviews(cookie._id),
     enabled: !!cookie?._id,
     staleTime: 30 * 60 * 1000,

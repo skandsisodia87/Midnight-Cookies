@@ -26,6 +26,7 @@ import {
   getCoupons,
   toggleCouponStatus,
 } from "../../services/admin.service";
+import constants from "../../common/constants.js";
 
 const Coupon = () => {
   const queryClient = useQueryClient();
@@ -36,7 +37,7 @@ const Coupon = () => {
   const [deleteCoupon, setDeleteCoupon] = useState(null);
 
   const { data, isError, isLoading } = useQuery({
-    queryKey: ["coupons"],
+    queryKey: [constants.COUPONS],
     queryFn: getCoupons,
     staleTime: 60 * 60 * 1000,
     gcTime: 60 * 60 * 1000,
@@ -49,7 +50,7 @@ const Coupon = () => {
     mutationFn: toggleCouponStatus,
     onSuccess: (data) => {
       toast.success(data.message || "Coupon status updated successfully.");
-      queryClient.invalidateQueries(["coupons"]);
+      queryClient.invalidateQueries([constants.COUPONS]);
     },
     onError: (error) => {
       toast.error(
@@ -64,7 +65,7 @@ const Coupon = () => {
     mutationFn: deleteCouponById,
     onSuccess: (data) => {
       toast.success(data.message || "Coupon deleted successfully.");
-      queryClient.invalidateQueries(["coupons"]);
+      queryClient.invalidateQueries([constants.COUPONS]);
     },
     onError: (error) => {
       toast.error(

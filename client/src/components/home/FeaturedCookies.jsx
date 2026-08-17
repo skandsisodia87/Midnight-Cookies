@@ -4,6 +4,7 @@ import CookieCardSkeleton from "../cookies/CookieCardSkeleton.jsx";
 import { getFeaturedCookie } from "../../services/cookie.service.js";
 import { useQuery } from "@tanstack/react-query";
 import ErrorPage from "../../common/ErrorPage.jsx";
+import constants from "../../common/constants.js";
 
 const FeaturedCookies = () => {
   const {
@@ -12,7 +13,7 @@ const FeaturedCookies = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["featured-cookie"],
+    queryKey: [constants.FEATURED_COOKIE],
     queryFn: getFeaturedCookie,
     staleTime: 3 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
@@ -27,7 +28,7 @@ const FeaturedCookies = () => {
             message={
               error?.response?.data?.message ||
               error?.message ||
-              "Something went wrong"
+              constants.ERROR_MSG
             }
             buttonText="Reload Page"
             redirectLink="/"

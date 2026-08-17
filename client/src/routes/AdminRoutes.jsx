@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import useAuthStore from "../store/authStore";
+import constants from "../common/constants";
 
 const AdminRoute = () => {
   const { isAuthenticated, user } = useAuthStore();
@@ -8,7 +9,7 @@ const AdminRoute = () => {
     return <Navigate to="/login" replace />;
   }
 
-  if (!user || user.role !== "admin") {
+  if (!user || user.role !== constants.ADMIN) {
     return <Navigate to="/" replace />;
   }
 

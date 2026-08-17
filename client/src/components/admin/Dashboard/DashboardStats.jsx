@@ -5,6 +5,7 @@ import {
   FaRupeeSign,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import constants from "../../../common/constants";
 
 const cards = [
   {
@@ -28,8 +29,8 @@ const cards = [
     redirect: "/admin/orders",
   },
   {
-    key: "products",
-    title: "Products",
+    key: constants.PRODUCTS,
+    title: constants.C_PRODUCTS,
     value: "64",
     icon: <FaCookieBite />,
     bg: "bg-orange-100",
@@ -38,8 +39,8 @@ const cards = [
     redirect: "/admin/products",
   },
   {
-    key: "customers",
-    title: "Customers",
+    key: constants.CUSTOMERS,
+    title: constants.C_CUSTOMERS,
     icon: <FaUsers />,
     bg: "bg-violet-100",
     text: "text-violet-700",

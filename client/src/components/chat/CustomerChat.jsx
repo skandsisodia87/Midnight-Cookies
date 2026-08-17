@@ -7,6 +7,7 @@ import {
   FiMoreVertical,
   FiX,
 } from "react-icons/fi";
+import constants from "../../common/constants";
 
 const CustomerChat = ({ onClose }) => {
   const [message, setMessage] = useState("");
@@ -103,7 +104,7 @@ const CustomerChat = ({ onClose }) => {
 
           <div className="min-w-0">
             <h1 className="truncate text-sm font-bold text-[#3A2118]">
-              Midnight Cookies
+              {constants.APPICATION_NAME}
             </h1>
 
             <div className="mt-0.5 flex items-center gap-1.5">

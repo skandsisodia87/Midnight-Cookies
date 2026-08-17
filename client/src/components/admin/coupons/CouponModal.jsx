@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { saveCoupon } from "../../../services/admin.service";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import constants from "../../../common/constants";
 
 const emptyCoupon = {
   code: "",
@@ -93,7 +94,7 @@ export default function CouponModal({ isOpen, editingCoupon, closeModal }) {
     mutationFn: saveCoupon,
     onSuccess: (data) => {
       toast.success(data.message || "Coupon saved successfully.");
-      queryClient.invalidateQueries(["coupons"]);
+      queryClient.invalidateQueries([constants.COUPONS]);
       closeModal();
     },
     onError: (error) => {

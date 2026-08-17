@@ -6,10 +6,11 @@ import { useQuery } from "@tanstack/react-query";
 import ErrorPage from "../../common/ErrorPage";
 import EmptyState from "../../common/EmptyState";
 import { getOrders } from "../../services/admin.service";
+import constants from "../../common/constants";
 
 const Orders = () => {
   const { data, isError, isLoading } = useQuery({
-    queryKey: ["admin-orders"],
+    queryKey: [constants.ADMIN_ORDERS],
     queryFn: getOrders,
     staleTime: 1 * 60 * 1000,
     gcTime: 10 * 60 * 1000,

@@ -30,6 +30,7 @@ import ErrorPage from "../../common/ErrorPage";
 import StatCard from "../../components/admin/analytics/StatCard";
 import OrderStatus from "../../components/admin/analytics/OrderStatus";
 import RevenueOverview from "../../components/admin/analytics/RevenueOverview";
+import constants from "../../common/constants";
 
 export default function Analytics() {
   const {
@@ -37,7 +38,7 @@ export default function Analytics() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["analytics"],
+    queryKey: [constants.ANALYTICS],
     queryFn: getAnalytics,
     staleTime: 5 * 60 * 1000,
   });
@@ -177,7 +178,7 @@ export default function Analytics() {
         />
 
         <StatCard
-          title="Customers"
+          title={constants.C_CUSTOMERS}
           value={analyticsData.totalCustomers}
           subtitle="Customers acquired"
           icon={<FaUsers />}
@@ -253,7 +254,7 @@ export default function Analytics() {
                 />
 
                 <Tooltip
-                  formatter={(value) => [`${value}`, "Customers"]}
+                  formatter={(value) => [`${value}`, constants.C_CUSTOMERS]}
                   contentStyle={{
                     borderRadius: 14,
                     border: "1px solid #E2E8F0",
@@ -261,8 +262,8 @@ export default function Analytics() {
                 />
 
                 <Bar
-                  dataKey="customers"
-                  name="Customers"
+                  dataKey={constants.CUSTOMERS}
+                  name={constants.C_CUSTOMERS}
                   fill="#8B5CF6"
                   radius={[6, 6, 0, 0]}
                   maxBarSize={34}
@@ -276,11 +277,11 @@ export default function Analytics() {
           <div className="mb-5 flex items-start justify-between gap-3">
             <div>
               <h2 className="text-base font-semibold text-slate-900 sm:text-lg">
-                Top Selling Products
+                Top Selling {constants.C_PRODUCTS}
               </h2>
 
               <p className="mt-1 text-xs text-slate-500 sm:text-sm">
-                Products ranked by units sold
+                {constants.C_PRODUCTS} ranked by units sold
               </p>
             </div>
 

@@ -2,6 +2,7 @@ import React from "react";
 import { FiSend, FiX, FiUsers } from "react-icons/fi";
 import FormField from "./FormField";
 import inputClass from "./inputClass";
+import constants from "../../../common/constants";
 
 const NewsletterModal = ({
   isOpen,
@@ -17,8 +18,6 @@ const NewsletterModal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2D1B16]/50 p-4 backdrop-blur-sm">
       <div className="flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl">
-        {/* Modal Header */}
-
         <div className="flex items-center justify-between border-b border-[#F3E4D4] px-5 py-4 sm:px-6">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FFF3E5] text-[#D98B2B]">
@@ -45,11 +44,7 @@ const NewsletterModal = ({
           </button>
         </div>
 
-        {/* Form */}
-
         <form onSubmit={onSubmit} className="overflow-y-auto p-5 sm:p-6">
-          {/* Audience */}
-
           <FormField label="Send To">
             <select
               name="audience"
@@ -57,15 +52,11 @@ const NewsletterModal = ({
               onChange={onChange}
               className={inputClass()}
             >
-              <option value="all">All Verified Subscribers</option>
-
-              <option value="users">Registered Users</option>
-
-              <option value="guests">Guest Subscribers</option>
+              <option value={constants.ALL}>All Verified Subscribers</option>
+              <option value={constants.USERS}>Registered Users</option>
+              <option value={constants.GUESTS}>Guest Subscribers</option>
             </select>
           </FormField>
-
-          {/* Subject */}
 
           <div className="mt-5">
             <FormField label="Subject" required error={errors.subject}>
@@ -80,8 +71,6 @@ const NewsletterModal = ({
             </FormField>
           </div>
 
-          {/* Preview */}
-
           <div className="mt-5">
             <FormField label="Preview Text" hint="Optional">
               <input
@@ -94,8 +83,6 @@ const NewsletterModal = ({
               />
             </FormField>
           </div>
-
-          {/* Content */}
 
           <div className="mt-5">
             <FormField
@@ -114,8 +101,6 @@ const NewsletterModal = ({
             </FormField>
           </div>
 
-          {/* Audience Info */}
-
           <div className="mt-5 rounded-xl border border-[#F3E4D4] bg-[#FFF8F2] p-4">
             <div className="flex gap-3">
               <FiUsers className="mt-0.5 shrink-0 text-[#D98B2B]" size={18} />
@@ -126,21 +111,21 @@ const NewsletterModal = ({
                 </p>
 
                 <p className="mt-1 text-sm text-[#8A7064]">
-                  {newsletter.audience === "users" &&
+                  {newsletter.audience === constants.USERS &&
                     subscribers.filter((item) => item.isUser && item.isVerified)
                       .length}
-                  {newsletter.audience === "guests" &&
+                  {newsletter.audience === constants.GUESTS &&
                     subscribers.filter(
                       (item) => !item.isUser && item.isVerified,
                     ).length}
-                  {newsletter.audience === "all" &&
+                  {newsletter.audience === constants.ALL &&
                     subscribers.filter((item) => item.isVerified).length}{" "}
-                  verified subscriber
-                  {(newsletter.audience === "users"
+                  {constants.VERIFIED} subscriber
+                  {(newsletter.audience === constants.USERS
                     ? subscribers.filter(
                         (item) => item.isUser && item.isVerified,
                       ).length
-                    : newsletter.audience === "guests"
+                    : newsletter.audience === constants.GUESTS
                       ? subscribers.filter(
                           (item) => !item.isUser && item.isVerified,
                         ).length
@@ -152,8 +137,6 @@ const NewsletterModal = ({
               </div>
             </div>
           </div>
-
-          {/* Footer */}
 
           <div className="mt-6 flex flex-col-reverse gap-3 border-t border-[#F3E4D4] pt-5 sm:flex-row sm:justify-end">
             <button

@@ -1,6 +1,7 @@
 import { FiInstagram, FiFacebook, FiTwitter } from "react-icons/fi";
 import { Link, NavLink } from "react-router-dom";
 import useAuthStore from "../../store/authStore";
+import constants from "../../common/constants";
 
 const Footer = () => {
   const { isAuthenticated } = useAuthStore();
@@ -9,7 +10,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-10">
         <div>
           <h2 className="text-3xl font-bold bg-linear-to-r from-[#D98B2B] via-yellow-400 to-[#D98B2B] bg-clip-text text-transparent">
-            Midnight Cookies
+            {constants.APPICATION_NAME}
           </h2>
 
           <p className="mt-5 text-gray-300 leading-7">
@@ -164,7 +165,7 @@ const Footer = () => {
           text-gray-400
         "
       >
-        © 2026 Midnight Cookies. All rights reserved.
+        © 2026 {constants.APPICATION_NAME}. All rights reserved.
       </div>
     </footer>
   );

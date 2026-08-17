@@ -1,4 +1,5 @@
 import { FiPackage, FiTruck, FiClock, FiCheckCircle } from "react-icons/fi";
+import constants from "../../../common/constants";
 
 const cards = [
   {
@@ -8,19 +9,19 @@ const cards = [
     color: "bg-[#FFF4E6]",
   },
   {
-    key: "pending",
+    key: constants.PENDING,
     title: "Pending",
     icon: FiClock,
     color: "bg-[#FFF8E7]",
   },
   {
-    key: "shipped",
+    key: constants.SHIPPED,
     title: "Shipped",
     icon: FiTruck,
     color: "bg-[#E8F4FD]",
   },
   {
-    key: "delivered",
+    key: constants.DELIVERED,
     title: "Delivered",
     icon: FiCheckCircle,
     color: "bg-[#E8F8EE]",

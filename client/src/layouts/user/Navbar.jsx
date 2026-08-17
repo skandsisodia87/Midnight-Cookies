@@ -15,6 +15,7 @@ import useAuthStore from "../../store/authStore";
 import { logoutUser } from "../../services/auth.service";
 import { toast } from "sonner";
 import useCartStore from "../../store/cartStore";
+import constants from "../../common/constants";
 
 const Navbar = () => {
   const { clearCart } = useCartStore();
@@ -70,7 +71,7 @@ const Navbar = () => {
               className="text-2xl font-bold tracking-wide bg-linear-to-r from-[#D98B2B] via-yellow-400 to-[#D98B2B] bg-clip-text text-transparent"
               onClick={closeMenu}
             >
-              Midnight Cookies
+              {constants.APPICATION_NAME}
             </Link>
           </div>
 
@@ -157,7 +158,7 @@ const Navbar = () => {
               Explore
             </p>
             <h2 className="text-xl font-semibold text-white">
-              Midnight Cookies
+              {constants.APPICATION_NAME}
             </h2>
           </div>
           <button

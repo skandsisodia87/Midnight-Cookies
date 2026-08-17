@@ -19,6 +19,7 @@ import useAuthStore from "../../store/authStore";
 import { logoutUser } from "../../services/auth.service";
 import { toast } from "sonner";
 import useCartStore from "../../store/cartStore";
+import constants from "../../common/constants";
 
 const menus = [
   {
@@ -27,7 +28,7 @@ const menus = [
     path: "/admin",
   },
   {
-    name: "Products",
+    name: constants.C_PRODUCTS,
     icon: <FiPackage />,
     path: "/admin/products",
   },
@@ -42,7 +43,7 @@ const menus = [
     path: "/admin/orders",
   },
   {
-    name: "Customers",
+    name: constants.C_CUSTOMERS,
     icon: <FiUsers />,
     path: "/admin/customers",
   },
@@ -124,7 +125,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             onClick={() => setSidebarOpen(false)}
             className="rounded-lg p-2 transition hover:bg-white/10"
           >
-            <FiX size={22} color="white"/>
+            <FiX size={22} color="white" />
           </button>
         </div>
 
@@ -136,7 +137,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
             <div>
               <p className="bg-linear-to-r from-[#D98B2B] via-yellow-400 to-[#D98B2B] bg-clip-text text-lg font-extrabold text-transparent">
-                Midnight Cookies
+                {constants.APPICATION_NAME}
               </p>
 
               <p className="text-sm text-[#E5C79A]">Admin Panel</p>

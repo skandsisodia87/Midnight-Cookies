@@ -1,3 +1,5 @@
+import constants from "../../common/constants";
+
 const LandingPageLoader = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-[#1b0f0b] via-[#2c1810] to-[#140c08]">
@@ -7,7 +9,7 @@ const LandingPageLoader = () => {
         </div>
 
         <h1 className="p-2 bg-linear-to-r from-[#D98B2B] via-yellow-400 to-[#D98B2B] bg-clip-text text-5xl font-extrabold text-transparent">
-          Midnight Cookies
+          {constants.APPICATION_NAME}
         </h1>
 
         <p className="mt-2 text-sm tracking-[0.4em] text-[#D98B2B] uppercase">

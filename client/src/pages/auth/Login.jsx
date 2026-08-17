@@ -4,6 +4,7 @@ import { useState } from "react";
 import useAuthStore from "../../store/authStore";
 import { loginUser } from "../../services/auth.service";
 import { toast } from "sonner";
+import constants from "../../common/constants";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ const Login = () => {
 
       toast.success("Login successful 🍪");
 
-      if (data?.user?.role === "admin") {
+      if (data?.user?.role === constants.ADMIN) {
         navigate("/admin", {
           replace: true,
         });

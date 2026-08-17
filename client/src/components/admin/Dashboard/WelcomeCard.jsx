@@ -7,6 +7,7 @@ import {
   FaUser,
   FaUsers,
 } from "react-icons/fa";
+import constants from "../../../common/constants";
 
 export default function WelcomeCard({ stats }) {
   return (
@@ -17,7 +18,7 @@ export default function WelcomeCard({ stats }) {
             Good morning, Admin
           </p>
           <h2 className="mt-3 text-3xl md:text-4xl font-bold leading-tight">
-            Sweet analytics for Midnight Cookies
+            Sweet analytics for {constants.APPICATION_NAME}
           </h2>
           <p className="mt-4 max-w-2xl text-sm md:text-base text-amber-100/90">
             Your bakery is performing great. Review the latest revenue, orders,

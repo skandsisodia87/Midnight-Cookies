@@ -3,6 +3,7 @@ import { FiLock } from "react-icons/fi";
 import { useState } from "react";
 import { resetPassword } from "../../services/auth.service";
 import { toast } from "sonner";
+import constants from "../../common/constants";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ const ResetPassword = () => {
         });
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Something went wrong");
+      toast.error(error.response?.data?.message || constants.ERROR_MSG);
     } finally {
       setLoading(false);
     }
@@ -74,7 +75,7 @@ const ResetPassword = () => {
           </h1>
 
           <p className="mt-2 sm:mt-3 text-sm sm:text-base text-gray-500 leading-6 sm:leading-7">
-            Create a new password for your Midnight Cookies account.
+            Create a new password for your {constants.APPICATION_NAME} account.
           </p>
         </div>
 

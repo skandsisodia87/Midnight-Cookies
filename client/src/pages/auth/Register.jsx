@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { registerUser, sendVerificationOtp } from "../../services/auth.service";
 import useAuthStore from "../../store/authStore";
+import constants from "../../common/constants";
 
 export const registrationSchema = z.object({
   name: z.string().trim().min(2, "Name should be at least 2 characters long"),
@@ -102,7 +103,7 @@ const Register = () => {
           </h1>
 
           <p className="mt-2 sm:mt-3 text-sm sm:text-base text-gray-500">
-            Join Midnight Cookies today.
+            Join {constants.APPICATION_NAME} today.
           </p>
         </div>
 

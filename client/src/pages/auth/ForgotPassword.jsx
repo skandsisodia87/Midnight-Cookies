@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { forgotPassword } from "../../services/auth.service";
 import { toast } from "sonner";
+import constants from "../../common/constants";
 
 const forgotPasswordSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email address"),
@@ -39,7 +40,7 @@ const ForgotPassword = () => {
 
     onError: (error) => {
       console.log(error);
-      toast.error(error.response?.data?.message || "Something went wrong");
+      toast.error(error.response?.data?.message || constants.ERROR_MSG);
     },
   });
 

@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { subscribeNewsletter } from "../../services/newsletter.service";
 import { toast } from "sonner";
 import { useState } from "react";
+import constants from "../../common/constants";
 
 const Newsletter = () => {
   const [email, setEmail] = useState("");
@@ -12,7 +13,7 @@ const Newsletter = () => {
       setEmail("");
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || "Something went wrong");
+      toast.error(error.response?.data?.message || constants.ERROR_MSG);
     },
   });
 

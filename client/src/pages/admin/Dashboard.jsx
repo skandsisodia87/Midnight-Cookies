@@ -8,6 +8,7 @@ import DashboardSkeleton from "../../components/admin/dashboard/DashboardSkeleto
 import { useQuery } from "@tanstack/react-query";
 import ErrorPage from "../../common/ErrorPage";
 import { getDashboard } from "../../services/admin.service";
+import constants from "../../common/constants";
 
 export default function Dashboard() {
   const {
@@ -15,7 +16,7 @@ export default function Dashboard() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["dashboard-data"],
+    queryKey: [constants.DASHBOARD_DATA],
     queryFn: getDashboard,
     staleTime: 3 * 60 * 1000,
     gcTime: 10 * 60 * 1000,

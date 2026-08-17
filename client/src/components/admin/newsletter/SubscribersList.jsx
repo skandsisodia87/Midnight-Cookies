@@ -9,6 +9,7 @@ import {
   FiCalendar,
   FiTrash2,
 } from "react-icons/fi";
+import constants from "../../../common/constants";
 
 const SubscribersList = ({
   filteredSubscribers,
@@ -46,11 +47,11 @@ const SubscribersList = ({
             onChange={(e) => setStatusFilter(e.target.value)}
             className="rounded-xl border border-[#EBDDCF] bg-[#FFFDFB] px-4 py-2.5 text-sm font-medium text-[#4E342E] outline-none focus:border-[#D98B2B]"
           >
-            <option value="all">All Status</option>
+            <option value={constants.ALL}>All Status</option>
 
-            <option value="verified">Verified</option>
+            <option value={constants.VERIFIED}>Verified</option>
 
-            <option value="pending">Pending</option>
+            <option value={constants.PENDING}>Pending</option>
           </select>
 
           <select
@@ -58,11 +59,9 @@ const SubscribersList = ({
             onChange={(e) => setTypeFilter(e.target.value)}
             className="rounded-xl border border-[#EBDDCF] bg-[#FFFDFB] px-4 py-2.5 text-sm font-medium text-[#4E342E] outline-none focus:border-[#D98B2B]"
           >
-            <option value="all">All Subscribers</option>
-
-            <option value="user">Registered Users</option>
-
-            <option value="guest">Guest Subscribers</option>
+            <option value={constants.ALL}>All Subscribers</option>
+            <option value={constants.USER}>Registered Users</option>
+            <option value={constants.GUEST}>Guest Subscribers</option>
           </select>
         </div>
       </div>

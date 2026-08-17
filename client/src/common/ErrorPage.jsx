@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
+import constants from "./constants";
 
 const ErrorPage = ({
-  title = "Something went wrong",
+  title = constants.ERROR_MSG,
   message = "Unable to process your request right now.",
   buttonText = "Go Back",
   redirectLink = "/",

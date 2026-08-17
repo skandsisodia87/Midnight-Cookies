@@ -9,6 +9,7 @@ import { FaRegStar, FaTruckFast } from "react-icons/fa6";
 import OrderReview from "../../components/order/OrderReview";
 import FloatingButton from "../../common/FloatingButton";
 import CustomerChat from "../../components/chat/CustomerChat";
+import constants from "../../common/constants";
 
 const OrderDetails = () => {
   const { orderId } = useParams();
@@ -106,7 +107,7 @@ const OrderDetails = () => {
               </div>
 
               <div className="rounded-4xl bg-[#EEF5FF] p-5">
-                <p className="text-sm text-gray-500">Products</p>
+                <p className="text-sm text-gray-500">{constants.C_PRODUCTS}</p>
 
                 <p className="mt-3 text-3xl font-bold text-[#2B1D16]">
                   {order.items.length}

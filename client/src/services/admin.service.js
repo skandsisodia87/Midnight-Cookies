@@ -1,3 +1,4 @@
+import constants from "../common/constants";
 import api from "./axios";
 
 const transformDashboardData = (data) => {
@@ -17,10 +18,10 @@ const transformDashboardData = (data) => {
     };
 
     tempData.dashboardStats = {
-      customers: data.totalCustomers || 0,
+      [constants.CUSTOMERS]: data.totalCustomers || 0,
       orders: data.totalOrders || 0,
       revenue: data.totalRevenue || 0,
-      products: data.totalProducts || 0,
+      [constants.PRODUCTS]: data.totalProducts || 0,
     };
 
     tempData.SalesChart = {};

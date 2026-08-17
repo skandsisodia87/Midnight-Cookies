@@ -12,6 +12,7 @@ import {
   deleteCategoryById,
   getCategories,
 } from "../../services/admin.service";
+import constants from "../../common/constants";
 
 const Categories = () => {
   const queryClient = useQueryClient();
@@ -20,7 +21,7 @@ const Categories = () => {
   const [deleteCategory, setDeleteCategory] = useState(null);
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["admin-categories"],
+    queryKey: [constants.ADMIN_CATEGORIES],
     queryFn: getCategories,
     staleTime: 60 * 60 * 1000,
     gcTime: 60 * 60 * 1000,
@@ -32,7 +33,7 @@ const Categories = () => {
     mutationFn: deleteCategoryById,
     onSuccess: (response) => {
       toast.success(response.message || "Category deleted successfully.");
-      queryClient.invalidateQueries(["admin-categories"]);
+      queryClient.invalidateQueries([constants.ADMIN_CATEGORIES]);
       setDeleteCategory(null);
     },
     onError: (error) => {
