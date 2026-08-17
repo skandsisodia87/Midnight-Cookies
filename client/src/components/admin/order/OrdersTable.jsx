@@ -2,6 +2,7 @@ import { FiEye, FiEdit } from "react-icons/fi";
 import OrderStatusBadge from "./OrderStatusBadge";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
+import constants from "../../../common/constants";
 
 export default function OrdersTable({ orders }) {
   const navigate = useNavigate();
@@ -59,7 +60,9 @@ export default function OrdersTable({ orders }) {
 
                     <button
                       className="rounded-full bg-[#FFF4E6] p-2 text-[#A15C38] transition hover:bg-[#FDE8CF] hover:text-[#7A3E22]"
-                      onClick={() => navigate("/admin/orders/edit")}
+                      onClick={() =>
+                        navigate(constants.ROUTES.ADMIN.EDIT_ORDER)
+                      }
                     >
                       <FiEdit size={16} />
                     </button>

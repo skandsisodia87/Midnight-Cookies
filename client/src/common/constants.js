@@ -43,6 +43,8 @@ const constants = {
 
   ERROR_MSG: "Something went wrong",
   BACK_TO_DASHBOARD: "Back to Dashboard",
+  FAILED_TO_PLACE_ORDER: "Failed to place order",
+  PLEASE_REFRESH_THE_PAGE:"Please refresh the page",
 
   ROUTES: {
     HOME: "/",

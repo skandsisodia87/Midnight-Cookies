@@ -49,7 +49,7 @@ const CookieDetails = () => {
 
         if (cartData.success) {
           setCartItems(cartData.cart || []);
-          navigate("/cart");
+          navigate(constants.ROUTES.CART);
           toast.success("Proceeding to cart 🛒");
         }
       }

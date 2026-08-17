@@ -61,7 +61,7 @@ const Customers = () => {
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
             <h1 className="text-2xl font-bold text-[#4E342E] sm:text-3xl">
-              Customers
+              {constants.C_CUSTOMERS}
             </h1>
 
             <p className="mt-1 text-sm text-[#7A5C4D] sm:text-base">

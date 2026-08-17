@@ -40,7 +40,6 @@ export default function DeleteDialog({
             data-closed:opacity-0
           "
         >
-          {/* Icon */}
           <div
             className="
               mx-auto
@@ -69,7 +68,6 @@ export default function DeleteDialog({
             </svg>
           </div>
 
-          {/* Content */}
           <div className="mt-5 text-center">
             <DialogTitle className="text-2xl font-semibold text-[#2B1D16]">
               {title}
@@ -78,7 +76,6 @@ export default function DeleteDialog({
             <p className="mt-3 text-gray-500 leading-7">{message}</p>
           </div>
 
-          {/* Actions */}
           <div className="mt-8 flex gap-3">
             <button
               type="button"

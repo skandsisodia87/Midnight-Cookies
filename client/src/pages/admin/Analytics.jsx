@@ -386,8 +386,6 @@ export default function Analytics() {
           </p>
         </div>
 
-        {/* Customers */}
-
         <div className="rounded-2xl border border-purple-200 bg-linear-to-br from-purple-50 to-violet-50 p-5 sm:rounded-3xl sm:p-6">
           <div className="flex items-center gap-3">
             <div className="grid h-10 w-10 place-items-center rounded-xl bg-purple-100 text-purple-600">
@@ -395,7 +393,7 @@ export default function Analytics() {
             </div>
 
             <p className="text-xs font-bold uppercase tracking-wider text-purple-700">
-              Customers
+              {constants.C_CUSTOMERS}
             </p>
           </div>
 

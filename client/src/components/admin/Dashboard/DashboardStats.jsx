@@ -26,7 +26,7 @@ const cards = [
     bg: "bg-sky-100",
     text: "text-sky-700",
     accent: "bg-sky-50",
-    redirect: "/admin/orders",
+    redirect: constants.ROUTES.ADMIN.ORDERS,
   },
   {
     key: constants.PRODUCTS,
@@ -36,7 +36,7 @@ const cards = [
     bg: "bg-orange-100",
     text: "text-orange-700",
     accent: "bg-orange-50",
-    redirect: "/admin/products",
+    redirect: constants.ROUTES.ADMIN.PRODUCTS,
   },
   {
     key: constants.CUSTOMERS,
@@ -45,7 +45,7 @@ const cards = [
     bg: "bg-violet-100",
     text: "text-violet-700",
     accent: "bg-violet-50",
-    redirect: "/admin/customers",
+    redirect: constants.ROUTES.ADMIN.CUSTOMERS,
   },
 ];
 

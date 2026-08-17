@@ -66,7 +66,7 @@ const Register = () => {
       );
       setTimeout(() => {
         useAuthStore.getState().setRegistering(true);
-        navigate("/verify-email", {
+        navigate(constants.ROUTES.VERIFY_EMAIL, {
           state: {
             email: data.user.email,
           },

@@ -6,6 +6,7 @@ import { getFullAddress } from "../../common/getFullAddress";
 import AddressSection from "../../components/address/AddressSection";
 import useCartStore from "../../store/cartStore";
 import { emptyCart } from "../../services/cart.service";
+import constants from "../../common/constants";
 
 export default function CheckoutPage() {
   const { cartItems, clearCart, setError } = useCartStore();
@@ -87,17 +88,21 @@ export default function CheckoutPage() {
         toast.success(res.message || "Order placed successfully");
 
         timeoutRef.current = setTimeout(() => {
-          navigate("/orders");
+          navigate(constants.ROUTES.ORDERS);
         }, 5000);
 
         clearCart();
         await emptyCart();
       } else {
-        toast.error(res?.message || "Failed to place order");
+        toast.error(res?.message || constants.FAILED_TO_PLACE_ORDER);
       }
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to place order");
-      toast.error(error.response?.data?.message || "Failed to place order");
+      setError(
+        error.response?.data?.message || constants.FAILED_TO_PLACE_ORDER,
+      );
+      toast.error(
+        error.response?.data?.message || constants.FAILED_TO_PLACE_ORDER,
+      );
     } finally {
       setOrdering(false);
     }
@@ -122,7 +127,9 @@ export default function CheckoutPage() {
         return allAddresses;
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Please refresh the page");
+      toast.error(
+        error.response?.data?.message || constants.PLEASE_REFRESH_THE_PAGE,
+      );
     }
 
     return [];

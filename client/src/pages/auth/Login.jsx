@@ -40,7 +40,7 @@ const Login = () => {
           replace: true,
         });
       } else {
-        navigate("/", {
+        navigate(constants.ROUTES.HOME, {
           replace: true,
         });
       }
@@ -67,7 +67,7 @@ const Login = () => {
 
   const handleContinueAsGuest = () => {
     toast.success("Exploring as guest 🍪");
-    navigate("/", { replace: true });
+    navigate(constants.ROUTES.HOME, { replace: true });
   };
 
   return (
