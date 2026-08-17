@@ -43,6 +43,7 @@ import AdminLayout from "./layouts/AdminLayout";
 import constants from "./common/constants";
 
 const App = () => {
+  const routes = constants.ROUTES;
   const { isAuthenticated, user } = useAuthStore();
   const { setCartItems, clearCart, setError } = useCartStore();
   const [cartLoading, setCartLoading] = useState(false);
@@ -95,101 +96,50 @@ const App = () => {
       <Routes>
         <Route element={<NonAdminRoute />}>
           <Route element={<MainLayout />}>
-            <Route path={constants.ROUTES.HOME} element={<Home />} />
-            <Route path={constants.ROUTES.CONTACT} element={<Contact />} />
-            <Route path={constants.ROUTES.COOKIES} element={<Cookies />} />
-            <Route
-              path={constants.ROUTES.COOKIE_DETAILS}
-              element={<CookieDetails />}
-            />
+            <Route path={routes.HOME} element={<Home />} />
+            <Route path={routes.CONTACT} element={<Contact />} />
+            <Route path={routes.COOKIES} element={<Cookies />} />
+            <Route path={routes.COOKIE_DETAILS} element={<CookieDetails />} />
           </Route>
 
           <Route element={<PublicRoute />}>
-            <Route path={constants.ROUTES.LOGIN} element={<Login />} />
-            <Route path={constants.ROUTES.REGISTER} element={<Register />} />
-            <Route
-              path={constants.ROUTES.FORGOT_PASSWORD}
-              element={<ForgotPassword />}
-            />
-            <Route
-              path={constants.ROUTES.RESET_PASSWORD}
-              element={<ResetPassword />}
-            />
+            <Route path={routes.LOGIN} element={<Login />} />
+            <Route path={routes.REGISTER} element={<Register />} />
+            <Route path={routes.FORGOT_PASSWORD} element={<ForgotPassword />} />
+            <Route path={routes.RESET_PASSWORD} element={<ResetPassword />} />
           </Route>
 
           <Route element={<VerifyEmailRoute />}>
-            <Route
-              path={constants.ROUTES.VERIFY_EMAIL}
-              element={<VerifyEmail />}
-            />
+            <Route path={routes.VERIFY_EMAIL} element={<VerifyEmail />} />
           </Route>
 
           <Route element={<ProtectedRoute />}>
             <Route element={<MainLayout />}>
-              <Route path={constants.ROUTES.CART} element={<Cart />} />
-              <Route path={constants.ROUTES.ORDERS} element={<Orders />} />
-              <Route
-                path={constants.ROUTES.ORDER_DETAILS}
-                element={<OrderDetails />}
-              />
+              <Route path={routes.CART} element={<Cart />} />
+              <Route path={routes.ORDERS} element={<Orders />} />
+              <Route path={routes.ORDER_DETAILS} element={<OrderDetails />} />
             </Route>
-            <Route
-              path={constants.ROUTES.CHECKOUT}
-              element={<CheckoutPage />}
-            />
+            <Route path={routes.CHECKOUT} element={<CheckoutPage />} />
           </Route>
         </Route>
 
         <Route element={<AdminRoute />}>
           <Route element={<AdminLayout />}>
-            <Route
-              path={constants.ROUTES.ADMIN.DASHBOARD}
-              element={<Dashboard />}
-            />
-            <Route
-              path={constants.ROUTES.ADMIN.ORDERS}
-              element={<AdminOrders />}
-            />
-            <Route
-              path={constants.ROUTES.ADMIN.EDIT_ORDER}
-              element={<EditOrder />}
-            />
-            <Route
-              path={constants.ROUTES.ADMIN.CHAT}
-              element={<AdminChatPage />}
-            />
-            <Route
-              path={constants.ROUTES.ADMIN.PRODUCTS}
-              element={<Products />}
-            />
-            <Route
-              path={constants.ROUTES.ADMIN.CATEGORIES}
-              element={<Categories />}
-            />
-            <Route
-              path={constants.ROUTES.ADMIN.CUSTOMERS}
-              element={<Customers />}
-            />
-            <Route
-              path={constants.ROUTES.ADMIN.COUPONS}
-              element={<Coupons />}
-            />
-            <Route
-              path={constants.ROUTES.ADMIN.NEWSLETTER}
-              element={<Newsletter />}
-            />
-            <Route
-              path={constants.ROUTES.ADMIN.ANALYTICS}
-              element={<Analytics />}
-            />
-            <Route
-              path={constants.ROUTES.ADMIN.SETTINGS}
-              element={<Settings />}
-            />
+            <Route path={routes.ADMIN.DASHBOARD} element={<Dashboard />} />
+            <Route path={routes.ADMIN.ORDERS} element={<AdminOrders />} />
+            <Route path={routes.ADMIN.EDIT_ORDER} element={<EditOrder />} />
+            <Route path={routes.ADMIN.CHAT} element={<AdminChatPage />} />
+            <Route path={routes.ADMIN.PRODUCTS} element={<Products />} />
+            <Route path={routes.ADMIN.CATEGORIES} element={<Categories />} />
+            <Route path={routes.ADMIN.CUSTOMERS} element={<Customers />} />
+            <Route path={routes.ADMIN.COUPONS} element={<Coupons />} />
+            <Route path={routes.ADMIN.NEWSLETTER} element={<Newsletter />} />
+            <Route path={routes.ADMIN.ANALYTICS} element={<Analytics />} />
+            <Route path={routes.ADMIN.SETTINGS} element={<Settings />} />
           </Route>
         </Route>
         <Route
-          path={constants.ROUTES.NOT_FOUND}
+          path={routes.NOT_FOUND}
           element={<NotFound isAdmin={user?.role === constants.ADMIN} />}
         />
       </Routes>
