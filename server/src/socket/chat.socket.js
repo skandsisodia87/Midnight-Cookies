@@ -2,7 +2,9 @@ import jwt from "jsonwebtoken";
 import env from "../config/env.js";
 import { parseCookie } from "cookie";
 import Conversation from "../models/conversation.model.js";
+import Message from "../models/message.model.js";
 import constants from "../constants/constants.js";
+import { saveConversationMessage } from "../services/chat.service.js";
 
 const chatSocket = (io) => {
   io.use((socket, next) => {
@@ -14,7 +16,6 @@ const chatSocket = (io) => {
       }
 
       const cookies = parseCookie(cookieHeader);
-
       const token = cookies.accessToken;
 
       if (!token) {
@@ -61,11 +62,9 @@ const chatSocket = (io) => {
 
         const isAdmin = userRole === constants.ADMIN;
 
-        /*
-         Customer can only join their own conversation.
-         Admin can join conversations.
-         */
-
+        // Customer can only join their own conversation.
+        // Assigned admin can join their conversation.
+        // Admin can join any conversation.
         if (!isCustomer && !isAssignedAdmin && !isAdmin) {
           return socket.emit("chat_error", {
             message: "You are not allowed to join this conversation",
@@ -76,6 +75,9 @@ const chatSocket = (io) => {
 
         socket.join(room);
 
+        // Store currently joined conversation
+        socket.conversationId = conversationId;
+
         console.log(`${userId} joined ${room}`);
 
         socket.emit("conversation_joined", {
@@ -83,8 +85,7 @@ const chatSocket = (io) => {
           room,
         });
 
-        /* Notify other participants that this user joined the conversation. */
-
+        // Notify other participants
         socket.to(room).emit("user_joined_conversation", {
           conversationId,
           userId,
@@ -106,6 +107,10 @@ const chatSocket = (io) => {
 
       socket.leave(room);
 
+      if (socket.conversationId === conversationId) {
+        socket.conversationId = null;
+      }
+
       console.log(`${userId} left ${room}`);
 
       socket.to(room).emit("user_left_conversation", {
@@ -114,22 +119,57 @@ const chatSocket = (io) => {
       });
     });
 
+    socket.on("send_message", async (data) => {
+      try {
+        const { conversationId, message, messageType, attachments } =
+          data || {};
+
+        if (!conversationId) {
+          return socket.emit("chat_error", {
+            message: "Conversation ID is required",
+          });
+        }
+
+        const savedMessage = await saveConversationMessage({
+          conversationId,
+          senderId: userId,
+          message,
+          messageType,
+          attachments,
+        });
+
+        const room = `${constants.CONVERSATION}:${conversationId}`;
+
+        io.to(room).emit("new_message", savedMessage);
+      } catch (error) {
+        console.error("Send message error:", error);
+
+        socket.emit("chat_error", {
+          message: error.message || "Unable to send message",
+        });
+      }
+    });
+
     socket.on("typing", ({ conversationId }) => {
       if (!conversationId) {
         return;
       }
 
-      const room = `${constants.CONVERSATION}:${conversationId}`;
-      socket.to(room).emit("user_typing", {
-        conversationId,
-        userId,
-      });
+      console.log("typing message...");
+
+      // const room = `${constants.CONVERSATION}:${conversationId}`;
+      // socket.to(room).emit("user_typing", {
+      //   conversationId,
+      //   userId,
+      // });
     });
 
     socket.on("stop_typing", ({ conversationId }) => {
       if (!conversationId) {
         return;
       }
+
+       console.log("stop typing");
 
       const room = `${constants.CONVERSATION}:${conversationId}`;
       socket.to(room).emit("user_stop_typing", {
@@ -146,7 +186,6 @@ const chatSocket = (io) => {
 
     socket.on("disconnect", (reason) => {
       console.log(`Socket disconnected: ${socket.id}`);
-
       console.log(`Reason: ${reason}`);
       socket.broadcast.emit("user_offline", {
         userId,

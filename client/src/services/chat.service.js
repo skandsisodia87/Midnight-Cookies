@@ -10,7 +10,7 @@ export const getConversationById = async (id) => {
   return response.data;
 };
 
-export const createMessage = async ({ body, conversationId }) => {
-  const response = await api.post(`/conversations/${conversationId}/messages`);
+export const getConversationMessages = async (conversationId) => {
+  const response = await api.get(`/conversations/${conversationId}/messages`);
   return response.data;
 };

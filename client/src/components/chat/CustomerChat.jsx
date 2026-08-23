@@ -7,210 +7,151 @@ import {
   FiMoreVertical,
   FiX,
 } from "react-icons/fi";
+import { toast } from "sonner";
 import constants from "../../common/constants";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   createConversation,
-  createMessage,
-  getConversationById,
+  getConversationMessages,
 } from "../../services/chat.service";
-
-import { toast } from "sonner";
 import useConversationSocket from "../../hooks/useConversationSocket";
 import useSocket from "../../hooks/useSocket";
+import useAuthStore from "../../store/authStore";
 
 const CustomerChat = ({ onClose }) => {
+  const { user } = useAuthStore();
+  const typingTimeoutRef = useRef(null);
+  const isTypingRef = useRef(false);
   const [message, setMessage] = useState("");
   const [conversation, setConversation] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [isCreatingConversation, setIsCreatingConversation] = useState(false);
+  const [messagesLoading, setMessagesLoading] = useState(true);
+  const [conversationReady, setConversationReady] = useState(false);
 
-  const pendingMessages = useRef([]);
-  const saveMessageTimeout = useRef(null);
-
-  // Prevent duplicate messages from socket
   const messageIds = useRef(new Set());
+  const { socket, status } = useSocket();
 
-  // --------------------------------------------------
-  // SOCKET
-  // --------------------------------------------------
+  useConversationSocket(socket, conversation?._id, setMessages, messageIds);
 
-  const { socket, status, socketId } = useSocket();
+  useEffect(() => {
+    let isMounted = true;
 
-  // Conversation-related socket listeners
-  useConversationSocket(socket, setMessages);
+    const initializeConversation = async () => {
+      try {
+        setIsCreatingConversation(true);
 
-  // --------------------------------------------------
-  // CREATE CONVERSATION
-  // --------------------------------------------------
+        const response = await createConversation();
 
-  const { mutate: conversationMutate, isPending: isCreatingConversation } =
-    useMutation({
-      mutationFn: createConversation,
-
-      onSuccess: (res) => {
-        if (res?.data) {
-          setConversation(res.data);
+        if (!isMounted) {
           return;
         }
 
-        toast.error("Failed to create conversation");
-      },
+        const conversationData = response?.data;
 
-      onError: (error) => {
+        if (!conversationData?._id) {
+          toast.error("Failed to create conversation");
+
+          return;
+        }
+
+        setConversation(conversationData);
+      } catch (error) {
         console.error("Create conversation error:", error);
 
-        toast.error(
-          error?.response?.data?.message || "Failed to create conversation",
-        );
-      },
-    });
+        if (isMounted) {
+          toast.error(
+            error?.response?.data?.message || "Failed to create conversation",
+          );
+        }
+      } finally {
+        if (isMounted) {
+          setIsCreatingConversation(false);
+        }
+      }
+    };
 
-  // --------------------------------------------------
-  // GET CONVERSATION / OLD MESSAGES
-  // --------------------------------------------------
+    initializeConversation();
 
-  const { data: conversationData, isLoading: messagesLoading } = useQuery({
-    queryKey: ["conversation", conversation?._id],
-
-    queryFn: () => getConversationById(conversation._id),
-
-    enabled: Boolean(conversation?._id),
-  });
-
-  // --------------------------------------------------
-  // LOAD EXISTING MESSAGES
-  // --------------------------------------------------
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
-    if (!conversationData?.messages) {
+    if (!conversation?._id) {
       return;
     }
 
-    setMessages(conversationData.messages);
+    let isMounted = true;
 
-    // Keep track of existing message IDs
-    conversationData.messages.forEach((item) => {
-      if (item.id || item._id) {
-        messageIds.current.add(item.id || item._id);
+    const loadMessages = async () => {
+      try {
+        if (!messagesLoading) setMessagesLoading(true);
+        setConversationReady(false);
+
+        const response = await getConversationMessages(conversation._id);
+
+        if (!isMounted) {
+          return;
+        }
+
+        const conversationMessages = response?.data || [];
+
+        // Set initial messages
+        setMessages(conversationMessages);
+
+        // Store message IDs
+        messageIds.current.clear();
+        conversationMessages.forEach((item) => {
+          const id = item?._id;
+
+          if (id) {
+            messageIds.current.add(id);
+          }
+        });
+
+        setConversationReady(true);
+      } catch (error) {
+        console.error("Get conversation messages error:", error);
+
+        if (isMounted) {
+          toast.error(
+            error?.response?.data?.message || "Failed to load messages",
+          );
+        }
+      } finally {
+        if (isMounted) {
+          setMessagesLoading(false);
+        }
       }
-    });
-  }, [conversationData]);
+    };
 
-  // --------------------------------------------------
-  // CREATE CONVERSATION WHEN CHAT OPENS
-  // --------------------------------------------------
+    loadMessages();
 
-  useEffect(() => {
-    conversationMutate();
-  }, []);
+    return () => {
+      isMounted = false;
+    };
+  }, [conversation?._id]);
 
   // --------------------------------------------------
   // JOIN CONVERSATION ROOM
   // --------------------------------------------------
 
   useEffect(() => {
-    if (!socket) {
-      return;
-    }
-
-    if (!conversation?._id) {
+    if (!socket || !conversation?._id || !conversationReady) {
       return;
     }
 
     console.log("Joining conversation:", conversation._id);
 
     socket.emit("join_conversation", conversation._id);
-  }, [socket, conversation?._id]);
-
-  // --------------------------------------------------
-  // RECEIVE NEW MESSAGE FROM SOCKET
-  // --------------------------------------------------
-
-  useEffect(() => {
-    if (!socket) {
-      return;
-    }
-
-    const handleNewMessage = (incomingMessage) => {
-      console.log("New message received:", incomingMessage);
-
-      const incomingId = incomingMessage?.id || incomingMessage?._id;
-
-      // Prevent duplicate message
-      if (incomingId && messageIds.current.has(incomingId)) {
-        return;
-      }
-
-      if (incomingId) {
-        messageIds.current.add(incomingId);
-      }
-
-      setMessages((prev) => [...prev, incomingMessage]);
-    };
-
-    socket.on("new_message", handleNewMessage);
 
     return () => {
-      socket.off("new_message", handleNewMessage);
+      console.log("Leaving conversation:", conversation._id);
+
+      socket.emit("leave_conversation", conversation._id);
     };
-  }, [socket]);
-
-  // --------------------------------------------------
-  // SAVE PENDING MESSAGES
-  // --------------------------------------------------
-
-  const persistPendingMessages = () => {
-    // Nothing to save
-    if (pendingMessages.current.length === 0) {
-      return;
-    }
-
-    if (!conversation?._id) {
-      return;
-    }
-
-    // Take current queue
-    const messagesToSave = [...pendingMessages.current];
-
-    // Clear queue immediately
-    pendingMessages.current = [];
-
-    console.log("Saving messages:", messagesToSave);
-
-    createMessage({
-      conversationId: conversation._id,
-
-      messages: messagesToSave,
-    }).catch((error) => {
-      console.error("Failed to save messages:", error);
-
-      // Put messages back into queue
-      pendingMessages.current = [...messagesToSave, ...pendingMessages.current];
-    });
-  };
-
-  // --------------------------------------------------
-  // DEBOUNCE MESSAGE PERSISTENCE
-  // --------------------------------------------------
-
-  const queueMessageForPersistence = (newMessage) => {
-    // Add message to queue
-    pendingMessages.current.push(newMessage);
-
-    // Clear existing timer
-    if (saveMessageTimeout.current) {
-      clearTimeout(saveMessageTimeout.current);
-    }
-
-    // Start new timer
-    saveMessageTimeout.current = setTimeout(() => {
-      persistPendingMessages();
-    }, 1000);
-  };
-
-  // --------------------------------------------------
-  // SEND MESSAGE
-  // --------------------------------------------------
+  }, [socket, conversation?._id, conversationReady]);
 
   const handleSendMessage = () => {
     const trimmedMessage = message.trim();
@@ -221,67 +162,34 @@ const CustomerChat = ({ onClose }) => {
 
     if (!conversation?._id) {
       toast.error("Conversation is not ready");
-
       return;
     }
 
     if (!socket) {
       toast.error("Chat connection is not ready");
-
       return;
     }
 
-    // Create temporary client-side ID
-    const messageId = `client-${Date.now()}-${Math.random()
-      .toString(36)
-      .substring(2, 8)}`;
+    if (!conversationReady) {
+      toast.error("Please wait for the conversation to load");
+      return;
+    }
 
-    const newMessage = {
-      id: messageId,
+    clearTimeout(typingTimeoutRef.current);
 
+    socket.emit("stop_typing", {
       conversationId: conversation._id,
+    });
 
-      sender: "customer",
-
+    socket.emit("send_message", {
+      conversationId: conversation._id,
       message: trimmedMessage,
-
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-
-    // Remember message ID
-    messageIds.current.add(messageId);
-
-    // ------------------------------------------
-    // 1. UPDATE UI IMMEDIATELY
-    // ------------------------------------------
-
-    setMessages((prev) => [...prev, newMessage]);
-
-    // ------------------------------------------
-    // 2. SEND THROUGH SOCKET IMMEDIATELY
-    // ------------------------------------------
-
-    socket.emit("send_message", newMessage);
-
-    // ------------------------------------------
-    // 3. ADD TO DB PERSISTENCE QUEUE
-    // ------------------------------------------
-
-    queueMessageForPersistence(newMessage);
-
-    // ------------------------------------------
-    // 4. CLEAR INPUT
-    // ------------------------------------------
+      messageType: constants.TEXT,
+      attachments: [],
+    });
 
     setMessage("");
   };
-
-  // --------------------------------------------------
-  // ENTER KEY
-  // --------------------------------------------------
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter" && !event.shiftKey) {
@@ -291,41 +199,86 @@ const CustomerChat = ({ onClose }) => {
     }
   };
 
-  // --------------------------------------------------
-  // FLUSH PENDING MESSAGES WHEN COMPONENT CLOSES
-  // --------------------------------------------------
+  const handleClose = () => {
+    if (socket && conversation?._id) {
+      socket.emit("leave_conversation", conversation._id);
+    }
+
+    // Clear local state
+    setMessages([]);
+    setConversation(null);
+    setMessage("");
+    setConversationReady(false);
+
+    // Clear duplicate tracking
+    messageIds.current.clear();
+
+    onClose?.();
+  };
+
+  const handleMessageChange = (e) => {
+    const value = e.target.value;
+    setMessage(value);
+
+    if (!socket || !conversation?._id || !conversationReady) {
+      return;
+    }
+
+    const conversationId = conversation._id;
+
+    if (!value.trim()) {
+      clearTimeout(typingTimeoutRef.current);
+
+      if (isTypingRef.current) {
+        socket.emit("stop_typing", {
+          conversationId,
+        });
+
+        isTypingRef.current = false;
+      }
+
+      return;
+    }
+
+    if (!isTypingRef.current) {
+      socket.emit("typing", {
+        conversationId,
+      });
+
+      isTypingRef.current = true;
+    }
+
+    clearTimeout(typingTimeoutRef.current);
+
+    typingTimeoutRef.current = setTimeout(() => {
+      socket.emit("stop_typing", {
+        conversationId,
+      });
+
+      isTypingRef.current = false;
+    }, 1500);
+  };
 
   useEffect(() => {
     return () => {
-      // Clear debounce timer
-      if (saveMessageTimeout.current) {
-        clearTimeout(saveMessageTimeout.current);
-      }
+      clearTimeout(typingTimeoutRef.current);
 
-      // Save anything still waiting
-      if (pendingMessages.current.length > 0 && conversation?._id) {
-        const messagesToSave = [...pendingMessages.current];
-
-        createMessage({
+      if (socket && conversation?._id) {
+        socket.emit("stop_typing", {
           conversationId: conversation._id,
-
-          messages: messagesToSave,
-        }).catch((error) => {
-          console.error("Failed to save pending messages:", error);
         });
-
-        pendingMessages.current = [];
       }
     };
-  }, [conversation?._id]);
+  }, [socket, conversation?._id]);
 
-  // --------------------------------------------------
-  // UI
-  // --------------------------------------------------
+  useEffect(() => {
+    return () => {
+      messageIds.current.clear();
+    };
+  }, []);
 
   return (
     <div className="fixed bottom-5 right-5 z-100 flex h-150 w-95 max-w-[calc(100vw-24px)] flex-col overflow-hidden rounded-2xl border border-[#E8DED2] bg-white shadow-[0_15px_50px_rgba(58,33,24,0.20)] animate-[chatOpen_0.2s_ease-out]">
-      {/* HEADER */}
       <header className="flex h-17.5 shrink-0 items-center justify-between border-b border-[#E9E0D7] bg-white px-4">
         <div className="flex min-w-0 items-center gap-3">
           <div className="relative shrink-0">
@@ -358,6 +311,7 @@ const CustomerChat = ({ onClose }) => {
         <div className="flex items-center gap-1">
           <button
             type="button"
+            aria-label="More options"
             className="flex h-8 w-8 items-center justify-center rounded-full text-[#725C51] transition hover:bg-[#F8EEE8] hover:text-[#A15C4D]"
           >
             <FiMoreVertical size={17} />
@@ -365,7 +319,7 @@ const CustomerChat = ({ onClose }) => {
 
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             aria-label="Close chat"
             className="flex h-8 w-8 items-center justify-center rounded-full text-[#725C51] transition hover:bg-[#F8EEE8] hover:text-[#A15C4D]"
           >
@@ -374,7 +328,6 @@ const CustomerChat = ({ onClose }) => {
         </div>
       </header>
 
-      {/* MESSAGES */}
       <div className="min-h-0 flex-1 overflow-y-auto bg-[#FCFAF7] px-4 py-5">
         <div className="mb-6 flex items-center gap-3">
           <div className="h-px flex-1 bg-[#EDE4DC]" />
@@ -386,18 +339,44 @@ const CustomerChat = ({ onClose }) => {
           <div className="h-px flex-1 bg-[#EDE4DC]" />
         </div>
 
-        {messagesLoading ? (
+        {isCreatingConversation || messagesLoading ? (
           <div className="flex justify-center py-10">
-            <span className="text-xs text-[#8E7A70]">Loading messages...</span>
+            <span className="text-xs text-[#8E7A70]">
+              {isCreatingConversation
+                ? "Starting chat..."
+                : "Loading messages..."}
+            </span>
+          </div>
+        ) : messages.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-10 text-center">
+            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[#F1E8E1] text-xl">
+              🍪
+            </div>
+
+            <p className="text-sm font-medium text-[#4B352B]">
+              Start a conversation
+            </p>
+
+            <p className="mt-1 text-xs text-[#9A877D]">
+              Send us a message and our support team will get back to you.
+            </p>
           </div>
         ) : (
           <div className="space-y-4">
             {messages.map((item, index) => {
-              const isCustomer = item.sender === "customer";
+              const isCustomer =
+                item.senderId?._id?.toString() === user?._id?.toString();
+
+              const messageTime = item.createdAt
+                ? new Date(item.createdAt).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                : item.time || "";
 
               return (
                 <div
-                  key={item.id || item._id || index}
+                  key={item._id || item.id || index}
                   className={`flex ${
                     isCustomer ? "justify-end" : "justify-start"
                   }`}
@@ -435,13 +414,7 @@ const CustomerChat = ({ onClose }) => {
                         ${isCustomer ? "justify-end" : "justify-start"}
                       `}
                     >
-                      <span>
-                        {item.time ||
-                          new Date(item.createdAt).toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                      </span>
+                      <span>{messageTime}</span>
 
                       {isCustomer && (
                         <FiCheck size={12} className="text-[#A15C4D]" />
@@ -455,7 +428,7 @@ const CustomerChat = ({ onClose }) => {
         )}
 
         {/* TYPING INDICATOR */}
-        <div className="mt-5 flex items-center gap-2">
+        {/*<div className="mt-5 flex items-center gap-2">
           <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#A15C4D]/10 text-xs">
             🍪
           </div>
@@ -467,19 +440,24 @@ const CustomerChat = ({ onClose }) => {
 
             <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#A15C4D] [animation-delay:300ms]" />
           </div>
-        </div>
+        </div> */}
       </div>
 
-      {/* INPUT */}
       <div className="shrink-0 border-t border-[#E9E0D7] bg-white p-3">
         <div className="rounded-xl border border-[#E3D7CE] bg-[#FFFCF9] transition focus-within:border-[#A15C4D] focus-within:ring-2 focus-within:ring-[#A15C4D]/10">
           <textarea
             value={message}
-            onChange={(event) => setMessage(event.target.value)}
+            onChange={handleMessageChange}
             onKeyDown={handleKeyDown}
             rows={2}
             placeholder="Write a message..."
-            className="w-full resize-none bg-transparent px-3.5 pt-2.5 text-[13px] leading-5 text-[#3A2118] outline-none placeholder:text-[#AE9D94]"
+            disabled={
+              isCreatingConversation ||
+              messagesLoading ||
+              !conversation?._id ||
+              !conversationReady
+            }
+            className="w-full resize-none bg-transparent px-3.5 pt-2.5 text-[13px] leading-5 text-[#3A2118] outline-none placeholder:text-[#AE9D94] disabled:cursor-not-allowed disabled:opacity-50"
           />
 
           <div className="flex items-center justify-between px-2.5 pb-2.5">
@@ -505,25 +483,12 @@ const CustomerChat = ({ onClose }) => {
               disabled={
                 !message.trim() ||
                 isCreatingConversation ||
+                messagesLoading ||
                 !socket ||
-                !conversation?._id
+                !conversation?._id ||
+                !conversationReady
               }
-              className="
-                flex
-                h-9
-                items-center
-                gap-1.5
-                rounded-lg
-                bg-[#A15C4D]
-                px-3.5
-                text-xs
-                font-semibold
-                text-white
-                transition
-                hover:bg-[#8F4D40]
-                disabled:cursor-not-allowed
-                disabled:opacity-40
-              "
+              className="flex h-9 items-center gap-1.5 rounded-lg bg-[#A15C4D] px-3.5 text-xs font-semibold text-white transition hover:bg-[#8F4D40] disabled:cursor-not-allowed disabled:opacity-40"
             >
               <FiSend size={14} />
             </button>

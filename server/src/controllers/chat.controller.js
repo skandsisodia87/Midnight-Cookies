@@ -1,6 +1,7 @@
 import constants from "../constants/constants.js";
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
+import { saveConversationMessage } from "../services/chat.service.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 export const createConversation = asyncHandler(async (req, res) => {
@@ -166,63 +167,13 @@ export const createMessage = asyncHandler(async (req, res) => {
 
   const senderId = req.user._id;
 
-  const conversation = await Conversation.findById(conversationId);
-
-  if (!conversation) {
-    return res.status(404).json({
-      success: false,
-      message: "Conversation not found",
-    });
-  }
-
-  if (conversation.status === constants.CLOSED) {
-    return res.status(400).json({
-      success: false,
-      message: "This conversation is closed",
-    });
-  }
-
-  const isCustomer = conversation.customerId.toString() === senderId.toString();
-
-  const isAdmin =
-    conversation.adminId &&
-    conversation.adminId.toString() === senderId.toString();
-
-  if (!isCustomer && !isAdmin) {
-    return res.status(403).json({
-      success: false,
-      message: "You are not a participant of this conversation",
-    });
-  }
-
-  if (
-    (!message || !message.trim()) &&
-    (!attachments || attachments.length === 0)
-  ) {
-    return res.status(400).json({
-      success: false,
-      message: "Message or attachment is required",
-    });
-  }
-
-  const newMessage = await Message.create({
+  const populatedMessage = await saveConversationMessage({
     conversationId,
     senderId,
-    message: message?.trim() || "",
-    messageType: messageType || "text",
-    attachments: attachments || [],
+    message,
+    messageType,
+    attachments,
   });
-
-  conversation.lastMessage = message?.trim() || "Attachment";
-  conversation.lastMessageAt = new Date();
-  conversation.unreadCount += 1;
-
-  await conversation.save();
-
-  const populateMessage = await Message.findById(newMessage._id).populate(
-    "senderId",
-    "name email",
-  );
 
   return res.status(201).json({
     success: true,
@@ -244,24 +195,25 @@ export const getConversationMessages = asyncHandler(async (req, res) => {
     });
   }
 
-  const isCustomer = conversation.customerId.toString() === usedId.toString();
+  const isCustomer = conversation.customerId?.toString() === userId.toString();
 
-  const isAdmin =
-    conversation.adminId &&
-    conversation.adminId.toString() === userId.toString();
+  const isAssignedAdmin =
+    conversation.adminId?.toString() === userId.toString();
 
   const isAdminUser = req.user.role === constants.ADMIN;
 
-  if (!isCustomer && !isAdmin && !isAdminUser) {
+  if (!isCustomer && !isAssignedAdmin && !isAdminUser) {
     return res.status(403).json({
       success: false,
       message: "You are not allowed to access this conversation",
     });
   }
 
-  const messages = await Message.find({ conversationId })
+  const messages = await Message.find({
+    conversationId,
+  })
     .populate("senderId", "name email")
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: 1 });
 
   return res.status(200).json({
     success: true,
