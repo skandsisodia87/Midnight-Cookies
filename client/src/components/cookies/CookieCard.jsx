@@ -6,7 +6,7 @@ import { addToCart, getCart } from "../../services/cart.service";
 import { useState } from "react";
 import { toast } from "sonner";
 import useCartStore from "../../store/cartStore";
-import useCartSync from "../../common/useCartSync";
+import useCartSync from "../../hooks/useCartSync";
 import useAuthStore from "../../store/authStore";
 
 const CookieCard = ({ cookie }) => {

@@ -64,15 +64,30 @@ export const getMyConversation = asyncHandler(async (req, res) => {
 });
 
 export const getAllConversations = asyncHandler(async (req, res) => {
-  const conversations = await Conversation.find()
+  const conversations = await Conversation.find({ adminId: { $ne: null } })
     .populate("customerId", "name email")
-    .populate("adminId", "name email")
     .sort({ lastMessageAt: -1, createdAt: -1 });
 
   return res.status(200).json({
     success: true,
     message: "Conversations fetched successfully",
-    data: conversations,
+    conversations,
+  });
+});
+
+export const getUnassignConversation = asyncHandler(async (_, res) => {
+  const conversations = await Conversation.find({
+    adminId: null,
+    status: "open",
+  })
+    .populate("customerId", "name email")
+    .select("lastMessageAt unreadCount")
+    .sort({ createdAt: 1 });
+
+  return res.status(200).json({
+    success: true,
+    message: "Conversations fetched successfully",
+    conversations,
   });
 });
 

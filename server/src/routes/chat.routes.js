@@ -17,6 +17,7 @@ import {
   createMessage,
   getConversationMessages,
   markMessagesAsRead,
+  getUnassignConversation,
 } from "../controllers/chat.controller.js";
 import constants from "../constants/constants.js";
 
@@ -47,6 +48,12 @@ router.get(
   validateUserRole(constants.USER, constants.ADMIN),
   validateObjectId(),
   getConversationById,
+);
+
+router.get(
+  "/conversations-unassign",
+  validateUserRole(constants.ADMIN),
+  getUnassignConversation,
 );
 
 router.patch(

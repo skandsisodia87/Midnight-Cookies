@@ -1,5 +1,3 @@
-import { FiCheck, FiCheckCircle } from "react-icons/fi";
-
 const AdminChatList = ({
   conversations,
   selectedConversation,
@@ -51,37 +49,43 @@ const AdminChatList = ({
             selectedConversation?._id === conversation._id ? "bg-[#F5E6D3]" : ""
           }`}
         >
-          <div className="flex items-start gap-3">
-            <div className="w-11 h-11 rounded-full bg-linear-to-br from-[#D98B2B] to-[#B8691E] flex items-center justify-center shrink-0">
-              <span className="text-white font-semibold text-xs">
-                {conversation.customerId.name.charAt(0).toUpperCase()}
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-[#D98B2B] to-[#B8691E]">
+              <span className="text-xs font-semibold text-white">
+                {conversation?.customerId?.name?.charAt(0)?.toUpperCase()}
               </span>
             </div>
 
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between gap-2 mb-1">
-                <h3 className="font-semibold text-[#1F140F] text-sm truncate">
-                  {conversation.customerId.name}
-                </h3>
-                <span className="text-xs text-[#9B8974] shrink-0">
-                  {formatTime(conversation.lastMessageAt)}
-                </span>
-              </div>
+            <div className="min-w-0 flex-1">
+              <h3 className="truncate text-sm font-semibold leading-5 text-[#1F140F]">
+                {conversation?.customerId?.name || "Unknown Customer"}
+              </h3>
 
-              <p className={`text-xs truncate ${
-                conversation.unreadCount > 0
-                  ? "font-semibold text-[#1F140F]"
-                  : "text-[#9B8974]"
-              }`}>
-                {truncateMessage(conversation.lastMessage || "No messages", 40)}
+              <p
+                className={`mt-1 truncate text-sm leading-5 ${
+                  conversation?.unreadCount > 0
+                    ? "font-semibold text-[#1F140F]"
+                    : "font-normal text-[#9B8974]"
+                }`}
+              >
+                {truncateMessage(
+                  conversation?.lastMessage || "No messages",
+                  40,
+                )}
               </p>
+            </div>
 
-              {conversation.unreadCount > 0 && (
-                <div className="mt-1">
-                  <span className="inline-block bg-[#D98B2B] text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                    {conversation.unreadCount}
-                  </span>
-                </div>
+            <div className="flex w-10 shrink-0 flex-col items-end justify-between gap-2 self-stretch">
+              <span className="text-xs leading-5 text-[#9B8974]">
+                {formatTime(conversation?.lastMessageAt)}
+              </span>
+
+              {conversation?.unreadCount > 0 && (
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#D98B2B] px-1 text-[10px] font-bold leading-none text-white">
+                  {conversation.unreadCount > 99
+                    ? "99+"
+                    : conversation.unreadCount}
+                </span>
               )}
             </div>
           </div>

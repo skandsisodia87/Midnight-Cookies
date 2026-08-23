@@ -8,7 +8,7 @@ import {
   removeCartItem,
   updateCartItemsQuantity,
 } from "../../services/cart.service";
-import useCartSync from "../../common/useCartSync";
+import useCartSync from "../../hooks/useCartSync";
 import constants from "../../common/constants";
 
 const Cart = () => {

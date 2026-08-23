@@ -8,105 +8,22 @@ import {
 } from "react-icons/fi";
 import AdminChatList from "./AdminChatList";
 import AdminChatWindow from "./AdminChatWindow";
+import NewChatDialog from "./NewChatDialog";
+import { useQuery } from "@tanstack/react-query";
+import { getAllConversations } from "../../services/chat.service";
 
 const AdminChat = () => {
   const [selectedConversation, setSelectedConversation] = useState(null);
-  const [conversations, setConversations] = useState([
-    {
-      _id: "conv1",
-      customerId: {
-        _id: "cust1",
-        name: "Sarah Johnson",
-        email: "sarah@example.com",
-      },
-      adminId: null,
-      status: "open",
-      lastMessage: "Thanks for the help!",
-      lastMessageAt: new Date(Date.now() - 3600000),
-      unreadCount: 0,
-      messages: [
-        {
-          _id: "msg1",
-          senderId: { _id: "cust1", name: "Sarah Johnson" },
-          message: "Hi, I have a question about my order",
-          timestamp: new Date(Date.now() - 7200000),
-        },
-        {
-          _id: "msg2",
-          senderId: { _id: "admin1", name: "Admin" },
-          message: "Hi Sarah! I'd be happy to help. What's your order number?",
-          timestamp: new Date(Date.now() - 6600000),
-        },
-        {
-          _id: "msg3",
-          senderId: { _id: "cust1", name: "Sarah Johnson" },
-          message: "It's #MC10245",
-          timestamp: new Date(Date.now() - 5400000),
-        },
-        {
-          _id: "msg4",
-          senderId: { _id: "admin1", name: "Admin" },
-          message:
-            "Found it! Your order is being prepared and will ship tomorrow.",
-          timestamp: new Date(Date.now() - 4200000),
-        },
-        {
-          _id: "msg5",
-          senderId: { _id: "cust1", name: "Sarah Johnson" },
-          message: "Thanks for the help!",
-          timestamp: new Date(Date.now() - 3600000),
-        },
-      ],
-    },
-    {
-      _id: "conv2",
-      customerId: {
-        _id: "cust2",
-        name: "Mike Chen",
-        email: "mike@example.com",
-      },
-      adminId: null,
-      status: "open",
-      lastMessage: "That sounds perfect!",
-      lastMessageAt: new Date(Date.now() - 1800000),
-      unreadCount: 2,
-      messages: [
-        {
-          _id: "msg6",
-          senderId: { _id: "cust2", name: "Mike Chen" },
-          message: "Do you have sugar-free options?",
-          timestamp: new Date(Date.now() - 1800000),
-        },
-        {
-          _id: "msg7",
-          senderId: { _id: "cust2", name: "Mike Chen" },
-          message: "That sounds perfect!",
-          timestamp: new Date(Date.now() - 1200000),
-        },
-      ],
-    },
-    {
-      _id: "conv3",
-      customerId: {
-        _id: "cust3",
-        name: "Emily Rodriguez",
-        email: "emily@example.com",
-      },
-      adminId: null,
-      status: "open",
-      lastMessage: "Can you deliver by Friday?",
-      lastMessageAt: new Date(Date.now() - 300000),
-      unreadCount: 3,
-      messages: [
-        {
-          _id: "msg8",
-          senderId: { _id: "cust3", name: "Emily Rodriguez" },
-          message: "Can you deliver by Friday?",
-          timestamp: new Date(Date.now() - 300000),
-        },
-      ],
-    },
-  ]);
+
+  const {
+    data: conversations = [],
+    isError,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["conversations"],
+    queryFn: getAllConversations,
+  });
 
   const [searchTerm, setSearchTerm] = useState("");
   const [showNewChatDialog, setShowNewChatDialog] = useState(false);
@@ -151,44 +68,16 @@ const AdminChat = () => {
       return conv;
     });
 
-    setConversations(updatedConversations);
+    // setConversations(updatedConversations);
     const updatedSelected = updatedConversations.find(
       (conv) => conv._id === selectedConversation._id,
     );
     setSelectedConversation(updatedSelected);
   };
 
-  const handleStartNewChat = (customerEmail) => {
-    // Check if conversation already exists
-    const existingConv = conversations.find(
-      (conv) => conv.customerId.email === customerEmail,
-    );
-
-    if (existingConv) {
-      handleSelectConversation(existingConv);
-      setShowNewChatDialog(false);
-      return;
-    }
-
-    // Create new conversation
-    const newConversation = {
-      _id: `conv_${Date.now()}`,
-      customerId: {
-        _id: `cust_${Date.now()}`,
-        name: customerEmail.split("@")[0],
-        email: customerEmail,
-      },
-      adminId: null,
-      status: "open",
-      lastMessage: "",
-      lastMessageAt: new Date(),
-      unreadCount: 0,
-      messages: [],
-    };
-
-    setConversations([newConversation, ...conversations]);
-    handleSelectConversation(newConversation);
+  const handleClose = () => {
     setShowNewChatDialog(false);
+    refetch();
   };
 
   return (
@@ -206,7 +95,6 @@ const AdminChat = () => {
             </button>
           </div>
 
-          {/* Search Bar */}
           <div className="relative">
             <FiSearch
               className="absolute left-3 top-3 text-[#9B8974]"
@@ -222,7 +110,6 @@ const AdminChat = () => {
           </div>
         </div>
 
-        {/* Conversations List */}
         <AdminChatList
           conversations={sortedConversations}
           selectedConversation={selectedConversation}
@@ -230,7 +117,6 @@ const AdminChat = () => {
         />
       </div>
 
-      {/* Right Side - Chat Window */}
       <div className="flex-1 flex flex-col bg-[#FFF6EC] min-w-0">
         {selectedConversation ? (
           <AdminChatWindow
@@ -258,47 +144,8 @@ const AdminChat = () => {
         )}
       </div>
 
-      {/* New Chat Dialog */}
       {showNewChatDialog && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-[#FFF6EC] rounded-lg p-6 max-w-sm w-full mx-4 border border-[#DCC8B5] shadow-lg">
-            <h2 className="text-lg font-bold text-[#1F140F] mb-4">
-              Start New Chat
-            </h2>
-            <input
-              type="email"
-              placeholder="customer@example.com"
-              autoFocus
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && e.target.value.trim()) {
-                  handleStartNewChat(e.target.value.trim());
-                }
-              }}
-              className="w-full px-3 py-2 border border-[#DCC8B5] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D98B2B] mb-4 bg-white text-sm"
-            />
-            <div className="flex gap-2">
-              <button
-                onClick={() => setShowNewChatDialog(false)}
-                className="flex-1 px-3 py-2 border border-[#DCC8B5] rounded-lg text-[#7B5C4F] hover:bg-[#F5E6D3] transition text-sm font-medium"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  const email = document.querySelector(
-                    'input[type="email"]',
-                  )?.value;
-                  if (email?.trim()) {
-                    handleStartNewChat(email.trim());
-                  }
-                }}
-                className="flex-1 px-3 py-2 bg-[#D98B2B] hover:bg-[#c97818] text-white rounded-lg transition text-sm font-medium"
-              >
-                Start
-              </button>
-            </div>
-          </div>
-        </div>
+        <NewChatDialog open={showNewChatDialog} onClose={handleClose} />
       )}
     </div>
   );

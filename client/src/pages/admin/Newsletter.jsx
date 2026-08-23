@@ -205,9 +205,6 @@ const Newsletter = () => {
     );
   }
 
-  {
-    console.log(subscribers, "subscribers");
-  }
   return (
     <div className="pb-4">
       <div className="mx-auto max-w-7xl">

@@ -24,9 +24,9 @@ const Header = ({ setSidebarOpen }) => {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <button className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FFF3E2] text-[#D98B2B] transition hover:bg-[#FFE2BF]">
+          {/* <button className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FFF3E2] text-[#D98B2B] transition hover:bg-[#FFE2BF]">
             <FiMoon size={18} />
-          </button>
+          </button> */}
 
           <button className="relative flex h-10 w-10 items-center justify-center rounded-full bg-[#FFF3E2] text-[#D98B2B] transition hover:bg-[#FFE2BF]">
             <FiBell size={18} />
