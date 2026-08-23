@@ -39,25 +39,20 @@ const CustomerChat = ({ onClose }) => {
     const initializeConversation = async () => {
       try {
         setIsCreatingConversation(true);
-
         const response = await createConversation();
-
         if (!isMounted) {
           return;
         }
 
         const conversationData = response?.data;
-
         if (!conversationData?._id) {
           toast.error("Failed to create conversation");
-
           return;
         }
 
         setConversation(conversationData);
       } catch (error) {
         console.error("Create conversation error:", error);
-
         if (isMounted) {
           toast.error(
             error?.response?.data?.message || "Failed to create conversation",
@@ -71,7 +66,6 @@ const CustomerChat = ({ onClose }) => {
     };
 
     initializeConversation();
-
     return () => {
       isMounted = false;
     };
@@ -83,23 +77,17 @@ const CustomerChat = ({ onClose }) => {
     }
 
     let isMounted = true;
-
     const loadMessages = async () => {
       try {
         if (!messagesLoading) setMessagesLoading(true);
         setConversationReady(false);
-
         const response = await getConversationMessages(conversation._id);
-
         if (!isMounted) {
           return;
         }
-
         const conversationMessages = response?.data || [];
-
         // Set initial messages
         setMessages(conversationMessages);
-
         // Store message IDs
         messageIds.current.clear();
         conversationMessages.forEach((item) => {
@@ -125,9 +113,7 @@ const CustomerChat = ({ onClose }) => {
         }
       }
     };
-
     loadMessages();
-
     return () => {
       isMounted = false;
     };
@@ -141,47 +127,36 @@ const CustomerChat = ({ onClose }) => {
     if (!socket || !conversation?._id || !conversationReady) {
       return;
     }
-
-    console.log("Joining conversation:", conversation._id);
-
-    socket.emit("join_conversation", conversation._id);
+    socket.emit(constants.JOIN_CONVERSATION, conversation._id);
 
     return () => {
-      console.log("Leaving conversation:", conversation._id);
-
-      socket.emit("leave_conversation", conversation._id);
+      socket.emit(constants.LEAVE_CONVERSATION, conversation._id);
     };
   }, [socket, conversation?._id, conversationReady]);
 
   const handleSendMessage = () => {
     const trimmedMessage = message.trim();
-
     if (!trimmedMessage) {
       return;
     }
-
     if (!conversation?._id) {
       toast.error("Conversation is not ready");
       return;
     }
-
     if (!socket) {
       toast.error("Chat connection is not ready");
       return;
     }
-
     if (!conversationReady) {
       toast.error("Please wait for the conversation to load");
       return;
     }
 
     clearTimeout(typingTimeoutRef.current);
-
-    socket.emit("stop_typing", {
+    socket.emit(constants.STOP_TYPING, {
       conversationId: conversation._id,
     });
-
-    socket.emit("send_message", {
+    socket.emit(constants.SEND_MESSAGE, {
       conversationId: conversation._id,
       message: trimmedMessage,
       messageType: constants.TEXT,
@@ -201,7 +176,7 @@ const CustomerChat = ({ onClose }) => {
 
   const handleClose = () => {
     if (socket && conversation?._id) {
-      socket.emit("leave_conversation", conversation._id);
+      socket.emit(constants.LEAVE_CONVERSATION, conversation._id);
     }
 
     // Clear local state
@@ -230,7 +205,7 @@ const CustomerChat = ({ onClose }) => {
       clearTimeout(typingTimeoutRef.current);
 
       if (isTypingRef.current) {
-        socket.emit("stop_typing", {
+        socket.emit(constants.STOP_TYPING, {
           conversationId,
         });
 
@@ -241,7 +216,7 @@ const CustomerChat = ({ onClose }) => {
     }
 
     if (!isTypingRef.current) {
-      socket.emit("typing", {
+      socket.emit(constants.TYPING, {
         conversationId,
       });
 
@@ -251,7 +226,7 @@ const CustomerChat = ({ onClose }) => {
     clearTimeout(typingTimeoutRef.current);
 
     typingTimeoutRef.current = setTimeout(() => {
-      socket.emit("stop_typing", {
+      socket.emit(constants.STOP_TYPING, {
         conversationId,
       });
 
@@ -264,7 +239,7 @@ const CustomerChat = ({ onClose }) => {
       clearTimeout(typingTimeoutRef.current);
 
       if (socket && conversation?._id) {
-        socket.emit("stop_typing", {
+        socket.emit(constants.STOP_TYPING, {
           conversationId: conversation._id,
         });
       }

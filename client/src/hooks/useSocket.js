@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import constants from "../common/constants";
 
 const SOCKET_URL = import.meta.env.VITE_API_URL;
 
 const useSocket = () => {
   const [socket, setSocket] = useState(null);
-  const [status, setStatus] = useState("Connecting");
+  const [status, setStatus] = useState("connecting");
   const [socketId, setSocketId] = useState("");
 
   useEffect(() => {
@@ -13,21 +14,21 @@ const useSocket = () => {
 
     setSocket(newSocket);
 
-    newSocket.on("connect", () => {
+    newSocket.on(constants.CONNECT, () => {
       console.log("Socket connected: ", newSocket.id);
 
-      setStatus("Connected");
+      setStatus(constants.CONNECTED);
       setSocketId(newSocket.id);
     });
 
-    newSocket.on("disconnect", (reason) => {
+    newSocket.on(constants.DISCONNECT, (reason) => {
       console.log("Socket disconnected: ", reason);
 
-      setStatus("Disconnected");
+      setStatus(constants.DISCONNECTED);
       setSocketId("");
     });
 
-    newSocket.on("connect_error", (error) => {
+    newSocket.on(constants.CONNECT_ERROR, (error) => {
       console.error("Socket connection error:", error);
 
       setStatus(`Connection error: ${error.message}`);

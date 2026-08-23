@@ -44,6 +44,23 @@ const constants = {
   CONNECTED: "connected",
   DISCONNECTED: "disconnected",
   CONVERSATION: "conversation",
+
+  CONNECT: "connect",
+  DISCONNECT: "disconnect",
+  CONNECT_ERROR: "connect_error",
+  CONVERSATION_JOINED: "conversation_joined",
+  USER_JOINED_CONVERSARION: "user_joined_conversation",
+  USER_LEFT_CONVERSARION: "user_left_conversation",
+  NEW_MESSAGE: "new_message",
+  CHAT_ERROR: "chat_error",
+  USER_TYPING: "user_typing",
+  USER_STOP_TYPING: "user_stop_typing",
+  STOP_TYPING: "stop_typing",
+  SEND_MESSAGE: "send_message",
+  LEAVE_CONVERSATION: "leave_conversation",
+  JOIN_CONVERSATION: "join_conversation",
+  JOIN_ONLINE: "join_online",
+  TYPING: "typing",
 };
 
 export default constants;

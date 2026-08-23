@@ -23,7 +23,6 @@ const chatSocket = (io) => {
       }
 
       const decoded = jwt.verify(token, env.ACCESS_TOKEN_SECRET);
-
       socket.user = decoded;
 
       next();
@@ -39,17 +38,17 @@ const chatSocket = (io) => {
 
     console.log(`Socket connected ${socket.id} | User: ${userId}`);
 
-    socket.on("join_conversation", async (conversationId) => {
+    socket.on(constants.JOIN_CONVERSATION, async (conversationId) => {
       try {
         if (!conversationId) {
-          return socket.emit("chat_error", {
+          return socket.emit(constants.CHAT_ERROR, {
             message: "Conversation ID is required",
           });
         }
         const conversation = await Conversation.findById(conversationId);
 
         if (!conversation) {
-          return socket.emit("chat_error", {
+          return socket.emit(constants.CHAT_ERROR, {
             message: "Conversation not found",
           });
         }
@@ -66,7 +65,7 @@ const chatSocket = (io) => {
         // Assigned admin can join their conversation.
         // Admin can join any conversation.
         if (!isCustomer && !isAssignedAdmin && !isAdmin) {
-          return socket.emit("chat_error", {
+          return socket.emit(constants.CHAT_ERROR, {
             message: "You are not allowed to join this conversation",
           });
         }
@@ -80,26 +79,26 @@ const chatSocket = (io) => {
 
         console.log(`${userId} joined ${room}`);
 
-        socket.emit("conversation_joined", {
+        socket.emit(constants.CONVERSATION_JOINED, {
           conversationId,
           room,
         });
 
         // Notify other participants
-        socket.to(room).emit("user_joined_conversation", {
+        socket.to(room).emit(constants.USER_JOINED_CONVERSARION, {
           conversationId,
           userId,
         });
       } catch (error) {
         console.error("Join conversation error:", error);
 
-        socket.emit("chat_error", {
+        socket.emit(constants.CHAT_ERROR, {
           message: "Unable to join conversation",
         });
       }
     });
 
-    socket.on("leave_conversation", (conversationId) => {
+    socket.on(constants.LEAVE_CONVERSATION, (conversationId) => {
       if (!conversationId) {
         return;
       }
@@ -113,19 +112,19 @@ const chatSocket = (io) => {
 
       console.log(`${userId} left ${room}`);
 
-      socket.to(room).emit("user_left_conversation", {
+      socket.to(room).emit(constants.USER_LEFT_CONVERSARION, {
         conversationId,
         userId,
       });
     });
 
-    socket.on("send_message", async (data) => {
+    socket.on(constants.SEND_MESSAGE, async (data) => {
       try {
         const { conversationId, message, messageType, attachments } =
           data || {};
 
         if (!conversationId) {
-          return socket.emit("chat_error", {
+          return socket.emit(constants.CHAT_ERROR, {
             message: "Conversation ID is required",
           });
         }
@@ -140,17 +139,17 @@ const chatSocket = (io) => {
 
         const room = `${constants.CONVERSATION}:${conversationId}`;
 
-        io.to(room).emit("new_message", savedMessage);
+        io.to(room).emit(constants.NEW_MESSAGE, savedMessage);
       } catch (error) {
         console.error("Send message error:", error);
 
-        socket.emit("chat_error", {
+        socket.emit(constants.CHAT_ERROR, {
           message: error.message || "Unable to send message",
         });
       }
     });
 
-    socket.on("typing", ({ conversationId }) => {
+    socket.on(constants.TYPING, ({ conversationId }) => {
       if (!conversationId) {
         return;
       }
@@ -164,12 +163,12 @@ const chatSocket = (io) => {
       // });
     });
 
-    socket.on("stop_typing", ({ conversationId }) => {
+    socket.on(constants.STOP_TYPING, ({ conversationId }) => {
       if (!conversationId) {
         return;
       }
 
-       console.log("stop typing");
+      console.log("stop typing");
 
       const room = `${constants.CONVERSATION}:${conversationId}`;
       socket.to(room).emit("user_stop_typing", {
@@ -178,13 +177,13 @@ const chatSocket = (io) => {
       });
     });
 
-    socket.on("join_online", () => {
+    socket.on(constants.JOIN_ONLINE, () => {
       socket.broadcast.emit("user_online", {
         userId,
       });
     });
 
-    socket.on("disconnect", (reason) => {
+    socket.on(constants.DISCONNECT, (reason) => {
       console.log(`Socket disconnected: ${socket.id}`);
       console.log(`Reason: ${reason}`);
       socket.broadcast.emit("user_offline", {

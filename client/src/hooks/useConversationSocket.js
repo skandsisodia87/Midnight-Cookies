@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import constants from "../common/constants";
 
 const useConversationSocket = (
   socket,
@@ -65,7 +66,6 @@ const useConversationSocket = (
       }
 
       messageIds.current.add(incomingMessage._id);
-
       setMessages((prev) => [...prev, incomingMessage]);
     };
 
@@ -73,22 +73,22 @@ const useConversationSocket = (
       console.error("Chat error:", data);
     };
 
-    socket.on("conversation_joined", handleConversationJoined);
-    socket.on("user_joined_conversation", handleUserJoined);
-    socket.on("user_left_conversation", handleUserLeft);
-    socket.on("new_message", handleNewMessage);
-    socket.on("chat_error", handleChatError);
-    socket.on("user_typing", handleUserTyping);
-    socket.on("user_stop_typing", handleUserStopTyping);
+    socket.on(constants.CONVERSATION_JOINED, handleConversationJoined);
+    socket.on(constants.USER_JOINED_CONVERSARION, handleUserJoined);
+    socket.on(constants.USER_LEFT_CONVERSARION, handleUserLeft);
+    socket.on(constants.NEW_MESSAGE, handleNewMessage);
+    socket.on(constants.CHAT_ERROR, handleChatError);
+    socket.on(constants.USER_TYPING, handleUserTyping);
+    socket.on(constants.USER_STOP_TYPING, handleUserStopTyping);
 
     return () => {
-      socket.off("conversation_joined", handleConversationJoined);
-      socket.off("user_joined_conversation", handleUserJoined);
-      socket.off("user_left_conversation", handleUserLeft);
-      socket.off("new_message", handleNewMessage);
-      socket.off("chat_error", handleChatError);
-      socket.off("user_typing", handleUserTyping);
-      socket.off("user_stop_typing", handleUserStopTyping);
+      socket.off(constants.CONVERSATION_JOINED, handleConversationJoined);
+      socket.off(constants.USER_JOINED_CONVERSARION, handleUserJoined);
+      socket.off(constants.USER_LEFT_CONVERSARION, handleUserLeft);
+      socket.off(constants.NEW_MESSAGE, handleNewMessage);
+      socket.off(constants.CHAT_ERROR, handleChatError);
+      socket.off(constants.USER_TYPING, handleUserTyping);
+      socket.off(constants.USER_STOP_TYPING, handleUserStopTyping);
     };
   }, [socket, conversationId, setMessages, messageIds]);
 };
