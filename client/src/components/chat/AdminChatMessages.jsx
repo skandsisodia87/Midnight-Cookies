@@ -1,15 +1,15 @@
+import moment from "moment";
 import { FiCheck } from "react-icons/fi";
+import useAuthStore from "../../store/authStore";
 
 const AdminChatMessages = ({ messages }) => {
+  const { user } = useAuthStore();
   const formatTime = (date) => {
-    return new Date(date).toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    return moment(date).format("hh:mm A");
   };
 
   const isAdminMessage = (senderId) => {
-    return senderId._id === "admin1" || senderId.name === "You";
+    return senderId._id?.toString() === user?._id?.toString();
   };
 
   if (!messages || messages.length === 0) {
@@ -36,7 +36,6 @@ const AdminChatMessages = ({ messages }) => {
             key={msg._id}
             className={`flex items-end gap-2 ${isAdmin ? "justify-end" : "justify-start"}`}
           >
-            {/* Avatar for customer messages */}
             {!isAdmin && showAvatar && (
               <div className="w-7 h-7 rounded-full bg-linear-to-br from-[#D98B2B] to-[#B8691E] flex items-center justify-center shrink-0">
                 <span className="text-white font-semibold text-xs">
@@ -46,7 +45,6 @@ const AdminChatMessages = ({ messages }) => {
             )}
             {!isAdmin && !showAvatar && <div className="w-7" />}
 
-            {/* Message */}
             <div
               className={`max-w-xs lg:max-w-md xl:max-w-lg px-3 py-1.5 rounded-md text-sm ${
                 isAdmin
@@ -60,7 +58,7 @@ const AdminChatMessages = ({ messages }) => {
                   isAdmin ? "text-orange-100" : "text-[#9B8974]"
                 }`}
               >
-                <span>{formatTime(msg.timestamp)}</span>
+                <span>{formatTime(msg.createdAt)}</span>
                 {isAdmin && <FiCheck size={12} />}
               </div>
             </div>

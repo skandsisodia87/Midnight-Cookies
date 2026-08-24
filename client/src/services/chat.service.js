@@ -29,3 +29,10 @@ export const assignConversation = async (conversationId) => {
   const response = await api.patch(`/conversations/${conversationId}/assign`);
   return response.data;
 };
+
+export const markMessagesAsRead = async (conversationId) => {
+  const response = await api.patch(
+    `/conversations/${conversationId}/messages/read`,
+  );
+  return response.data;
+};

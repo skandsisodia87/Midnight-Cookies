@@ -44,7 +44,9 @@ const AdminChatList = ({
       {conversations.map((conversation) => (
         <button
           key={conversation._id}
-          onClick={() => onSelectConversation(conversation)}
+          onClick={() => {
+            onSelectConversation(conversation);
+          }}
           className={`w-full px-3 py-2.5 border-b border-[#EDE3D5] hover:bg-[#F9F5F0] transition text-left ${
             selectedConversation?._id === conversation._id ? "bg-[#F5E6D3]" : ""
           }`}

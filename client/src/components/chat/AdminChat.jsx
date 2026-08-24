@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   FiSearch,
   FiPlus,
@@ -6,24 +6,39 @@ import {
   FiVideo,
   FiMoreVertical,
 } from "react-icons/fi";
+import { TbReload } from "react-icons/tb";
 import AdminChatList from "./AdminChatList";
 import AdminChatWindow from "./AdminChatWindow";
 import NewChatDialog from "./NewChatDialog";
 import { useQuery } from "@tanstack/react-query";
 import { getAllConversations } from "../../services/chat.service";
+import useSocket from "../../hooks/useSocket";
+import useConversationSocket from "../../hooks/useConversationSocket";
+import { toast } from "sonner";
+import constants from "../../common/constants";
 
 const AdminChat = () => {
+  const typingTimeoutRef = useRef(null);
+  const messageIds = useRef(new Set());
+  const { socket, status } = useSocket();
+  const [messages, setMessages] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
 
   const {
     data: conversations = [],
-    isError,
-    isLoading,
+    isFetching,
     refetch,
   } = useQuery({
     queryKey: ["conversations"],
     queryFn: getAllConversations,
   });
+
+  useConversationSocket(
+    socket,
+    selectedConversation?._id,
+    setMessages,
+    messageIds,
+  );
 
   const [searchTerm, setSearchTerm] = useState("");
   const [showNewChatDialog, setShowNewChatDialog] = useState(false);
@@ -49,30 +64,29 @@ const AdminChat = () => {
   const handleSendMessage = (message) => {
     if (!selectedConversation || !message.trim()) return;
 
-    const updatedConversations = conversations.map((conv) => {
-      if (conv._id === selectedConversation._id) {
-        const newMessage = {
-          _id: `msg_${Date.now()}`,
-          senderId: { _id: "admin1", name: "You" },
-          message: message.trim(),
-          timestamp: new Date(),
-        };
+    const trimmedMessage = message.trim();
+    if (!trimmedMessage) {
+      return;
+    }
+    if (!selectedConversation?._id) {
+      toast.error("Conversation is not ready");
+      return;
+    }
+    if (!socket) {
+      toast.error("Chat connection is not ready");
+      return;
+    }
 
-        return {
-          ...conv,
-          messages: [...conv.messages, newMessage],
-          lastMessage: message.trim(),
-          lastMessageAt: new Date(),
-        };
-      }
-      return conv;
+    clearTimeout(typingTimeoutRef.current);
+    socket.emit(constants.STOP_TYPING, {
+      conversationId: selectedConversation._id,
     });
-
-    // setConversations(updatedConversations);
-    const updatedSelected = updatedConversations.find(
-      (conv) => conv._id === selectedConversation._id,
-    );
-    setSelectedConversation(updatedSelected);
+    socket.emit(constants.SEND_MESSAGE, {
+      conversationId: selectedConversation._id,
+      message: trimmedMessage,
+      messageType: constants.TEXT,
+      attachments: [],
+    });
   };
 
   const handleClose = () => {
@@ -86,13 +100,31 @@ const AdminChat = () => {
         <div className="p-4 border-b border-[#DCC8B5] bg-[#FFF6EC]">
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-xl font-bold text-[#1F140F]">Messages</h1>
-            <button
-              onClick={() => setShowNewChatDialog(true)}
-              className="p-2 hover:bg-[#F5E6D3] rounded-full transition"
-              title="Start new chat"
-            >
-              <FiPlus size={20} className="text-[#D98B2B]" />
-            </button>
+            <div>
+              <button
+                onClick={() => setShowNewChatDialog(true)}
+                className="p-2 hover:bg-[#F5E6D3] rounded-full transition"
+                title="Start new chat"
+              >
+                <FiPlus size={20} className="text-[#D98B2B]" />
+              </button>
+              {isFetching ? (
+                <button
+                  className="p-2 hover:bg-[#F5E6D3] rounded-full transition"
+                  disabled
+                >
+                  <TbReload size={20} className="text-[#D98B2B] animate-spin" />
+                </button>
+              ) : (
+                <button
+                  onClick={refetch}
+                  className="p-2 hover:bg-[#F5E6D3] rounded-full transition"
+                  title="Refresh"
+                >
+                  <TbReload size={20} className="text-[#D98B2B]" />
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="relative">
@@ -122,6 +154,8 @@ const AdminChat = () => {
           <AdminChatWindow
             conversation={selectedConversation}
             onSendMessage={handleSendMessage}
+            socket={socket}
+            typingTimeoutRef={typingTimeoutRef}
           />
         ) : (
           <div className="flex-1 flex items-center justify-center bg-[#FFF6EC]">
