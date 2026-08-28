@@ -1,10 +1,12 @@
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
+import User from "../models/user.model.js";
 import constants from "../constants/constants.js";
 
 export const saveConversationMessage = async ({
   conversationId,
   senderId,
+  userRole,
   message,
   messageType = constants.TEXT,
   attachments = [],
@@ -25,8 +27,21 @@ export const saveConversationMessage = async ({
   const isAssignedAdmin =
     conversation.adminId?.toString() === senderId.toString();
 
-  if (!isCustomer && !isAssignedAdmin) {
+  let isAdmin = userRole === constants.ADMIN;
+  if (!isAdmin && !isCustomer && !isAssignedAdmin) {
+    const senderUser = await User.findById(senderId).select("role");
+    if (senderUser?.role === constants.ADMIN) {
+      isAdmin = true;
+    }
+  }
+
+  if (!isCustomer && !isAssignedAdmin && !isAdmin) {
     throw new Error("You are not a participant of this conversation");
+  }
+
+  // If an admin sends a message to an unassigned conversation, assign it to them
+  if (isAdmin && !conversation.adminId) {
+    conversation.adminId = senderId;
   }
 
   if (

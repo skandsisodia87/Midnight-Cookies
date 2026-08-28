@@ -36,7 +36,7 @@ const chatSocket = (io) => {
     const userId = socket.user._id;
     const userRole = socket.user.role;
 
-    console.log(`Socket connected ${socket.id} | User: ${userId}`);
+    console.log(`Socket connected ${socket.id} | User: ${userId} (${userRole})`);
 
     socket.on(constants.JOIN_CONVERSATION, async (conversationId) => {
       try {
@@ -85,7 +85,7 @@ const chatSocket = (io) => {
         });
 
         // Notify other participants
-        socket.to(room).emit(constants.USER_JOINED_CONVERSARION, {
+        socket.to(room).emit(constants.USER_JOINED_CONVERSATION, {
           conversationId,
           userId,
         });
@@ -112,7 +112,7 @@ const chatSocket = (io) => {
 
       console.log(`${userId} left ${room}`);
 
-      socket.to(room).emit(constants.USER_LEFT_CONVERSARION, {
+      socket.to(room).emit(constants.USER_LEFT_CONVERSATION, {
         conversationId,
         userId,
       });
@@ -132,6 +132,7 @@ const chatSocket = (io) => {
         const savedMessage = await saveConversationMessage({
           conversationId,
           senderId: userId,
+          userRole,
           message,
           messageType,
           attachments,
@@ -139,6 +140,7 @@ const chatSocket = (io) => {
 
         const room = `${constants.CONVERSATION}:${conversationId}`;
 
+        // Broadcast to everyone in the conversation room (both admin and customer)
         io.to(room).emit(constants.NEW_MESSAGE, savedMessage);
       } catch (error) {
         console.error("Send message error:", error);
@@ -154,13 +156,13 @@ const chatSocket = (io) => {
         return;
       }
 
-      console.log("typing message...");
+      console.log(`User ${userId} typing in ${conversationId}`);
 
-      // const room = `${constants.CONVERSATION}:${conversationId}`;
-      // socket.to(room).emit("user_typing", {
-      //   conversationId,
-      //   userId,
-      // });
+      const room = `${constants.CONVERSATION}:${conversationId}`;
+      socket.to(room).emit(constants.USER_TYPING, {
+        conversationId,
+        userId,
+      });
     });
 
     socket.on(constants.STOP_TYPING, ({ conversationId }) => {
@@ -168,10 +170,10 @@ const chatSocket = (io) => {
         return;
       }
 
-      console.log("stop typing");
+      console.log(`User ${userId} stop typing in ${conversationId}`);
 
       const room = `${constants.CONVERSATION}:${conversationId}`;
-      socket.to(room).emit("user_stop_typing", {
+      socket.to(room).emit(constants.USER_STOP_TYPING, {
         conversationId,
         userId,
       });

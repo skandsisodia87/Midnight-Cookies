@@ -4,12 +4,15 @@ import useAuthStore from "../../store/authStore";
 
 const AdminChatMessages = ({ messages }) => {
   const { user } = useAuthStore();
+
   const formatTime = (date) => {
     return moment(date).format("hh:mm A");
   };
 
   const isAdminMessage = (senderId) => {
-    return senderId._id?.toString() === user?._id?.toString();
+    if (!senderId) return false;
+    const sId = senderId._id ? senderId._id.toString() : senderId.toString();
+    return sId === user?._id?.toString();
   };
 
   if (!messages || messages.length === 0) {
@@ -27,23 +30,26 @@ const AdminChatMessages = ({ messages }) => {
     <div className="space-y-3">
       {messages.map((msg, index) => {
         const isAdmin = isAdminMessage(msg.senderId);
+        const prevMsg = index > 0 ? messages[index - 1] : null;
         const showAvatar =
-          index === 0 ||
-          isAdminMessage(messages[index - 1]?.senderId) !== isAdmin;
+          index === 0 || isAdminMessage(prevMsg?.senderId) !== isAdmin;
+
+        const senderName = msg.senderId?.name || "Customer";
+        const initial = senderName.charAt(0).toUpperCase();
 
         return (
           <div
-            key={msg._id}
+            key={msg._id || index}
             className={`flex items-end gap-2 ${isAdmin ? "justify-end" : "justify-start"}`}
           >
             {!isAdmin && showAvatar && (
               <div className="w-7 h-7 rounded-full bg-linear-to-br from-[#D98B2B] to-[#B8691E] flex items-center justify-center shrink-0">
                 <span className="text-white font-semibold text-xs">
-                  {msg.senderId.name.charAt(0).toUpperCase()}
+                  {initial}
                 </span>
               </div>
             )}
-            {!isAdmin && !showAvatar && <div className="w-7" />}
+            {!isAdmin && !showAvatar && <div className="w-7 shrink-0" />}
 
             <div
               className={`max-w-xs lg:max-w-md xl:max-w-lg px-3 py-1.5 rounded-md text-sm ${

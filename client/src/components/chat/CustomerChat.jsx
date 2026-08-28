@@ -21,6 +21,7 @@ const CustomerChat = ({ onClose }) => {
   const { user } = useAuthStore();
   const typingTimeoutRef = useRef(null);
   const isTypingRef = useRef(false);
+  const messagesEndRef = useRef(null);
   const [message, setMessage] = useState("");
   const [conversation, setConversation] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -31,7 +32,16 @@ const CustomerChat = ({ onClose }) => {
   const messageIds = useRef(new Set());
   const { socket, status } = useSocket();
 
-  useConversationSocket(socket, conversation?._id, setMessages, messageIds);
+  const { isOtherUserTyping } = useConversationSocket(
+    socket,
+    conversation?._id,
+    setMessages,
+    messageIds,
+  );
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isOtherUserTyping]);
 
   useEffect(() => {
     let isMounted = true;
@@ -86,16 +96,22 @@ const CustomerChat = ({ onClose }) => {
           return;
         }
         const conversationMessages = response?.data || [];
-        // Set initial messages
-        setMessages(conversationMessages);
-        // Store message IDs
-        messageIds.current.clear();
-        conversationMessages.forEach((item) => {
-          const id = item?._id;
+        // Set initial messages while preserving any socket-arrived messages
+        setMessages((prevMessages) => {
+          const fetchedIds = new Set(conversationMessages.map((m) => m._id));
+          const newSocketMessages = prevMessages.filter(
+            (m) => m._id && !fetchedIds.has(m._id),
+          );
+          const merged = [...conversationMessages, ...newSocketMessages];
 
-          if (id) {
-            messageIds.current.add(id);
-          }
+          messageIds.current.clear();
+          merged.forEach((item) => {
+            if (item?._id) {
+              messageIds.current.add(item._id);
+            }
+          });
+
+          return merged;
         });
 
         setConversationReady(true);
@@ -118,21 +134,6 @@ const CustomerChat = ({ onClose }) => {
       isMounted = false;
     };
   }, [conversation?._id]);
-
-  // --------------------------------------------------
-  // JOIN CONVERSATION ROOM
-  // --------------------------------------------------
-
-  useEffect(() => {
-    if (!socket || !conversation?._id || !conversationReady) {
-      return;
-    }
-    socket.emit(constants.JOIN_CONVERSATION, conversation._id);
-
-    return () => {
-      socket.emit(constants.LEAVE_CONVERSATION, conversation._id);
-    };
-  }, [socket, conversation?._id, conversationReady]);
 
   const handleSendMessage = () => {
     const trimmedMessage = message.trim();
@@ -339,8 +340,10 @@ const CustomerChat = ({ onClose }) => {
         ) : (
           <div className="space-y-4">
             {messages.map((item, index) => {
-              const isCustomer =
-                item.senderId?._id?.toString() === user?._id?.toString();
+              const senderIdStr = item.senderId?._id
+                ? item.senderId._id.toString()
+                : item.senderId?.toString();
+              const isCustomer = senderIdStr === user?._id?.toString();
 
               const messageTime = item.createdAt
                 ? new Date(item.createdAt).toLocaleTimeString([], {
@@ -403,19 +406,20 @@ const CustomerChat = ({ onClose }) => {
         )}
 
         {/* TYPING INDICATOR */}
-        {/*<div className="mt-5 flex items-center gap-2">
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#A15C4D]/10 text-xs">
-            🍪
+        {isOtherUserTyping && (
+          <div className="mt-5 flex items-center gap-2">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#A15C4D]/10 text-xs">
+              🍪
+            </div>
+
+            <div className="flex items-center gap-1 rounded-2xl rounded-tl-md border border-[#E8DED5] bg-white px-3.5 py-2.5">
+              <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#A15C4D]" />
+              <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#A15C4D] [animation-delay:150ms]" />
+              <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#A15C4D] [animation-delay:300ms]" />
+            </div>
           </div>
-
-          <div className="flex items-center gap-1 rounded-2xl rounded-tl-md border border-[#E8DED5] bg-white px-3.5 py-2.5">
-            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#A15C4D]" />
-
-            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#A15C4D] [animation-delay:150ms]" />
-
-            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#A15C4D] [animation-delay:300ms]" />
-          </div>
-        </div> */}
+        )}
+        <div ref={messagesEndRef} />
       </div>
 
       <div className="shrink-0 border-t border-[#E9E0D7] bg-white p-3">

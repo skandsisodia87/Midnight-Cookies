@@ -1,11 +1,5 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import {
-  FiSearch,
-  FiPlus,
-  FiPhone,
-  FiVideo,
-  FiMoreVertical,
-} from "react-icons/fi";
+import { useState, useCallback } from "react";
+import { FiSearch, FiPlus } from "react-icons/fi";
 import { TbReload } from "react-icons/tb";
 import AdminChatList from "./AdminChatList";
 import AdminChatWindow from "./AdminChatWindow";
@@ -13,15 +7,9 @@ import NewChatDialog from "./NewChatDialog";
 import { useQuery } from "@tanstack/react-query";
 import { getAllConversations } from "../../services/chat.service";
 import useSocket from "../../hooks/useSocket";
-import useConversationSocket from "../../hooks/useConversationSocket";
-import { toast } from "sonner";
-import constants from "../../common/constants";
 
 const AdminChat = () => {
-  const typingTimeoutRef = useRef(null);
-  const messageIds = useRef(new Set());
   const { socket, status } = useSocket();
-  const [messages, setMessages] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
 
   const {
@@ -32,13 +20,6 @@ const AdminChat = () => {
     queryKey: ["conversations"],
     queryFn: getAllConversations,
   });
-
-  useConversationSocket(
-    socket,
-    selectedConversation?._id,
-    setMessages,
-    messageIds,
-  );
 
   const [searchTerm, setSearchTerm] = useState("");
   const [showNewChatDialog, setShowNewChatDialog] = useState(false);
@@ -60,34 +41,6 @@ const AdminChat = () => {
   const handleSelectConversation = useCallback((conversation) => {
     setSelectedConversation(conversation);
   }, []);
-
-  const handleSendMessage = (message) => {
-    if (!selectedConversation || !message.trim()) return;
-
-    const trimmedMessage = message.trim();
-    if (!trimmedMessage) {
-      return;
-    }
-    if (!selectedConversation?._id) {
-      toast.error("Conversation is not ready");
-      return;
-    }
-    if (!socket) {
-      toast.error("Chat connection is not ready");
-      return;
-    }
-
-    clearTimeout(typingTimeoutRef.current);
-    socket.emit(constants.STOP_TYPING, {
-      conversationId: selectedConversation._id,
-    });
-    socket.emit(constants.SEND_MESSAGE, {
-      conversationId: selectedConversation._id,
-      message: trimmedMessage,
-      messageType: constants.TEXT,
-      attachments: [],
-    });
-  };
 
   const handleClose = () => {
     setShowNewChatDialog(false);
@@ -153,9 +106,7 @@ const AdminChat = () => {
         {selectedConversation ? (
           <AdminChatWindow
             conversation={selectedConversation}
-            onSendMessage={handleSendMessage}
             socket={socket}
-            typingTimeoutRef={typingTimeoutRef}
           />
         ) : (
           <div className="flex-1 flex items-center justify-center bg-[#FFF6EC]">

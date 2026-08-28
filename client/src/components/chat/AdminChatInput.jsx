@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { FiPaperclip, FiSmile, FiSend, FiX } from "react-icons/fi";
 
-const AdminChatInput = ({ message, setMessage, onSendMessage }) => {
+const AdminChatInput = ({
+  message,
+  setMessage,
+  onSendMessage,
+  handleMessageChange,
+}) => {
   const [attachments, setAttachments] = useState([]);
 
   const handleSendMessage = () => {
@@ -110,7 +115,7 @@ const AdminChatInput = ({ message, setMessage, onSendMessage }) => {
           <input
             type="text"
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={handleMessageChange}
             onKeyDown={handleKeyDown}
             placeholder="Type your message..."
             className="w-full bg-transparent focus:outline-none text-[#1F140F] placeholder-[#B8956F]"
