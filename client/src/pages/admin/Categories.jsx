@@ -70,7 +70,7 @@ const Categories = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-4">
       <div className="rounded-[28px] border border-[#F3E4D4] bg-linear-to-r from-[#FFF7EC] via-white to-[#FFFDF8] p-6 shadow-sm sm:p-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>

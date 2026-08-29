@@ -85,7 +85,7 @@ export const updateCategory = asyncHandler(async (req, res) => {
 export const getCategories = asyncHandler(async (req, res) => {
   const categories = await Category.find({}).select(
     "name slug description image isDefault isActive",
-  );
+  ).sort({ createdAt: 1 });
 
   return res.status(200).json({
     success: true,
