@@ -35,6 +35,7 @@ const constants = {
   FEATURED_COOKIE: "featured-cookie",
   ANALYTICS: "analytics",
   ADMIN_CATEGORIES: "admin-categories",
+  ADMIN_PRODUCTS: "admin-products",
   COUPONS: "coupons",
   ADMIN_CUSTOMERS: "admin-customers",
   DASHBOARD_DATA: "dashboard-data",

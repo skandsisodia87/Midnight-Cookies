@@ -147,3 +147,48 @@ export const removeSubscriber = async (id) => {
   const response = await api.delete(`/admin/newsletter/${id}`);
   return response.data;
 };
+
+// Admin Products (Cookies & Variants)
+export const getAdminCookies = async (params = {}) => {
+  const response = await api.post("/admin/cookies/search", params);
+  return response.data;
+};
+
+export const getAdminCookie = async (id) => {
+  const response = await api.get(`/admin/cookies/${id}`);
+  return response.data;
+};
+
+export const createAdminCookie = async (formData) => {
+  const response = await api.post("/admin/cookies", formData);
+  return response.data;
+};
+
+export const updateAdminCookie = async ({ id, formData }) => {
+  const response = await api.patch(`/admin/cookies/${id}`, formData);
+  return response.data;
+};
+
+export const deleteAdminCookie = async (id) => {
+  const response = await api.delete(`/admin/cookies/${id}`);
+  return response.data;
+};
+
+export const toggleAdminCookieStatus = async (id) => {
+  const response = await api.patch(`/admin/cookies/${id}/status`);
+  return response.data;
+};
+
+export const toggleAdminCookieFeatured = async (id) => {
+  const response = await api.patch(`/admin/cookies/${id}/featured`);
+  return response.data;
+};
+
+export const updateAdminVariantStock = async ({ variantId, stock, change }) => {
+  const response = await api.patch(`/admin/cookies/variants/${variantId}/stock`, {
+    stock,
+    change,
+  });
+  return response.data;
+};
+

@@ -3,6 +3,7 @@ import Cookie from "../models/cookie.model.js";
 import slugify from "slugify";
 import CookieVariant from "../models/cookieVariant.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
+import constants from "../constants/constants.js";
 
 export const getAllCookies = asyncHandler(async (req, res) => {
   const cookies = await Cookie.aggregate([
@@ -29,20 +30,29 @@ export const getAllCookies = asyncHandler(async (req, res) => {
       },
     },
     {
+      $lookup: {
+        from: "categories",
+        localField: "category",
+        foreignField: "_id",
+        as: "categoryDoc",
+      },
+    },
+    {
       $project: {
         name: 1,
         slug: 1,
         description: 1,
         images: 1,
-        category: 1,
+        category: {
+          $ifNull: [{ $arrayElemAt: ["$categoryDoc.name", 0] }, "$category"],
+        },
+        categoryDoc: { $arrayElemAt: ["$categoryDoc", 0] },
         defaultVariant: {
           $arrayElemAt: [
             {
               $filter: {
                 input: "$variants",
-
                 as: "variant",
-
                 cond: {
                   $eq: ["$$variant.weight", "500g"],
                 },
@@ -68,7 +78,9 @@ export const getSingleCookie = asyncHandler(async (req, res) => {
   const cookie = await Cookie.findOne(
     { slug, isActive: true },
     "-__v -updatedAt",
-  ).lean();
+  )
+    .populate("category", "name slug description")
+    .lean();
 
   if (!cookie) {
     return res.status(404).json({
@@ -107,13 +119,24 @@ export const getFeaturedCookies = asyncHandler(async (req, res) => {
       },
     },
     {
+      $lookup: {
+        from: "categories",
+        localField: "category",
+        foreignField: "_id",
+        as: "categoryDoc",
+      },
+    },
+    {
       $project: {
         _id: 1,
         name: 1,
         slug: 1,
         description: 1,
         images: 1,
-        category: 1,
+        category: {
+          $ifNull: [{ $arrayElemAt: ["$categoryDoc.name", 0] }, "$category"],
+        },
+        categoryDoc: { $arrayElemAt: ["$categoryDoc", 0] },
         defaultVariant: {
           $arrayElemAt: [
             {
@@ -137,3 +160,4 @@ export const getFeaturedCookies = asyncHandler(async (req, res) => {
     cookies: featuredCookies,
   });
 });
+

@@ -11,13 +11,18 @@ import {
   bulkCreateCookies,
   softDeleteCookie,
   updateCookieStatus,
+  toggleCookieFeatured,
+  updateVariantStock,
 } from "../controllers/admin/cookie.controller.js";
 import {
   validate,
   validateObjectId,
   validateUserRole,
 } from "../middleware/validation.middleware.js";
-import { cookieSchema } from "../validations/cookie.validation.js";
+import {
+  cookieSchema,
+  updateCookieSchema,
+} from "../validations/cookie.validation.js";
 import {
   getOrders,
   getOrder,
@@ -63,6 +68,7 @@ router.use(validateUserRole(constants.ADMIN));
 
 router.get("/dashboard", getDashboard);
 
+router.get("/cookies", getCookies);
 router.post("/cookies/search", getCookies);
 router.get("/cookies/:id", validateObjectId(), getCookie);
 router.post(
@@ -75,13 +81,17 @@ router.post(
 router.patch(
   "/cookies/:id",
   validateObjectId(),
-  validate(cookieSchema),
+  upload.single("cookie_image"),
+  validate(updateCookieSchema),
   updateCookie,
 );
 router.patch("/cookies/:id/status", validateObjectId(), updateCookieStatus);
+router.patch("/cookies/:id/featured", validateObjectId(), toggleCookieFeatured);
+router.patch("/cookies/variants/:variantId/stock", updateVariantStock);
 router.delete("/cookies/:id", validateObjectId(), deleteCookie);
 router.post("/bulk/cookies", bulkCreateCookies);
 router.patch("/cookies/:id/soft-delete", softDeleteCookie);
+
 
 router
   .route("/categories")
