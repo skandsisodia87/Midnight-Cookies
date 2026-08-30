@@ -96,6 +96,9 @@ const constants = {
 
     NOT_FOUND: "*",
   },
+
+  INPUT_CLASS:
+    "w-full rounded-xl border border-[#E8D5C4] bg-[#FFFCF9] px-4 py-3 text-sm text-[#4E342E] outline-none transition focus:border-[#C77B30] focus:ring-2 focus:ring-[#C77B30]/10",
 };
 
 export default constants;

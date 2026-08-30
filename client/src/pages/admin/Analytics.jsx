@@ -141,20 +141,22 @@ export default function Analytics() {
 
   return (
     <div className="space-y-5 px-3 pb-8 sm:space-y-6 sm:px-4 lg:px-6">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-900 sm:text-3xl">
-            Analytics
-          </h1>
+      <div className="rounded-[28px] border border-[#F3E4D4] bg-linear-to-r from-[#FFF7EC] via-white to-[#FFFDF8] p-4 shadow-sm sm:p-6">
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-[#4E342E] sm:text-3xl">
+              Analytics
+            </h1>
 
-          <p className="mt-1 text-sm text-slate-500">
-            Track your business performance and sales insights
-          </p>
-        </div>
+            <p className="mt-1 text-sm text-[#7A5C4D] sm:text-base">
+              Track your business performance and sales insights
+            </p>
+          </div>
 
-        <div className="inline-flex w-fit items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm">
-          <FaChartLine className="text-amber-500" />
-          <span>Yearly Overview</span>
+          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm">
+            <FaChartLine className="text-amber-500" />
+            <span>Yearly Overview</span>
+          </div>
         </div>
       </div>
 
