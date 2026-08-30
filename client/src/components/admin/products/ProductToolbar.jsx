@@ -1,10 +1,4 @@
-import {
-  FiSearch,
-  FiX,
-  FiList,
-  FiGrid,
-  FiFilter,
-} from "react-icons/fi";
+import { FiSearch, FiX, FiList, FiGrid } from "react-icons/fi";
 
 const ProductToolbar = ({
   search,
@@ -18,7 +12,6 @@ const ProductToolbar = ({
   viewMode,
   setViewMode,
   categories = [],
-  totalFiltered = 0,
 }) => {
   const hasActiveFilters =
     Boolean(search) ||
@@ -60,7 +53,7 @@ const ProductToolbar = ({
         {/* Filters Group */}
         <div className="flex flex-wrap items-center gap-2.5">
           {/* Category Filter */}
-          <div className="relative min-w-[140px]">
+          <div className="relative min-w-35">
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
@@ -79,7 +72,7 @@ const ProductToolbar = ({
           </div>
 
           {/* Stock Filter */}
-          <div className="relative min-w-[130px]">
+          <div className="relative min-w-32.5">
             <select
               value={stockFilter}
               onChange={(e) => setStockFilter(e.target.value)}
@@ -96,7 +89,7 @@ const ProductToolbar = ({
           </div>
 
           {/* Status Filter */}
-          <div className="relative min-w-[125px]">
+          <div className="relative min-w-31.25">
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}

@@ -1,6 +1,10 @@
 import { FiPlus, FiPackage } from "react-icons/fi";
 
-const ProductEmptyState = ({ onAddProduct, isFiltered = false, onResetFilters }) => {
+const ProductEmptyState = ({
+  onAddProduct,
+  isFiltered = false,
+  onResetFilters,
+}) => {
   return (
     <div className="flex flex-col items-center justify-center px-4 py-16 text-center">
       <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-[#FFF8EF] border border-[#F2D8BE] text-4xl shadow-xs">

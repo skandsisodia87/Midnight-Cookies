@@ -42,7 +42,8 @@ const ProductStats = ({ stats = {} }) => {
       subtext: `${stats.outOfStockCount ?? 0} out of stock, ${stats.lowStockCount ?? 0} low stock`,
       icon: <FiAlertTriangle className="text-xl text-[#D97706]" />,
       bgIcon: "bg-[#D97706]/10",
-      borderColor: stats.outOfStockCount > 0 ? "border-[#FBCFE8]" : "border-[#FDE68A]",
+      borderColor:
+        stats.outOfStockCount > 0 ? "border-[#FBCFE8]" : "border-[#FDE68A]",
       highlight: (stats.lowStockCount ?? 0) + (stats.outOfStockCount ?? 0) > 0,
     },
   ];

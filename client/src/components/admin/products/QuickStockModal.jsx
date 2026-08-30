@@ -73,7 +73,7 @@ const QuickStockModal = ({ isOpen, onClose, cookie }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2D1B16]/60 p-4 backdrop-blur-xs">
-      <div className="w-full max-w-lg overflow-hidden rounded-[32px] bg-white shadow-2xl">
+      <div className="w-full max-w-lg overflow-hidden rounded-4xl bg-white shadow-2xl">
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b border-[#F3E4D4] bg-[#FFFDFB] px-6 py-5">
           <div className="flex items-center gap-3">
@@ -131,7 +131,8 @@ const QuickStockModal = ({ isOpen, onClose, cookie }) => {
                         {v.weight}
                       </h4>
                       <p className="text-[11px] text-[#8A7064]">
-                        Price: ₹{v.discountPrice || v.price} • SKU: {v.sku || "N/A"}
+                        Price: ₹{v.discountPrice || v.price} • SKU:{" "}
+                        {v.sku || "N/A"}
                       </p>
                     </div>
 
@@ -165,7 +166,9 @@ const QuickStockModal = ({ isOpen, onClose, cookie }) => {
                         type="number"
                         min="0"
                         value={currentVal}
-                        onChange={(e) => handleDirectInput(v._id, e.target.value)}
+                        onChange={(e) =>
+                          handleDirectInput(v._id, e.target.value)
+                        }
                         className="h-8 w-16 rounded-xl border border-[#E4D7C8] bg-white text-center text-sm font-extrabold text-[#4E342E] outline-none focus:border-[#D98B2B]"
                       />
 

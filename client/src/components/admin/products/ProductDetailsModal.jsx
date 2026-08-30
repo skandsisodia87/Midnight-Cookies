@@ -1,6 +1,17 @@
-import { FiX, FiEdit2, FiStar, FiPackage, FiCheck, FiSliders } from "react-icons/fi";
+import {
+  FiX,
+  FiEdit2,
+  FiStar,
+  FiSliders,
+} from "react-icons/fi";
 
-const ProductDetailsModal = ({ isOpen, onClose, cookie, onEdit, onQuickStock }) => {
+const ProductDetailsModal = ({
+  isOpen,
+  onClose,
+  cookie,
+  onEdit,
+  onQuickStock,
+}) => {
   if (!isOpen || !cookie) return null;
 
   const variants = cookie.variants || [];
@@ -8,7 +19,7 @@ const ProductDetailsModal = ({ isOpen, onClose, cookie, onEdit, onQuickStock }) 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2D1B16]/60 p-4 backdrop-blur-xs">
-      <div className="w-full max-w-2xl overflow-hidden rounded-[32px] bg-white shadow-2xl">
+      <div className="w-full max-w-2xl overflow-hidden rounded-4xl bg-white shadow-2xl">
         {/* Header with image */}
         <div className="relative h-56 w-full bg-[#FFF8EF]">
           {cookie.images?.[0]?.url ? (
@@ -63,7 +74,9 @@ const ProductDetailsModal = ({ isOpen, onClose, cookie, onEdit, onQuickStock }) 
                 <h2 className="text-2xl font-extrabold text-[#4E342E]">
                   {cookie.name}
                 </h2>
-                <p className="text-xs text-[#8A7064] mt-0.5">slug: {cookie.slug}</p>
+                <p className="text-xs text-[#8A7064] mt-0.5">
+                  slug: {cookie.slug}
+                </p>
               </div>
 
               <div className="text-right">
@@ -133,7 +146,9 @@ const ProductDetailsModal = ({ isOpen, onClose, cookie, onEdit, onQuickStock }) 
                   {variants.map((v) => (
                     <tr key={v._id || v.weight} className="hover:bg-[#FFFDFB]">
                       <td className="px-3.5 py-2.5 font-bold">{v.weight}</td>
-                      <td className="px-3.5 py-2.5 text-[#8A7064]">₹{v.price}</td>
+                      <td className="px-3.5 py-2.5 text-[#8A7064]">
+                        ₹{v.price}
+                      </td>
                       <td className="px-3.5 py-2.5 font-semibold text-[#5F8D4E]">
                         {v.discountPrice ? `₹${v.discountPrice}` : "—"}
                       </td>

@@ -1,14 +1,6 @@
 import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  FiUpload,
-  FiPlus,
-  FiTrash2,
-  FiX,
-  FiStar,
-  FiCheck,
-  FiInfo,
-} from "react-icons/fi";
+import { FiUpload, FiPlus, FiTrash2, FiX } from "react-icons/fi";
 import { toast } from "sonner";
 import {
   createAdminCookie,
@@ -38,8 +30,20 @@ const initialForm = {
   category: "",
   ingredients: ["Belgian Dark Chocolate", "Butter", "Brown Sugar", "Flour"],
   variants: [
-    { weight: "250g", price: 199, discountPrice: 169, stock: 15, isAvailable: true },
-    { weight: "500g", price: 349, discountPrice: 299, stock: 25, isAvailable: true },
+    {
+      weight: "250g",
+      price: 199,
+      discountPrice: 169,
+      stock: 15,
+      isAvailable: true,
+    },
+    {
+      weight: "500g",
+      price: 349,
+      discountPrice: 299,
+      stock: 25,
+      isAvailable: true,
+    },
   ],
   image: null,
   isFeatured: false,
@@ -285,7 +289,7 @@ const ProductModal = ({ isOpen, onClose, editingCookie, categories = [] }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2D1B16]/60 p-4 backdrop-blur-xs overflow-y-auto">
-      <div className="my-8 w-full max-w-3xl overflow-hidden rounded-[32px] bg-white shadow-2xl">
+      <div className="my-8 w-full max-w-3xl overflow-hidden rounded-4xl bg-white shadow-2xl">
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b border-[#F3E4D4] bg-[#FFFDFB] px-6 py-5">
           <div>
@@ -308,7 +312,10 @@ const ProductModal = ({ isOpen, onClose, editingCookie, categories = [] }) => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="max-h-[78vh] overflow-y-auto p-6 space-y-6">
+        <form
+          onSubmit={handleSubmit}
+          className="max-h-[78vh] overflow-y-auto p-6 space-y-6"
+        >
           {/* Section: General Info */}
           <div className="space-y-4">
             <h3 className="text-sm font-bold uppercase tracking-wider text-[#A15C38]">
@@ -395,7 +402,10 @@ const ProductModal = ({ isOpen, onClose, editingCookie, categories = [] }) => {
                   />
                 ) : (
                   <div className="text-center text-[#8A7064]">
-                    <FiUpload size={24} className="mx-auto mb-1 text-[#D98B2B]" />
+                    <FiUpload
+                      size={24}
+                      className="mx-auto mb-1 text-[#D98B2B]"
+                    />
                     <span className="text-[10px]">No image</span>
                   </div>
                 )}
@@ -500,7 +510,8 @@ const ProductModal = ({ isOpen, onClose, editingCookie, categories = [] }) => {
                   4. Variants & Quantity (Stock)
                 </h3>
                 <p className="text-xs text-[#8A7064]">
-                  Set weights (e.g. 250g, 500g, 1kg), price, discount price, and inventory stock.
+                  Set weights (e.g. 250g, 500g, 1kg), price, discount price, and
+                  inventory stock.
                 </p>
               </div>
               <button

@@ -1,6 +1,11 @@
 import { FiPlus, FiRefreshCw } from "react-icons/fi";
 
-const ProductHeader = ({ onAddProduct, totalCount = 0, isRefetching, onRefresh }) => {
+const ProductHeader = ({
+  onAddProduct,
+  totalCount = 0,
+  isRefetching,
+  onRefresh,
+}) => {
   return (
     <div className="rounded-[28px] border border-[#F3E4D4] bg-linear-to-r from-[#FFF7EC] via-white to-[#FFFDF8] p-6 shadow-sm sm:p-8">
       <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
@@ -14,7 +19,8 @@ const ProductHeader = ({ onAddProduct, totalCount = 0, isRefetching, onRefresh }
             </span>
           </div>
           <p className="max-w-2xl text-sm text-[#7A5C4D] sm:text-base">
-            Create, update, and manage your cookie recipes, variant sizes, pricing, and live inventory stock.
+            Create, update, and manage your cookie recipes, variant sizes,
+            pricing, and live inventory stock.
           </p>
         </div>
 
@@ -27,7 +33,9 @@ const ProductHeader = ({ onAddProduct, totalCount = 0, isRefetching, onRefresh }
               title="Refresh cookies list"
               className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-[#E4D7C8] bg-white text-[#4E342E] shadow-xs transition hover:bg-[#FFF4E6] active:scale-95 disabled:opacity-50 cursor-pointer"
             >
-              <FiRefreshCw className={`text-base ${isRefetching ? "animate-spin text-[#D98B2B]" : ""}`} />
+              <FiRefreshCw
+                className={`text-base ${isRefetching ? "animate-spin text-[#D98B2B]" : ""}`}
+              />
             </button>
           )}
 

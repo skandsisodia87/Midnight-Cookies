@@ -43,7 +43,10 @@ const ProductsSkeleton = () => {
 
         <div className="divide-y divide-[#F6EBE0] p-6 space-y-4">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="flex items-center justify-between gap-4 pt-3">
+            <div
+              key={i}
+              className="flex items-center justify-between gap-4 pt-3"
+            >
               <div className="flex items-center gap-4">
                 <div className="h-14 w-14 rounded-2xl bg-[#F3E4D4]/60 shrink-0" />
                 <div className="space-y-2">

@@ -72,7 +72,9 @@ const Products = () => {
     },
     onError: (err) => {
       toast.error(
-        err.response?.data?.message || err.message || "Failed to delete cookie.",
+        err.response?.data?.message ||
+          err.message ||
+          "Failed to delete cookie.",
       );
     },
   });
@@ -87,8 +89,8 @@ const Products = () => {
     onError: (err) => {
       toast.error(
         err.response?.data?.message ||
-        err.message ||
-        "Failed to toggle status.",
+          err.message ||
+          "Failed to toggle status.",
       );
     },
   });
@@ -103,8 +105,8 @@ const Products = () => {
     onError: (err) => {
       toast.error(
         err.response?.data?.message ||
-        err.message ||
-        "Failed to toggle featured status.",
+          err.message ||
+          "Failed to toggle featured status.",
       );
     },
   });
@@ -119,9 +121,7 @@ const Products = () => {
       });
 
       // Snapshot previous value
-      const previousData = queryClient.getQueryData([
-        constants.ADMIN_PRODUCTS,
-      ]);
+      const previousData = queryClient.getQueryData([constants.ADMIN_PRODUCTS]);
 
       // Optimistically update cache
       if (previousData?.cookies) {
@@ -184,7 +184,9 @@ const Products = () => {
     return cookies.filter((cookie) => {
       // Search
       const term = search.toLowerCase().trim();
-      const catName = cookie.category?.name || (typeof cookie.category === "string" ? cookie.category : "");
+      const catName =
+        cookie.category?.name ||
+        (typeof cookie.category === "string" ? cookie.category : "");
       const matchesSearch =
         !term ||
         cookie.name?.toLowerCase().includes(term) ||
@@ -218,9 +220,7 @@ const Products = () => {
         matchesStock = totalStock > 0 && totalStock <= 5;
       if (stockFilter === "out_of_stock") matchesStock = totalStock === 0;
 
-      return (
-        matchesSearch && matchesCategory && matchesStatus && matchesStock
-      );
+      return matchesSearch && matchesCategory && matchesStatus && matchesStock;
     });
   }, [cookies, search, categoryFilter, statusFilter, stockFilter]);
 
@@ -270,7 +270,6 @@ const Products = () => {
 
   return (
     <div className="space-y-6 p-4">
-      {/* Header */}
       <ProductHeader
         onAddProduct={handleOpenCreate}
         totalCount={cookies.length}
@@ -278,12 +277,9 @@ const Products = () => {
         onRefresh={() => refetchCookies()}
       />
 
-      {/* KPI Stats Cards */}
       <ProductStats stats={stats} />
 
-      {/* Main Content Container */}
       <div className="overflow-hidden rounded-[28px] border border-[#F3E4D4] bg-white shadow-sm">
-        {/* Filter & Search Toolbar */}
         <ProductToolbar
           search={search}
           setSearch={setSearch}
@@ -340,7 +336,6 @@ const Products = () => {
         )}
       </div>
 
-      {/* Add / Edit Cookie Modal */}
       <ProductModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
@@ -348,14 +343,12 @@ const Products = () => {
         categories={categories}
       />
 
-      {/* Quick Stock Batch Adjuster Modal */}
       <QuickStockModal
         isOpen={Boolean(selectedStockCookie)}
         onClose={() => setSelectedStockCookie(null)}
         cookie={selectedStockCookie}
       />
 
-      {/* Full Details Modal */}
       <ProductDetailsModal
         isOpen={Boolean(selectedDetailsCookie)}
         onClose={() => setSelectedDetailsCookie(null)}
@@ -364,7 +357,6 @@ const Products = () => {
         onQuickStock={setSelectedStockCookie}
       />
 
-      {/* Delete Confirmation Dialog */}
       <DeleteDialog
         open={Boolean(deleteCookie)}
         onClose={() => setDeleteCookie(null)}

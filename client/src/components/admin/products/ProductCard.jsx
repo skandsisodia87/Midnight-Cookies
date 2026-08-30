@@ -57,7 +57,10 @@ const ProductCard = ({
             title={cookie.isFeatured ? "Unfeature" : "Feature"}
             className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-[#D98B2B] shadow-xs backdrop-blur-xs transition hover:scale-110 cursor-pointer"
           >
-            <FiStar size={15} className={cookie.isFeatured ? "fill-[#D98B2B]" : ""} />
+            <FiStar
+              size={15}
+              className={cookie.isFeatured ? "fill-[#D98B2B]" : ""}
+            />
           </button>
         </div>
       </div>
@@ -164,7 +167,7 @@ const ProductCard = ({
                     </button>
 
                     <span
-                      className={`inline-flex min-w-[24px] items-center justify-center rounded-md px-1 py-0.5 text-center font-bold text-[11px] ${
+                      className={`inline-flex min-w-6 items-center justify-center rounded-md px-1 py-0.5 text-center font-bold text-[11px] ${
                         isOut
                           ? "bg-[#FEE2E2] text-[#B85C5C]"
                           : isLow
@@ -197,7 +200,9 @@ const ProductCard = ({
 
           <div className="mt-2.5 flex items-center justify-between border-t border-[#F6EBE0] pt-2 text-[11px] text-[#7A5C4D]">
             <span>Total Stock</span>
-            <strong className="text-[#4E342E] font-bold">{totalStock} units</strong>
+            <strong className="text-[#4E342E] font-bold">
+              {totalStock} units
+            </strong>
           </div>
         </div>
 

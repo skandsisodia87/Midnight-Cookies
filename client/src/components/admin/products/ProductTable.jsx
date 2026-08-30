@@ -27,7 +27,9 @@ const ProductTable = ({
           <tr>
             <th className="px-6 py-4 font-bold">Cookie Product</th>
             <th className="px-6 py-4 font-bold">Category & Pricing</th>
-            <th className="px-6 py-4 font-bold">Variant Inventory (Stock Steppers)</th>
+            <th className="px-6 py-4 font-bold">
+              Variant Inventory (Stock Steppers)
+            </th>
             <th className="px-6 py-4 font-bold text-center">Store Status</th>
             <th className="px-6 py-4 font-bold text-right">Actions</th>
           </tr>
@@ -128,7 +130,9 @@ const ProductTable = ({
                 <td className="px-6 py-4.5 align-top">
                   <div className="space-y-1.5">
                     <span className="inline-flex items-center rounded-full border border-[#E8D6C6] bg-[#FFF8EF] px-2.5 py-0.5 text-xs font-semibold text-[#8A5A36]">
-                      {cookie.category?.name || cookie.category || "Uncategorized"}
+                      {cookie.category?.name ||
+                        cookie.category ||
+                        "Uncategorized"}
                     </span>
 
                     <div className="text-sm font-bold text-[#4E342E]">
@@ -138,7 +142,8 @@ const ProductTable = ({
                     </div>
 
                     <div className="text-xs text-[#8A7064]">
-                      {variants.length} variant{variants.length === 1 ? "" : "s"}
+                      {variants.length} variant
+                      {variants.length === 1 ? "" : "s"}
                     </div>
                   </div>
                 </td>
@@ -188,7 +193,7 @@ const ProductTable = ({
                                 </button>
 
                                 <span
-                                  className={`inline-flex min-w-[28px] items-center justify-center rounded-md px-1.5 py-0.5 text-center font-bold ${
+                                  className={`inline-flex min-w-7 items-center justify-center rounded-md px-1.5 py-0.5 text-center font-bold ${
                                     isOut
                                       ? "bg-[#FEE2E2] text-[#B85C5C]"
                                       : isLow
