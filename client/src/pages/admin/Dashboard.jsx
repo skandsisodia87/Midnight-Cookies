@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import ErrorPage from "../../common/ErrorPage";
 import { getDashboard } from "../../services/admin.service";
 import constants from "../../common/constants";
+import TopSellingCookies from "../../components/admin/dashboard/TopSellingCookies ";
 
 export default function Dashboard() {
   const {
@@ -61,6 +62,9 @@ export default function Dashboard() {
         <RecentOrders recentOrders={dashboardData.data.recentOrders} />
         <LowStockProducts products={dashboardData.data.lowStockProducts} />
       </div>
+      <TopSellingCookies
+        topSellingCookies={dashboardData.data.topSellingProducts}
+      />
     </div>
   );
 }
