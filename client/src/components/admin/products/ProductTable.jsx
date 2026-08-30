@@ -5,7 +5,6 @@ import {
   FiStar,
   FiPlus,
   FiMinus,
-  FiPackage,
   FiSliders,
 } from "react-icons/fi";
 
@@ -36,10 +35,6 @@ const ProductTable = ({
         </thead>
         <tbody className="divide-y divide-[#F6EBE0]">
           {cookies.map((cookie) => {
-            const imageSrc =
-              cookie.images?.[0]?.url ||
-              cookie.images?.[0] ||
-              "/placeholder-cookie.png";
             const variants = cookie.variants || [];
             const totalStock = variants.reduce(
               (sum, v) => sum + (v.stock || 0),
@@ -92,11 +87,10 @@ const ProductTable = ({
                               ? "Remove from Featured"
                               : "Mark as Featured"
                           }
-                          className={`rounded-lg p-1 transition cursor-pointer ${
-                            cookie.isFeatured
+                          className={`rounded-lg p-1 transition cursor-pointer ${cookie.isFeatured
                               ? "text-[#D98B2B] hover:text-[#B57018]"
                               : "text-[#D8C9C0] hover:text-[#D98B2B]"
-                          }`}
+                            }`}
                         >
                           <FiStar
                             size={14}
@@ -193,13 +187,12 @@ const ProductTable = ({
                                 </button>
 
                                 <span
-                                  className={`inline-flex min-w-7 items-center justify-center rounded-md px-1.5 py-0.5 text-center font-bold ${
-                                    isOut
+                                  className={`inline-flex min-w-7 items-center justify-center rounded-md px-1.5 py-0.5 text-center font-bold ${isOut
                                       ? "bg-[#FEE2E2] text-[#B85C5C]"
                                       : isLow
                                         ? "bg-[#FEF3C7] text-[#D97706]"
                                         : "bg-[#E8F5E9] text-[#5F8D4E]"
-                                  }`}
+                                    }`}
                                 >
                                   {v.stock}
                                 </span>
@@ -258,9 +251,8 @@ const ProductTable = ({
                       <div className="absolute left-1 top-1 h-4 w-4 rounded-full bg-white shadow-sm transition peer-checked:translate-x-5" />
                     </label>
                     <span
-                      className={`text-[11px] font-semibold ${
-                        cookie.isActive ? "text-[#5F8D4E]" : "text-[#8A7064]"
-                      }`}
+                      className={`text-[11px] font-semibold ${cookie.isActive ? "text-[#5F8D4E]" : "text-[#8A7064]"
+                        }`}
                     >
                       {cookie.isActive ? "Active" : "Inactive"}
                     </span>
