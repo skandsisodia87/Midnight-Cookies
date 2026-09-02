@@ -1,4 +1,4 @@
-import { env as e} from "process";
+import { env as e } from "process";
 
 const env = {
   PORT: e.PORT || 5000,
@@ -15,6 +15,8 @@ const env = {
   CLOUDINARY_CLOUD_NAME: e.CLOUDINARY_CLOUD_NAME,
   CLOUDINARY_API_KEY: e.CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET: e.CLOUDINARY_API_SECRET,
+  REDIS_HOST: e.REDIS_HOST || "localhost",
+  REDIS_PORT: e.REDIS_PORT || 6379,
 };
 
 export default env;

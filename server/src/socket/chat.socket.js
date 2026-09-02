@@ -2,9 +2,8 @@ import jwt from "jsonwebtoken";
 import env from "../config/env.js";
 import { parseCookie } from "cookie";
 import Conversation from "../models/conversation.model.js";
-import Message from "../models/message.model.js";
 import constants from "../constants/constants.js";
-import { saveConversationMessage } from "../services/chat.service.js";
+const mongoose = require("mongoose");
 
 const chatSocket = (io) => {
   io.use((socket, next) => {
@@ -36,7 +35,9 @@ const chatSocket = (io) => {
     const userId = socket.user._id;
     const userRole = socket.user.role;
 
-    console.log(`Socket connected ${socket.id} | User: ${userId} (${userRole})`);
+    console.log(
+      `Socket connected ${socket.id} | User: ${userId} (${userRole})`,
+    );
 
     socket.on(constants.JOIN_CONVERSATION, async (conversationId) => {
       try {
@@ -129,19 +130,24 @@ const chatSocket = (io) => {
           });
         }
 
-        const savedMessage = await saveConversationMessage({
+        const messageData = {
+          _id: new mongoose.Types.ObjectId(),
           conversationId,
           senderId: userId,
           userRole,
           message,
           messageType,
           attachments,
-        });
+          clientMessageId,
+          createdAt: new Date(),
+        };
 
         const room = `${constants.CONVERSATION}:${conversationId}`;
 
         // Broadcast to everyone in the conversation room (both admin and customer)
         io.to(room).emit(constants.NEW_MESSAGE, savedMessage);
+
+        await addMessageToQueue(message);
       } catch (error) {
         console.error("Send message error:", error);
 
