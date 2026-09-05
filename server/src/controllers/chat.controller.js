@@ -1,7 +1,12 @@
 import constants from "../constants/constants.js";
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
+import User from "../models/user.model.js";
 import { saveConversationMessage } from "../services/chat.service.js";
+import {
+  getCachedConversationMessages,
+  markCachedConversationMessagesAsRead,
+} from "../queues/message.queue.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 export const createConversation = asyncHandler(async (req, res) => {
@@ -81,7 +86,7 @@ export const getUnassignConversation = asyncHandler(async (_, res) => {
     status: "open",
   })
     .populate("customerId", "name email")
-    .select("lastMessageAt unreadCount")
+    .select("lastMessageAt adminUnreadCount")
     .sort({ createdAt: 1 });
 
   return res.status(200).json({
@@ -185,6 +190,7 @@ export const createMessage = asyncHandler(async (req, res) => {
   const populatedMessage = await saveConversationMessage({
     conversationId,
     senderId,
+    userRole: req.user.role,
     message,
     messageType,
     attachments,
@@ -230,10 +236,35 @@ export const getConversationMessages = asyncHandler(async (req, res) => {
     .populate("senderId", "name email")
     .sort({ createdAt: 1 });
 
+  const cachedMessages = await getCachedConversationMessages(conversationId);
+  const databaseMessageIds = new Set(
+    messages.map((message) => message._id.toString()),
+  );
+  const missingCachedMessages = cachedMessages.filter(
+    (message) => !databaseMessageIds.has(String(message._id)),
+  );
+  const senderIds = [
+    ...new Set(
+      missingCachedMessages.map((message) => String(message.senderId)),
+    ),
+  ];
+  const senders = await User.find({ _id: { $in: senderIds } }).select(
+    "name email",
+  );
+  const senderMap = new Map(
+    senders.map((sender) => [sender._id.toString(), sender]),
+  );
+  const cachedMessagesWithSenders = missingCachedMessages.map((message) => ({
+    ...message,
+    senderId: senderMap.get(String(message.senderId)) || message.senderId,
+  }));
+
   return res.status(200).json({
     success: true,
     message: "Messages fetched successfully",
-    data: messages,
+    data: [...messages, ...cachedMessagesWithSenders].sort(
+      (first, second) => new Date(first.createdAt) - new Date(second.createdAt),
+    ),
   });
 });
 
@@ -267,17 +298,24 @@ export const markMessagesAsRead = asyncHandler(async (req, res) => {
     {
       conversationId,
       senderId: { $ne: userId },
-      isRead: false,
+      readAt: null,
     },
     {
       $set: {
-        isRead: true,
         readAt: new Date(),
       },
     },
   );
+  await markCachedConversationMessagesAsRead(conversationId, userId);
 
-  conversation.unreadCount = 0;
+  const isAdminReader = isAdmin || req.user.role === constants.ADMIN;
+  if (isAdminReader) {
+    conversation.adminLastReadAt = new Date();
+    conversation.adminUnreadCount = 0;
+  } else {
+    conversation.customerLastReadAt = new Date();
+    conversation.customerUnreadCount = 0;
+  }
 
   await conversation.save();
 

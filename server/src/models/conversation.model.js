@@ -31,9 +31,24 @@ const conversationSchema = new Schema(
       default: null,
     },
 
-    unreadCount: {
+    customerUnreadCount: {
       type: Number,
       default: 0,
+    },
+
+    adminUnreadCount: {
+      type: Number,
+      default: 0,
+    },
+
+    customerLastReadAt: {
+      type: Date,
+      default: null,
+    },
+
+    adminLastReadAt: {
+      type: Date,
+      default: null,
     },
   },
   {

@@ -3,7 +3,8 @@ import env from "../config/env.js";
 import { parseCookie } from "cookie";
 import Conversation from "../models/conversation.model.js";
 import constants from "../constants/constants.js";
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+import addMessageToQueue from "../queues/message.queue.js";
 
 const chatSocket = (io) => {
   io.use((socket, next) => {
@@ -138,16 +139,15 @@ const chatSocket = (io) => {
           message,
           messageType,
           attachments,
-          clientMessageId,
           createdAt: new Date(),
         };
 
         const room = `${constants.CONVERSATION}:${conversationId}`;
 
         // Broadcast to everyone in the conversation room (both admin and customer)
-        io.to(room).emit(constants.NEW_MESSAGE, savedMessage);
+        io.to(room).emit(constants.NEW_MESSAGE, messageData);
 
-        await addMessageToQueue(message);
+        await addMessageToQueue(messageData);
       } catch (error) {
         console.error("Send message error:", error);
 

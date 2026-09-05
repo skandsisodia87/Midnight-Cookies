@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "server": "nodemon src/server.js",
+    "message-cron": "node src/workers/message.worker.js",
     "client": "npm run dev --prefix ../client",
-    "dev": "concurrently --names \"server,client\" --prefix-colors \"yellow,blue\" \"npm run server\" \"npm run client\""
+    "dev": "concurrently --names \"server,cron,client\" --prefix-colors \"yellow,magenta,blue\" \"npm run server\" \"npm run message-cron\" \"npm run client\""
   },
   "keywords": [],
   "author": "",

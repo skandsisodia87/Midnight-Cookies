@@ -6,7 +6,7 @@ import constants from "../constants/constants.js";
 export const saveConversationMessage = async ({
   conversationId,
   senderId,
-  userRole,
+  userRole = constants.USER,
   message,
   messageType = constants.TEXT,
   attachments = [],
@@ -55,6 +55,7 @@ export const saveConversationMessage = async ({
   const newMessage = await Message.create({
     conversationId,
     senderId,
+    senderRole: isAdmin ? constants.ADMIN : constants.USER,
     message: message?.trim() || "",
     messageType,
     attachments,
@@ -64,7 +65,8 @@ export const saveConversationMessage = async ({
 
   conversation.lastMessageAt = new Date();
 
-  conversation.unreadCount += 1;
+  if (isAdmin) conversation.customerUnreadCount += 1;
+  else conversation.adminUnreadCount += 1;
 
   await conversation.save();
 

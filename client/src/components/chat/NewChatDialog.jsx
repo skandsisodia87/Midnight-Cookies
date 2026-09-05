@@ -69,11 +69,11 @@ function ConversationItem({ conversation, onAssign }) {
               {customerName}
             </h3>
 
-            {conversation.unreadCount > 0 && (
+            {conversation.adminUnreadCount > 0 && (
               <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#D98B2B] px-1.5 text-[10px] font-bold text-white">
-                {conversation.unreadCount > 99
+                {conversation.adminUnreadCount > 99
                   ? "99+"
-                  : conversation.unreadCount}
+                  : conversation.adminUnreadCount}
               </span>
             )}
           </div>

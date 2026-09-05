@@ -29,14 +29,9 @@ const constants = {
   OPEN: "open",
   CLOSED: "closed",
 
-  BATCH_SIZE: 20,
-  BLOCK_TIMEOUT: 5000,
-  BATCH_TIMEOUT: 1500,
-  MESSAGE_RETENTION_MS: 60 * 60 * 1000,
+  MESSAGE_RETENTION_MS: 2 * 60 * 60 * 1000,
   CLEANUP_INTERVAL_MS: 5 * 60 * 1000,
-  MESSAGE_STREAM: "chat:messages",
-  CONSUMER_GROUP: "message-workers",
-  CONSUMER_NAME: `worker-${process.pid}`,
+  MESSAGE_CACHE_PREFIX: "chat:message:",
 
   USER_NOT_FOUND: "User not found.",
   INVALID_REFRESH_TOKEN: "Invalid refresh token.",

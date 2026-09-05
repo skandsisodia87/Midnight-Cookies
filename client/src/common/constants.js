@@ -31,6 +31,10 @@ const constants = {
   GUESTS: "guests",
   PENDING: "pending",
 
+  IMAGE: "image",
+  FILE: "file",
+  TEXT: "text",
+
   NEWSLETTER: "newsletter",
   FEATURED_COOKIE: "featured-cookie",
   ANALYTICS: "analytics",

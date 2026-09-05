@@ -65,7 +65,7 @@ const AdminChatList = ({
 
               <p
                 className={`mt-1 truncate text-sm leading-5 ${
-                  conversation?.unreadCount > 0
+                  conversation?.adminUnreadCount > 0
                     ? "font-semibold text-[#1F140F]"
                     : "font-normal text-[#9B8974]"
                 }`}
@@ -82,11 +82,11 @@ const AdminChatList = ({
                 {formatTime(conversation?.lastMessageAt)}
               </span>
 
-              {conversation?.unreadCount > 0 && (
+              {conversation?.adminUnreadCount > 0 && (
                 <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#D98B2B] px-1 text-[10px] font-bold leading-none text-white">
-                  {conversation.unreadCount > 99
+                  {conversation.adminUnreadCount > 99
                     ? "99+"
-                    : conversation.unreadCount}
+                    : conversation.adminUnreadCount}
                 </span>
               )}
             </div>

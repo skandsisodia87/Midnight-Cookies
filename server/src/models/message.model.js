@@ -17,6 +17,12 @@ const messageSchema = new Schema(
       index: true,
     },
 
+    senderRole: {
+      type: String,
+      enum: [constants.USER, constants.ADMIN],
+      required: true,
+    },
+
     message: {
       type: String,
       trim: true,
@@ -37,11 +43,6 @@ const messageSchema = new Schema(
         fileType: String,
       },
     ],
-
-    isRead: {
-      type: Boolean,
-      default: false,
-    },
 
     readAt: {
       type: Date,
