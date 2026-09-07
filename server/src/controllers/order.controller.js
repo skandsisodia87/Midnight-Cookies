@@ -9,12 +9,47 @@ import { sendEmail } from "../services/email.service.js";
 import env from "../config/env.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import constants from "../constants/constants.js";
+import { isValidPaymentSignature } from "./payment.controller.js";
 
 export const createOrder = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
-    const { items, shippingAddress, paymentMethod, notes } = req.body;
+    const {
+      items,
+      shippingAddress,
+      paymentMethod,
+      notes,
+      razorpayOrderId,
+      razorpayPaymentId,
+      razorpaySignature,
+    } = req.body;
+
+    let paymentStatus = constants.PENDING;
+
+    if (paymentMethod === constants.ONLINE) {
+      if (!razorpayOrderId || !razorpayPaymentId || !razorpaySignature) {
+        throw new Error("Razorpay payment details are required");
+      }
+
+      let validSignature = false;
+
+      try {
+        validSignature = isValidPaymentSignature({
+          orderId: razorpayOrderId,
+          paymentId: razorpayPaymentId,
+          signature: razorpaySignature,
+        });
+      } catch {
+        validSignature = false;
+      }
+
+      if (!validSignature) {
+        throw new Error("Invalid Razorpay payment signature");
+      }
+
+      paymentStatus = constants.PAID;
+    }
 
     let totalAmount = 0;
     const orderItems = [];
@@ -84,6 +119,7 @@ export const createOrder = async (req, res) => {
           totalAmount,
           shippingAddress,
           paymentMethod,
+          paymentStatus,
           notes,
         },
       ],

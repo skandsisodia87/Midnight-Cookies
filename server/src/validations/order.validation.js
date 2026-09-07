@@ -39,6 +39,12 @@ export const createOrderSchema = Joi.object({
     "any.required": "Payment method is required",
   }),
 
+  razorpayOrderId: Joi.string().trim().allow(""),
+
+  razorpayPaymentId: Joi.string().trim().allow(""),
+
+  razorpaySignature: Joi.string().trim().allow(""),
+
   notes: Joi.string().allow("").messages({
     "string.base": "Notes must be a string",
   }),

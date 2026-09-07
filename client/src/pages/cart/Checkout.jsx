@@ -55,11 +55,12 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const [notes, setNotes] = useState("");
 
-  const placeOrder = async (items) => {
+  const placeOrder = async (items, paymentData = {}) => {
     const res = await createOrder({
       items,
       shippingAddress: selectedAddress,
       paymentMethod,
+      ...paymentData,
       notes,
     });
 
@@ -124,9 +125,13 @@ export default function CheckoutPage() {
             name: user?.name,
             email: user?.email,
           },
-          handler: async () => {
+          handler: async (paymentResponse) => {
             try {
-              await placeOrder(items);
+              await placeOrder(items, {
+                razorpayOrderId: paymentResponse.razorpay_order_id,
+                razorpayPaymentId: paymentResponse.razorpay_payment_id,
+                razorpaySignature: paymentResponse.razorpay_signature,
+              });
             } catch (error) {
               setError(error.message);
               toast.error(error.message);
