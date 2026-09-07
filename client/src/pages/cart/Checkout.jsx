@@ -2,14 +2,17 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { getAddresses, createOrder } from "../../services/order.service";
+import { createPaymentOrder } from "../../services/payment.service";
 import { getFullAddress } from "../../common/getFullAddress";
 import AddressSection from "../../components/address/AddressSection";
 import useCartStore from "../../store/cartStore";
+import useAuthStore from "../../store/authStore";
 import { emptyCart } from "../../services/cart.service";
 import constants from "../../common/constants";
 
 export default function CheckoutPage() {
   const { cartItems, clearCart, setError } = useCartStore();
+  const { user } = useAuthStore();
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
 
@@ -52,6 +55,30 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const [notes, setNotes] = useState("");
 
+  const placeOrder = async (items) => {
+    const res = await createOrder({
+      items,
+      shippingAddress: selectedAddress,
+      paymentMethod,
+      notes,
+    });
+
+    if (!res?.success) {
+      throw new Error(res?.message || constants.FAILED_TO_PLACE_ORDER);
+    }
+
+    setOrderResponse(res.order ?? res.data ?? null);
+    setOrderPlaced(true);
+    toast.success(res.message || "Order placed successfully");
+
+    timeoutRef.current = setTimeout(() => {
+      navigate(constants.ROUTES.ORDERS);
+    }, 5000);
+
+    clearCart();
+    await emptyCart();
+  };
+
   const handlePlaceOrder = async () => {
     if (!hasItems) {
       toast.error("Your cart is empty");
@@ -63,6 +90,8 @@ export default function CheckoutPage() {
       return;
     }
 
+    let paymentStarted = false;
+
     try {
       setOrdering(true);
       setError(null);
@@ -73,28 +102,48 @@ export default function CheckoutPage() {
         quantity: it.quantity,
       }));
 
-      const body = {
-        items,
-        shippingAddress: selectedAddress,
-        paymentMethod,
-        notes,
-      };
+      if (paymentMethod === "ONLINE") {
+        if (!window.Razorpay) {
+          throw new Error("Online payment is unavailable. Please refresh and try again.");
+        }
 
-      const res = await createOrder(body);
+        const paymentResponse = await createPaymentOrder(total);
 
-      if (res?.success) {
-        setOrderResponse(res.order ?? res.data ?? null);
-        setOrderPlaced(true);
-        toast.success(res.message || "Order placed successfully");
+        if (!paymentResponse?.success || !paymentResponse.order?.id) {
+          throw new Error("Unable to start online payment");
+        }
 
-        timeoutRef.current = setTimeout(() => {
-          navigate(constants.ROUTES.ORDERS);
-        }, 5000);
+        const razorpay = new window.Razorpay({
+          key: paymentResponse.key,
+          amount: paymentResponse.order.amount,
+          currency: paymentResponse.order.currency,
+          name: "Midnight Cookies",
+          description: "Cookie order payment",
+          order_id: paymentResponse.order.id,
+          prefill: {
+            name: user?.name,
+            email: user?.email,
+          },
+          handler: async () => {
+            try {
+              await placeOrder(items);
+            } catch (error) {
+              setError(error.message);
+              toast.error(error.message);
+            } finally {
+              setOrdering(false);
+            }
+          },
+          modal: {
+            ondismiss: () => setOrdering(false),
+          },
+        });
 
-        clearCart();
-        await emptyCart();
+        paymentStarted = true;
+        razorpay.open();
+        return;
       } else {
-        toast.error(res?.message || constants.FAILED_TO_PLACE_ORDER);
+        await placeOrder(items);
       }
     } catch (error) {
       setError(
@@ -104,7 +153,7 @@ export default function CheckoutPage() {
         error.response?.data?.message || constants.FAILED_TO_PLACE_ORDER,
       );
     } finally {
-      setOrdering(false);
+      if (!paymentStarted) setOrdering(false);
     }
   };
 
@@ -190,7 +239,7 @@ export default function CheckoutPage() {
 
               <div
                 onClick={() => setPaymentMethod("ONLINE")}
-                className={`border rounded-3xl p-5 cursor-pointer transition ${paymentMethod === "online" ? "border-[#D98B2B]" : "border-gray-200 hover:border-[#D98B2B]"}`}
+                className={`border rounded-3xl p-5 cursor-pointer transition ${paymentMethod === "ONLINE" ? "border-[#D98B2B]" : "border-gray-200 hover:border-[#D98B2B]"}`}
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -206,7 +255,7 @@ export default function CheckoutPage() {
                   <input
                     type="radio"
                     checked={paymentMethod === "ONLINE"}
-                    onChange={() => setPaymentMethod("online")}
+                    onChange={() => setPaymentMethod("ONLINE")}
                     className="w-5 h-5 accent-[#D98B2B]"
                   />
                 </div>

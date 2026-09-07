@@ -63,6 +63,7 @@ import adminRoutes from "./routes/admin.routes.js";
 import chatRoutes from "./routes/chat.routes.js";
 import categoryRoutes from "./routes/category.routes.js";
 import chatSocket from "./socket/chat.socket.js";
+import paymentRoutes from "./routes/payment.routes.js";
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/cookie", cookieRoutes);
@@ -75,5 +76,6 @@ app.use("/api/v1/contact", contactRoutes);
 app.use("/api/v1/newsletter", newsletterRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1", chatRoutes);
+app.use("/api/v1/payment", paymentRoutes);
 
 export { app, server };

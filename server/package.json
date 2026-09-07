@@ -28,6 +28,7 @@
     "mongoose-paginate-v2": "^1.9.5",
     "multer": "^2.2.0",
     "nodemailer": "^9.0.1",
+    "razorpay": "^2.9.8",
     "slugify": "^1.6.9",
     "socket.io": "^4.8.3"
   },
