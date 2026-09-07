@@ -1,24 +1,15 @@
-const categories = [
-  {
-    title: "Chocolate",
-    image:
-      "https://res.cloudinary.com/dvxwaltk8/image/upload/v1778474022/double_choco-chip_nl8ho9.jpg",
-  },
-
-  {
-    title: "Oreo",
-    image:
-      "https://res.cloudinary.com/dvxwaltk8/image/upload/v1778477269/oreo-dream_ktf5ba.png",
-  },
-
-  {
-    title: "Premium",
-    image:
-      "https://res.cloudinary.com/dvxwaltk8/image/upload/v1778476344/red-velvet-cookie_yupu07.png",
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { getActiveCategories } from "../../services/category.service";
 
 const Categories = () => {
+  const { data } = useQuery({
+    queryKey: ["active-categories"],
+    queryFn: getActiveCategories,
+    staleTime: 60 * 60 * 1000,
+  });
+
+  const categories = data?.categories ?? [];
+
   return (
     <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-white">
       <div className="max-w-7xl mx-auto">
@@ -33,9 +24,9 @@ const Categories = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
-          {categories.map((category, index) => (
+          {categories.map((category) => (
             <div
-              key={index}
+              key={category._id}
               className="
                 relative
                 overflow-hidden
@@ -50,7 +41,7 @@ const Categories = () => {
             >
               <img
                 src={category.image}
-                alt={category.title}
+                alt={category.name}
                 className="
                   w-full
                   h-full
@@ -74,7 +65,7 @@ const Categories = () => {
                 "
               >
                 <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
-                  {category.title}
+                  {category.name}
                 </h3>
               </div>
             </div>

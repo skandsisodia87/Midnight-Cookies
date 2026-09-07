@@ -9,3 +9,8 @@ export const getCookieReviews = async (cookieId) => {
   const response = await api.get(`/review/${cookieId}`);
   return response.data?.reviews ?? [];
 };
+
+export const getTestimonials = async () => {
+  const response = await api.get("/review/testimonials");
+  return response.data?.reviews ?? [];
+};

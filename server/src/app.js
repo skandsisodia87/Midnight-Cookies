@@ -61,10 +61,12 @@ import contactRoutes from "./routes/contact.routes.js";
 import newsletterRoutes from "./routes/newsletter.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import chatRoutes from "./routes/chat.routes.js";
+import categoryRoutes from "./routes/category.routes.js";
 import chatSocket from "./socket/chat.socket.js";
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/cookie", cookieRoutes);
+app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/orders", orderRoutes);
 app.use("/api/v1/review", reviewRoutes);
 app.use("/api/v1/cart", cartRoutes);

@@ -83,13 +83,69 @@ export const updateCategory = asyncHandler(async (req, res) => {
 });
 
 export const getCategories = asyncHandler(async (req, res) => {
-  const categories = await Category.find({}).select(
-    "name slug description image isDefault isActive",
-  ).sort({ createdAt: 1 });
+  const categories = await Category.find({})
+    .select("name slug description image isDefault isActive")
+    .sort({ createdAt: 1 });
 
   return res.status(200).json({
     success: true,
     message: "Categories fetched successfully.",
+    categories,
+  });
+});
+
+export const getActiveCategories = asyncHandler(async (_req, res) => {
+  const categories = await Category.aggregate([
+    {
+      $match: {
+        isActive: true,
+      },
+    },
+    {
+      $lookup: {
+        from: "cookies",
+        let: { categoryId: "$_id" },
+        pipeline: [
+          {
+            $match: {
+              $expr: { $eq: ["$category", "$$categoryId"] },
+              isActive: true,
+              isDeleted: false,
+            },
+          },
+          { $limit: 1 },
+        ],
+        as: "cookies",
+      },
+    },
+    {
+      $match: {
+        "cookies.0": { $exists: true },
+      },
+    },
+    {
+      $project: {
+        name: 1,
+        slug: 1,
+        description: 1,
+        image: 1,
+        isDefault: 1,
+        isActive: 1,
+        sortOrder: 1,
+        createdAt: 1,
+      },
+    },
+    {
+      $sort: {
+        sortOrder: 1,
+        createdAt: 1,
+      },
+    },
+  ]);
+
+  return res.status(200).json({
+    success: true,
+    message: "Active categories fetched successfully.",
     categories,
   });
 });

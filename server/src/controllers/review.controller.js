@@ -72,6 +72,19 @@ export const getCookieReviews = asyncHandler(async (req, res) => {
   });
 });
 
+export const getTestimonials = asyncHandler(async (_req, res) => {
+  const reviews = await Review.find({ review: { $exists: true, $ne: "" } })
+    .populate("userId", "name")
+    .populate("cookieId", "name")
+    .sort({ createdAt: -1 })
+    .limit(5);
+
+  return res.status(200).json({
+    success: true,
+    reviews,
+  });
+});
+
 export const deleteReview = asyncHandler(async (req, res) => {
   const { id } = req.params;
 

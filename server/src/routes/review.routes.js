@@ -3,6 +3,7 @@ import verifyJWT from "../middleware/auth.middleware.js";
 import {
   createReview,
   getCookieReviews,
+  getTestimonials,
   deleteReview,
 } from "../controllers/review.controller.js";
 import {
@@ -13,6 +14,7 @@ import constants from "../constants/constants.js";
 
 const router = express.Router();
 
+router.get("/testimonials", getTestimonials);
 router.get("/:cookieId", validateObjectId("cookieId"), getCookieReviews);
 
 router.post("/", verifyJWT, validateUserRole(constants.USER), createReview);
