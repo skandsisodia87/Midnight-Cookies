@@ -14,6 +14,7 @@ import Payment from "../../components/admin/settings/Payment";
 import General from "../../components/admin/settings/General";
 import Shipping from "../../components/admin/settings/Shipping";
 import Security from "../../components/admin/settings/Security";
+import DeliveryAgents from "../../components/admin/settings/DeliveryAgents";
 
 const settingsSections = [
   {
@@ -44,6 +45,11 @@ const settingsSections = [
   {
     id: "shipping",
     label: "Shipping",
+    icon: FiTruck,
+  },
+  {
+    id: "delivery-agents",
+    label: "Delivery Agents",
     icon: FiTruck,
   },
 ];
@@ -104,6 +110,9 @@ export default function Settings() {
 
       case "shipping":
         return <Shipping settings={settings} handleChange={handleChange} />;
+
+      case "delivery-agents":
+        return <DeliveryAgents />;
 
       default:
         return <General settings={settings} handleChange={handleChange} />;

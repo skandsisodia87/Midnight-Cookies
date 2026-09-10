@@ -137,6 +137,30 @@ const orderSchema = new Schema(
       default: constants.PLACED,
     },
     shippingAddress: shippingAddressSchema,
+    deliveryAgent: {
+      type: Schema.Types.ObjectId,
+      ref: "DeliveryAgent",
+      default: null,
+    },
+    deliveryTrackingNumber: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    expectedDeliveryDate: {
+      type: String,
+      default: "",
+    },
+    deliverySlot: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    deliveryInstructions: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     notes: {
       type: String,
     },

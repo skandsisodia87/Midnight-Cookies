@@ -1,6 +1,8 @@
 import env from "../../config/env.js";
 import constants from "../../constants/constants.js";
 import Order from "../../models/order.model.js";
+import User from "../../models/user.model.js";
+import DeliveryAgent from "../../models/deliveryAgent.model.js";
 import { sendEmail } from "../../services/email.service.js";
 import { orderStatusEmailTemplate } from "../../templates/orderEmailTemplate.js";
 import asyncHandler from "../../utils/asyncHandler.js";
@@ -130,10 +132,8 @@ export const getOrder = asyncHandler(async (req, res) => {
 
   const order = await Order.findById(id).populate({
     path: "userId",
-    select: {
-      name: 1,
-    },
-  });
+    select: "name email phone",
+  }).populate("deliveryAgent");
 
   if (!order) {
     return res.status(404).json({ success: false, message: "No order found" });
@@ -142,6 +142,95 @@ export const getOrder = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json({ success: true, message: "Order fetched successfully", order });
+});
+
+export const updateOrder = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const {
+    shippingAddress,
+    deliveryAgent,
+    deliveryTrackingNumber,
+    expectedDeliveryDate,
+    deliverySlot,
+    deliveryInstructions,
+    notes,
+    orderStatus,
+  } = req.body;
+
+  const order = await Order.findById(id);
+
+  if (!order) {
+    return res.status(404).json({
+      success: false,
+      message: constants.ORDER_NOT_FOUND,
+    });
+  }
+
+  if (
+    order.orderStatus === constants.DELIVERED ||
+    order.orderStatus === constants.CANCELLED
+  ) {
+    return res.status(400).json({
+      success: false,
+      message: "Finalized orders cannot be updated",
+    });
+  }
+
+  if (shippingAddress) {
+    order.shippingAddress = {
+      ...(order.shippingAddress?.toObject?.() || {}),
+      ...shippingAddress,
+    };
+  }
+
+  if (deliveryAgent !== undefined) {
+    if (deliveryAgent) {
+      const assignedAgent = await DeliveryAgent.findOne({
+        _id: deliveryAgent,
+        isActive: true,
+        isDeleted: false,
+      });
+
+      if (!assignedAgent) {
+        return res.status(400).json({
+          success: false,
+          message: "Selected delivery agent is unavailable",
+        });
+      }
+    }
+
+    order.deliveryAgent = deliveryAgent || null;
+  }
+  if (deliveryTrackingNumber !== undefined) {
+    order.deliveryTrackingNumber = deliveryTrackingNumber;
+  }
+  if (expectedDeliveryDate !== undefined) {
+    order.expectedDeliveryDate = expectedDeliveryDate;
+  }
+  if (deliverySlot !== undefined) order.deliverySlot = deliverySlot;
+  if (deliveryInstructions !== undefined) {
+    order.deliveryInstructions = deliveryInstructions;
+  }
+
+  if (typeof notes === "string") order.notes = notes;
+
+  if (orderStatus && orderStatus !== order.orderStatus) {
+    if (!Object.values(constants).includes(orderStatus)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid order status",
+      });
+    }
+    order.orderStatus = orderStatus;
+  }
+
+  await order.save();
+
+  return res.status(200).json({
+    success: true,
+    message: "Order updated successfully",
+    order,
+  });
 });
 
 export const deleteOrder = asyncHandler(async (req, res) => {

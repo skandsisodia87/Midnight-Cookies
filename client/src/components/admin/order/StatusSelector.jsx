@@ -8,54 +8,59 @@ import {
 } from "react-icons/fi";
 
 const STATUS_OPTIONS = [
-  "Placed",
-  "Confirmed",
-  "Baking",
-  "Out for Delivery",
-  "Delivered",
-  "Cancelled",
+  { value: "placed", label: "Placed" },
+  { value: "confirmed", label: "Confirmed" },
+  { value: "baking", label: "Baking" },
+  { value: "shipped", label: "Out for Delivery" },
+  { value: "delivered", label: "Delivered" },
+  { value: "cancelled", label: "Cancelled" },
 ];
 
 const STATUS_STEPS = [
   {
+    value: "placed",
     label: "Placed",
     icon: FiPackage,
   },
   {
+    value: "confirmed",
     label: "Confirmed",
     icon: FiCheckCircle,
   },
   {
+    value: "baking",
     label: "Baking",
     icon: FiCoffee,
   },
   {
+    value: "shipped",
     label: "Out for Delivery",
     icon: FiTruck,
   },
   {
+    value: "delivered",
     label: "Delivered",
     icon: FiHome,
   },
 ];
 
 const badgeColor = {
-  Placed: "bg-blue-100 text-blue-700",
+  placed: "bg-blue-100 text-blue-700",
 
-  Confirmed: "bg-yellow-100 text-yellow-700",
+  confirmed: "bg-yellow-100 text-yellow-700",
 
-  Baking: "bg-orange-100 text-orange-700",
+  baking: "bg-orange-100 text-orange-700",
 
-  "Out for Delivery": "bg-purple-100 text-purple-700",
+  shipped: "bg-purple-100 text-purple-700",
 
-  Delivered: "bg-green-100 text-green-700",
+  delivered: "bg-green-100 text-green-700",
 
-  Cancelled: "bg-red-100 text-red-700",
+  cancelled: "bg-red-100 text-red-700",
 };
 
 const StatusSelector = ({ order, setOrder }) => {
   const currentIndex = STATUS_STEPS.findIndex(
-    (step) => step.label === order.status,
+    (step) => step.value === order.status,
   );
 
   return (
@@ -99,8 +104,8 @@ const StatusSelector = ({ order, setOrder }) => {
             className="w-full rounded-xl border border-[#E7D8C9] px-4 py-3 outline-none focus:border-[#A15C38]"
           >
             {STATUS_OPTIONS.map((status) => (
-              <option key={status} value={status}>
-                {status}
+              <option key={status.value} value={status.value}>
+                {status.label}
               </option>
             ))}
           </select>
@@ -108,7 +113,7 @@ const StatusSelector = ({ order, setOrder }) => {
 
         {/* Timeline */}
 
-        {order.status !== "Cancelled" ? (
+        {order.status !== "cancelled" ? (
           <div className="space-y-5">
             {STATUS_STEPS.map((step, index) => {
               const Icon = step.icon;

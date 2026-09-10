@@ -74,6 +74,36 @@ export const getOrders = async () => {
   return response.data;
 };
 
+export const getAdminOrder = async (orderId) => {
+  const response = await api.get(`/admin/orders/${orderId}`);
+  return response.data;
+};
+
+export const updateAdminOrder = async ({ orderId, payload }) => {
+  const response = await api.patch(`/admin/orders/${orderId}`, payload);
+  return response.data;
+};
+
+export const getDeliveryAgents = async () => {
+  const response = await api.get("/admin/delivery-agents");
+  return response.data;
+};
+
+export const createDeliveryAgent = async (payload) => {
+  const response = await api.post("/admin/delivery-agents", payload);
+  return response.data;
+};
+
+export const updateDeliveryAgent = async ({ agentId, payload }) => {
+  const response = await api.patch(`/admin/delivery-agents/${agentId}`, payload);
+  return response.data;
+};
+
+export const deleteDeliveryAgent = async (agentId) => {
+  const response = await api.delete(`/admin/delivery-agents/${agentId}`);
+  return response.data;
+};
+
 export const getCategories = async () => {
   const response = await api.get("/admin/categories");
   return response.data;

@@ -20,6 +20,9 @@ const NotFound = lazy(() => import("./pages/misc/NotFound"));
 
 const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
 const AdminOrders = lazy(() => import("./pages/admin/Orders"));
+const AdminOrderDetails = lazy(() =>
+  import("./pages/admin/AdminOrderDetails"),
+);
 const Customers = lazy(() => import("./pages/admin/Customers"));
 const Products = lazy(() => import("./pages/admin/Products"));
 const Categories = lazy(() => import("./pages/admin/Categories"));
@@ -127,6 +130,10 @@ const App = () => {
           <Route element={<AdminLayout />}>
             <Route path={routes.ADMIN.DASHBOARD} element={<Dashboard />} />
             <Route path={routes.ADMIN.ORDERS} element={<AdminOrders />} />
+            <Route
+              path={routes.ADMIN.ORDER_DETAILS}
+              element={<AdminOrderDetails />}
+            />
             <Route path={routes.ADMIN.EDIT_ORDER} element={<EditOrder />} />
             <Route path={routes.ADMIN.CHAT} element={<AdminChatPage />} />
             <Route path={routes.ADMIN.PRODUCTS} element={<Products />} />

@@ -87,7 +87,8 @@ const constants = {
     ADMIN: {
       DASHBOARD: "/admin",
       ORDERS: "/admin/orders",
-      EDIT_ORDER: "/admin/orders/edit",
+      ORDER_DETAILS: "/admin/orders/:orderId",
+      EDIT_ORDER: "/admin/orders/edit/:orderId",
       CHAT: "/admin/chat",
       PRODUCTS: "/admin/products",
       CATEGORIES: "/admin/categories",
@@ -96,6 +97,7 @@ const constants = {
       NEWSLETTER: "/admin/newsletter",
       ANALYTICS: "/admin/analytics",
       SETTINGS: "/admin/settings",
+      DELIVERY_AGENTS: "/admin/delivery-agents",
     },
 
     NOT_FOUND: "*",

@@ -22,8 +22,6 @@ const OrderSummary = ({ order }) => {
 
   return (
     <div className="rounded-2xl border border-[#F3E4D4] bg-white shadow-sm">
-      {/* Header */}
-
       <div className="border-b border-[#F3E4D4] px-6 py-4">
         <h2 className="text-lg font-semibold text-[#4E342E]">Order Summary</h2>
 
@@ -31,8 +29,6 @@ const OrderSummary = ({ order }) => {
       </div>
 
       <div className="space-y-4 p-6">
-        {/* Items */}
-
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <FiShoppingBag className="text-[#A15C38]" />
@@ -42,15 +38,11 @@ const OrderSummary = ({ order }) => {
           <span className="font-semibold">{totalItems}</span>
         </div>
 
-        {/* Subtotal */}
-
         <div className="flex items-center justify-between">
           <span>Subtotal</span>
 
           <span className="font-medium">₹{subtotal}</span>
         </div>
-
-        {/* Discount */}
 
         <div className="flex items-center justify-between text-green-600">
           <div className="flex items-center gap-2">
@@ -61,8 +53,6 @@ const OrderSummary = ({ order }) => {
           <span>- ₹{discount}</span>
         </div>
 
-        {/* Delivery */}
-
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <FiTruck />
@@ -72,15 +62,11 @@ const OrderSummary = ({ order }) => {
           <span>₹{deliveryCharge}</span>
         </div>
 
-        {/* GST */}
-
         <div className="flex items-center justify-between">
           <span>GST (5%)</span>
 
           <span>₹{gst}</span>
         </div>
-
-        {/* Coupon */}
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -93,8 +79,6 @@ const OrderSummary = ({ order }) => {
 
         <hr className="border-[#F3E4D4]" />
 
-        {/* Grand Total */}
-
         <div className="flex items-center justify-between">
           <span className="text-lg font-semibold text-[#4E342E]">
             Grand Total
@@ -103,19 +87,17 @@ const OrderSummary = ({ order }) => {
           <span className="text-2xl font-bold text-[#A15C38]">₹{total}</span>
         </div>
 
-        {/* Payment */}
-
         <div className="rounded-xl bg-[#FFF8F2] p-4">
           <div className="flex items-center gap-2">
             <FiCreditCard className="text-[#A15C38]" />
 
-            <span className="font-medium">{order.payment.method}</span>
+            <span className="font-medium">{order.paymentMethod}</span>
           </div>
 
           <p className="mt-2 text-sm text-gray-500">
             Status :
             <span className="ml-1 font-medium text-green-600">
-              {order.payment.paymentStatus}
+              {order.paymentStatus}
             </span>
           </p>
         </div>

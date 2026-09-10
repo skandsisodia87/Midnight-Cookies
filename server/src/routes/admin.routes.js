@@ -26,6 +26,7 @@ import {
 import {
   getOrders,
   getOrder,
+  updateOrder,
   updateOrderStatus,
   deleteOrder,
 } from "../controllers/admin/order.controller.js";
@@ -60,6 +61,16 @@ import {
 import { getAnalytics } from "../controllers/admin/analytics.controller.js";
 import categorySchema from "../validations/category.validation.js";
 import constants from "../constants/constants.js";
+import {
+  getDeliveryAgents,
+  createDeliveryAgent,
+  updateDeliveryAgent,
+  deleteDeliveryAgent,
+} from "../controllers/admin/deliveryAgent.controller.js";
+import {
+  deliveryAgentSchema,
+  updateDeliveryAgentSchema,
+} from "../validations/deliveryAgent.validation.js";
 
 const router = express.Router();
 
@@ -112,8 +123,19 @@ router
   .route("/orders/:id")
   .all(validateObjectId())
   .get(getOrder)
+  .patch(updateOrder)
   .delete(deleteOrder);
 router.patch("/orders/:id/status", validateObjectId(), updateOrderStatus);
+
+router
+  .route("/delivery-agents")
+  .get(getDeliveryAgents)
+  .post(validate(deliveryAgentSchema), createDeliveryAgent);
+router
+  .route("/delivery-agents/:id")
+  .all(validateObjectId())
+  .patch(validate(updateDeliveryAgentSchema), updateDeliveryAgent)
+  .delete(deleteDeliveryAgent);
 
 router.get("/customers", getCustomers);
 router

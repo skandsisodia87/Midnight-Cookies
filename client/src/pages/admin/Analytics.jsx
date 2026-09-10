@@ -1,18 +1,12 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import {
-  LineChart,
-  Line,
   BarChart,
   Bar,
-  PieChart,
-  Pie,
-  Cell,
   ResponsiveContainer,
   Tooltip,
   CartesianGrid,
   XAxis,
   YAxis,
-  Legend,
 } from "recharts";
 
 import {
