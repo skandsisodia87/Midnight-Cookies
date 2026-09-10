@@ -55,7 +55,7 @@ const Navbar = () => {
   return (
     <>
       <nav className="sticky top-0 z-50 bg-[#1F140F] px-6 py-4 text-white shadow-lg">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
+        <div className="mx-auto flex max-w-[90%] items-center justify-between">
           <div className="flex items-center gap-3">
             <button
               type="button"

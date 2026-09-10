@@ -1,7 +1,7 @@
 const CookieDetailsSkeleton = () => {
   return (
     <div className="min-h-screen bg-[#FFF6EC] px-4 sm:px-6 lg:px-8 py-8 sm:py-12 animate-pulse">
-      <div className="max-w-7xl mx-auto space-y-12">
+      <div className="max-w-[90%] mx-auto space-y-12">
         <div className="flex items-center gap-2">
           <div className="h-4 w-16 bg-amber-200/50 rounded-full" />
           <div className="h-4 w-3 bg-amber-200/40 rounded-full" />

@@ -207,7 +207,7 @@ const Newsletter = () => {
 
   return (
     <div className="pb-4">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-[90%]">
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="flex items-center gap-3">

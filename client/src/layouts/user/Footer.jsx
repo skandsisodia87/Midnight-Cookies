@@ -7,7 +7,7 @@ const Footer = () => {
   const { isAuthenticated } = useAuthStore();
   return (
     <footer className="bg-[#1F140F] text-white pt-20 pb-10 px-6">
-      <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-10">
+      <div className="max-w-[90%] mx-auto grid md:grid-cols-4 gap-10">
         <div>
           <h2 className="text-3xl font-bold bg-linear-to-r from-[#D98B2B] via-yellow-400 to-[#D98B2B] bg-clip-text text-transparent">
             {constants.APPICATION_NAME}

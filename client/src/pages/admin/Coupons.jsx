@@ -136,7 +136,7 @@ const Coupon = () => {
 
   return (
     <div className="">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-[90%]">
         <CouponHeader onCreate={openCreateModal} />
 
         <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">

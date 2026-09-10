@@ -13,7 +13,7 @@ const HeroSection = () => {
 
   return (
     <section className="relative bg-[#1F140F] text-white py-16 lg:py-20 px-5 sm:px-6 overflow-visible">
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+      <div className="max-w-[90%] mx-auto grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}

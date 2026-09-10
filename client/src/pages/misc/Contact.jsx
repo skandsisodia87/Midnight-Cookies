@@ -43,7 +43,7 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen bg-[#FFF6EC] py-16 px-4 md:px-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-[90%] mx-auto">
         <div className="text-center">
           <h1 className="text-5xl font-bold text-[#2B1D16]">Contact Us 🍪</h1>
 

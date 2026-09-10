@@ -30,7 +30,7 @@ const Cookies = () => {
 
   return (
     <div className='min-h-screen bg-[#FFF6EC] px-6 py-12'>
-      <div className='max-w-7xl mx-auto'>
+      <div className='max-w-[90%] mx-auto'>
         {/* Heading */}
         <div className='text-center mb-16'>
           <h1 className='text-5xl md:text-6xl font-bold text-[#2B1D16]'>

@@ -1,13 +1,10 @@
+import env from "../config/env.js";
 import razorpay from "../config/razorpay.js";
 import crypto from "crypto";
 
-export const isValidPaymentSignature = ({
-  orderId,
-  paymentId,
-  signature,
-}) => {
+export const isValidPaymentSignature = ({ orderId, paymentId, signature }) => {
   const expectedSignature = crypto
-    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+    .createHmac("sha256", env.RAZORPAY_KEY_SECRET)
     .update(`${orderId}|${paymentId}`)
     .digest("hex");
 
@@ -39,7 +36,7 @@ export const createPaymentOrder = async (req, res) => {
     return res.status(201).json({
       success: true,
       order,
-      key: process.env.RAZORPAY_KEY_ID,
+      key: env.RAZORPAY_KEY_ID,
     });
   } catch (error) {
     console.error("Razorpay order error:", error);

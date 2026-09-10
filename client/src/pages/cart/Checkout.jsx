@@ -195,7 +195,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen bg-[#FFF6EC] py-10 px-4 md:px-8">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="max-w-[90%] mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
           <div>
             <h1 className="text-4xl font-bold text-[#2B1D16]">Checkout 🍪</h1>

@@ -43,7 +43,7 @@ const FeaturedCookies = () => {
       id="featured-cookies"
       className="bg-[#FFF6EC] lg:pt-24 pt-12 pb-24 px-5 sm:px-6"
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-[90%] mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#2B1D16]">
             Featured Cookies

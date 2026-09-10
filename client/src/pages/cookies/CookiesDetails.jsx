@@ -341,7 +341,7 @@ const CookieDetails = () => {
 
   return (
     <div className="min-h-screen bg-[#FFF6EC] text-[#2B1D16] selection:bg-amber-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2">
+      <div className="max-w-[90%] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2">
         <div className="flex flex-wrap items-center justify-between gap-4 py-3 border-b border-amber-200/50">
           <nav className="flex items-center gap-2 text-xs sm:text-sm font-medium text-amber-900/70 overflow-x-auto whitespace-nowrap py-1">
             <Link
@@ -369,7 +369,7 @@ const CookieDetails = () => {
               </>
             )}
             <FiChevronRight className="text-amber-400 shrink-0" size={14} />
-            <span className="text-[#2B1D16] font-semibold truncate max-w-[160px] sm:max-w-xs">
+            <span className="text-[#2B1D16] font-semibold truncate max-w-40 sm:max-w-xs">
               {cookie.name}
             </span>
           </nav>
@@ -386,7 +386,7 @@ const CookieDetails = () => {
         </div>
       </div>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+      <main className="max-w-[90%] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start">
 
           <div className="lg:col-span-6 lg:sticky lg:top-24 space-y-4">
@@ -506,7 +506,7 @@ const CookieDetails = () => {
               </p>
             </div>
 
-            <div className="bg-gradient-to-r from-amber-500/10 via-amber-200/20 to-transparent p-4 sm:p-5 rounded-3xl border border-amber-200/70 space-y-1">
+            <div className="bg-linear-to-r from-amber-500/10 via-amber-200/20 to-transparent p-4 sm:p-5 rounded-3xl border border-amber-200/70 space-y-1">
               <div className="flex items-baseline gap-3 sm:gap-4 flex-wrap">
                 <span className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#D98B2B]">
                   ₹{discountPrice}
@@ -844,7 +844,7 @@ const CookieDetails = () => {
                     How To Enjoy Warm & Molten
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-[#FFF6EC] border border-amber-200">
+                    <div className="p-5 rounded-2xl bg-linear-to-br from-amber-50 to-[#FFF6EC] border border-amber-200">
                       <span className="text-2xl mb-2 block">
                         ⚡ Microwave (Recommended)
                       </span>
@@ -855,7 +855,7 @@ const CookieDetails = () => {
                       </p>
                     </div>
 
-                    <div className="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-[#FFF6EC] border border-amber-200">
+                    <div className="p-5 rounded-2xl bg-linear-to-br from-amber-50 to-[#FFF6EC] border border-amber-200">
                       <span className="text-2xl mb-2 block">
                         ♨️ Oven / Air Fryer
                       </span>
@@ -1026,7 +1026,7 @@ const CookieDetails = () => {
                   <div>
                     <div className="flex items-center justify-between gap-3 mb-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                        <div className="w-10 h-10 rounded-full bg-linear-to-br from-amber-400 to-amber-600 text-white flex items-center justify-center font-bold text-sm shadow-sm">
                           {review?.userId?.name?.charAt(0)?.toUpperCase() ||
                             "U"}
                         </div>
@@ -1124,7 +1124,7 @@ const CookieDetails = () => {
       </main>
 
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-amber-200 px-4 py-3 shadow-[0_-8px_30px_rgba(0,0,0,0.08)]">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+        <div className="max-w-[90%] mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
             <img
               src={images[0] || placeholderCookie}

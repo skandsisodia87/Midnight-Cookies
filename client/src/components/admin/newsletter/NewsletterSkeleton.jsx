@@ -7,7 +7,7 @@ const Skeleton = ({ className = "" }) => {
 const NewsletterSkeleton = () => {
   return (
     <div className="pb-4">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-[90%]">
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <Skeleton className="h-11 w-11 rounded-xl" />

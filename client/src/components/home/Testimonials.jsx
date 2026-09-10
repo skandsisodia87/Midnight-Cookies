@@ -15,7 +15,7 @@ const Testimonials = () => {
 
   return (
     <section className="bg-[#FFF6EC] py-12 sm:py-16 lg:py-24 px-4 sm:px-6">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-[90%] mx-auto">
         <div className="text-center mb-10 sm:mb-12 lg:mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#2B1D16]">
             What Our Customers Say
