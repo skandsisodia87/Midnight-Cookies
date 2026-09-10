@@ -2,150 +2,142 @@
 
 Freshly baked cookies delivered to your doorstep.
 
----
-
-## 📌 Project Overview
-
-**Midnight Cookies** is a full-stack cookie ordering web application where users can browse different types of cookies, add products to cart, and place orders online.
-
-The platform includes:
-
-- Customer-facing cookie store
-- Shopping cart & checkout system
-- User authentication
-- Order management
-- Admin dashboard for managing products and orders
-
-This project is built using **React**, **Node.js**, **Express.js**, and **MongoDB**.
+Midnight Cookies is a full-stack e-commerce application for browsing cookie products, adding items to cart, placing orders, and managing store operations through an admin dashboard.
 
 ---
 
-# 🚀 Features
+## Project Overview
 
-## 👤 User Features
+This project combines:
 
-- Browse all cookies
-- View cookie details
-- Add/remove items from cart
-- Place orders
-- User authentication
-- View order history
-- Responsive design for mobile and desktop
+- A React + Vite frontend for the customer experience
+- A Node.js + Express backend with REST APIs
+- MongoDB for persistent data storage
+- Redis for queue-related background processing
+- Socket.IO for real-time chat support
+- Razorpay integration for online payments
 
-## 🛠️ Admin Features
-
-- Admin login
-- Add/Edit/Delete cookies
-- Manage customer orders
-- Update order status
-- Manage inventory
+The platform supports both customer and admin flows, including authentication, catalog browsing, checkout, order management, newsletter subscription, and live chat.
 
 ---
 
-# 🧑‍💻 Tech Stack
+## Features
 
-## Frontend
+### Customer Features
 
-- React
+- Browse cookie catalog and categories
+- View individual cookie details and variants
+- Add or remove items from cart
+- Manage addresses and checkout details
+- Place orders with payment integration
+- Track order status
+- Review products
+- Subscribe to newsletter
+- Contact the store
+- Real-time chat support
+- Secure authentication with JWT and refresh tokens
+
+### Admin Features
+
+- Admin-only routes and middleware
+- Manage cookies and categories
+- View and update customer orders
+- Manage inventory and product variants
+- Monitor sales and dashboard data
+- Handle customer inquiries and chat conversations
+- Review newsletter subscriptions
+
+---
+
+## Tech Stack
+
+### Frontend
+
+- React 19
+- Vite
 - React Router
-- Material UI / Tailwind CSS
+- Zustand
+- TanStack Query
+- Tailwind CSS
+- Framer Motion
+- Recharts
+- Socket.IO Client
 - Axios
 
-## Backend
+### Backend
 
 - Node.js
 - Express.js
-
-## Database
-
-- MongoDB
-- Mongoose
-
-## Authentication
-
+- MongoDB + Mongoose
+- Redis
 - JWT Authentication
-
-## Deployment
-
-- Frontend: Vercel
-- Backend: Render / Railway
-- Database: MongoDB Atlas
+- Socket.IO
+- Razorpay
+- Nodemailer
+- Cloudinary
+- Multer
 
 ---
 
-# 📂 Project Structure
+## Project Structure
 
 ```bash
 Midnight-Cookies/
-│
-├── client/                 # React Frontend
-│   ├── src/
+├── client/                         # Frontend app
 │   ├── public/
-│   └── package.json
+│   ├── src/
+│   ├── .env
+│   ├── index.html
+│   ├── package.json
+│   └── vite.config.js
 │
-├── server/                 # Node.js Backend
-│   ├── controllers/
-│   ├── middleware/
-│   ├── models/
-│   ├── routes/
-│   ├── config/
-│   └── package.json
+├── server/                         # Backend API + services
+│   ├── src/
+│   ├── .env
+│   ├── package.json
+│   └── public/
 │
-└── README.md
+├── README.md
+└── .gitignore
 ```
 
 ---
 
-# 🗃️ Database Collections
+## Core Backend Modules
 
-## Cookies
+The server application is organized into the following domains:
 
-Stores all cookie product information.
-
-```js
-{
-  (name, description, price, images, category, stock, ingredients, ratings);
-}
-```
-
-## Users
-
-```js
-{
-  (name, email, password, phone, role);
-}
-```
-
-## Orders
-
-```js
-{
-  (userId, items, totalAmount, paymentStatus, orderStatus, shippingAddress);
-}
-```
+- `auth` — signup, login, password reset, JWT handling
+- `cookie` — product catalog and category management
+- `cart` — cart operations and persistence
+- `address` — user delivery addresses
+- `order` — order placement and status updates
+- `payment` — Razorpay order creation and signature verification
+- `review` — customer ratings and reviews
+- `newsletter` — newsletter signup and verification
+- `contact` — contact form submissions
+- `chat` — real-time messaging support
+- `admin` — admin dashboard and management endpoints
 
 ---
 
-# ⚙️ Installation & Setup
+## Local Setup
 
-## 1️⃣ Clone Repository
+### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/midnight-cookies.git
+git clone <your-repository-url>
+cd Midnight-Cookies
 ```
 
----
-
-## 2️⃣ Install Frontend Dependencies
+### 2. Install frontend dependencies
 
 ```bash
 cd client
 npm install
 ```
 
----
-
-## 3️⃣ Install Backend Dependencies
+### 3. Install backend dependencies
 
 ```bash
 cd ../server
@@ -154,136 +146,186 @@ npm install
 
 ---
 
-# 🔐 Environment Variables
+## Environment Variables
 
-Create a `.env` file inside the `server` folder.
-
-```env
-PORT = 3000
-MONGO_URI = your_mongodb_connection_string
-ACCESS_TOKEN_SECRET = your_access_token_secret
-ACCESS_TOKEN_EXPIRY = 15m
-REFRESH_TOKEN_SECRET = your_refresh_token_secret
-REFRESH_TOKEN_EXPIRY = 7d
-EMAIL_USER = sender_email
-EMAIL_PASS = app_password
-CLIENT_URL = client_uri
-NODE_ENV = develop
-```
-
-Create a `.env` file inside the `client` folder.
+Create a `.env` file in the `server` folder with the following variables:
 
 ```env
-VITE_API_URL=your_api_endpoint
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+ACCESS_TOKEN_SECRET=your_access_token_secret
+ACCESS_TOKEN_EXPIRY=15m
+REFRESH_TOKEN_SECRET=your_refresh_token_secret
+REFRESH_TOKEN_EXPIRY=7d
+EMAIL_USER=your_email_address
+EMAIL_PASS=your_email_app_password
+CLIENT_URL=http://localhost:5173
+NODE_ENV=develop
+
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+
+REDIS_HOST=localhost
+REDIS_PORT=6379
+
+RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_key_secret
 ```
+
+Create a `.env` file in the `client` folder:
+
+```env
+VITE_API_URL=http://localhost:5000
+```
+
+> Make sure MongoDB, Redis, and your configured email/payment credentials are available before starting the app.
 
 ---
 
-# ▶️ Run Project
+## Run the Project
 
-## Run Backend
+### Start the backend
+
+```bash
+cd server
+npm run server
+```
+
+### Start the frontend
+
+```bash
+cd client
+npm run dev
+```
+
+### Run both together from the server folder
 
 ```bash
 cd server
 npm run dev
 ```
 
-## Run Frontend
+This script uses `concurrently` to start the backend, cron worker, and frontend in one command.
+
+---
+
+## Available Scripts
+
+### Client
 
 ```bash
 cd client
-npm start
+npm run dev      # start Vite dev server
+npm run build    # production build
+npm run preview  # preview production build
+npm run lint     # run ESLint checks
+```
+
+### Server
+
+```bash
+cd server
+npm run server       # start Express server with nodemon
+npm run message-cron # run background message worker
+npm run client       # start frontend from server folder context
+npm run dev          # run server, cron worker, and client concurrently
 ```
 
 ---
 
-# 📦 API Modules
+## API Overview
 
-- Authentication APIs
-- Product APIs
-- Cart APIs
-- Order APIs
-- Admin APIs
+The API is served under `/api/v1` and includes endpoints for:
+
+- Authentication
+- Cookies and Categories
+- Cart
+- Orders and Payment
+- Reviews
+- Addresses
+- Contact
+- Newsletter
+- Admin operations
+- Real-time chat routes
+
+Health check endpoint:
+
+```bash
+GET /api/health
+```
 
 ---
 
-# 🛒 Order Flow
+## Order Flow
 
 ```text
 Browse Cookies
    ↓
 Add to Cart
    ↓
-Checkout
+Add Address and Checkout
+   ↓
+Pay via Razorpay
    ↓
 Place Order
    ↓
-Admin Receives Order
+Admin Reviews and Updates Status
    ↓
-Order Delivered
+Customer Receives Order
 ```
 
 ---
 
-# 📱 Responsive Design
+## Responsive Design
 
-The application is fully responsive and optimized for:
+The application is designed to work smoothly across:
 
-- Mobile Devices
+- Mobile devices
 - Tablets
-- Desktop Screens
+- Desktops
+- Large screens
 
 ---
 
-# 🔮 Future Enhancements
+## Future Enhancements
 
-- Online Payments (Razorpay/Stripe)
-- Coupon System
-- Wishlist Feature
-- Email Notifications
-- SMS Notifications
-- Delivery Tracking
-- Reviews & Ratings
-- Subscription Cookie Boxes
+Potential improvements for the project include:
 
----
-
-# 📸 Screenshots
-
-Add your project screenshots here.
-
-Example:
-
-```md
-![Home Page](./screenshots/home.png)
-```
+- Coupon and discount system
+- Wishlist functionality
+- Better analytics dashboard
+- Delivery tracking
+- SMS notifications
+- More admin reporting tools
+- Product recommendations
 
 ---
 
-# 🤝 Contributing
+## Contributing
 
 Contributions are welcome.
 
 1. Fork the repository
-2. Create a new branch
-3. Commit changes
-4. Push to branch
-5. Create Pull Request
+2. Create a feature branch
+3. Commit your changes
+4. Push the branch
+5. Open a pull request
 
 ---
 
-# 📄 License
+## License
 
 This project is licensed under the MIT License.
 
 ---
 
-# 💡 Author
+## Author
 
 Developed by Skand Sisodia.
 
 ---
 
-# ⭐ Support
+## Support
 
-If you like this project, give it a ⭐ on GitHub.
+If you like this project, give it a star on GitHub.
