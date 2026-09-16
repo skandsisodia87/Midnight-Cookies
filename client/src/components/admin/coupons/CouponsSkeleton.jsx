@@ -1,6 +1,6 @@
 const CouponsSkeleton = () => {
   return (
-    <div className="space-y-6 px-4 sm:px-6 animate-pulse">
+    <div className="space-y-6 pb-5 animate-pulse">
       <div className="rounded-[28px] border border-[#F3E4D4] bg-linear-to-r from-[#FFF7EC] via-white to-[#FFFDF8] p-6 shadow-sm">
         <div className="h-8 w-52 rounded-full bg-slate-200" />
         <div className="mt-4 h-4 w-3/4 rounded-full bg-slate-200" />

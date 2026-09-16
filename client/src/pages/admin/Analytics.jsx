@@ -98,7 +98,7 @@ export default function Analytics() {
 
   if (isLoading) {
     return (
-      <div className="space-y-5 px-3 pb-8 sm:px-4 lg:px-6">
+      <div className="space-y-5 pb-5">
         <div className="h-24 animate-pulse rounded-3xl bg-slate-200" />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -134,7 +134,7 @@ export default function Analytics() {
   }
 
   return (
-    <div className="space-y-5 px-3 pb-8 sm:space-y-6 sm:px-4 lg:px-6">
+    <div className="space-y-5 pb-5 sm:space-y-6">
       <div className="rounded-[28px] border border-[#F3E4D4] bg-linear-to-r from-[#FFF7EC] via-white to-[#FFFDF8] p-4 shadow-sm sm:p-6">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>

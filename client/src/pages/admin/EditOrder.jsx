@@ -128,7 +128,7 @@ const EditOrder = () => {
   const editableOrder = order;
 
   return (
-    <div className="mx-auto w-full max-w-[1700px] py-8">
+    <div className="mx-auto w-full pb-5">
       <div className="mb-8 rounded-3xl border border-[#F3E4D4] p-6 shadow-[0_10px_40px_rgba(0,0,0,0.05)]  bg-white">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-start gap-4">

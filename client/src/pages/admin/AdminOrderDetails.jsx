@@ -43,7 +43,7 @@ const AdminOrderDetails = () => {
   const itemCount = order.items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="space-y-6 py-8">
+    <div className="space-y-6 pb-5">
       <header className="rounded-3xl border border-[#F3E4D4] bg-white p-5 shadow-sm sm:p-7">
         <button
           type="button"

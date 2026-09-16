@@ -54,7 +54,7 @@ const Orders = () => {
   }
 
   return (
-    <div className="space-y-5 sm:space-y-6 p-4">
+    <div className="space-y-5 sm:space-y-6 pb-5">
       <div className="rounded-[28px] border border-[#F3E4D4] bg-linear-to-r from-[#FFF7EC] via-white to-[#FFFDF8] p-4 shadow-sm sm:p-6">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>

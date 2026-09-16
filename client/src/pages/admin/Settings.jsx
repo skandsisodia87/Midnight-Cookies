@@ -124,7 +124,7 @@ export default function Settings() {
   const ActiveIcon = activeItem?.icon || FiShoppingBag;
 
   return (
-    <div className="space-y-5 px-3 pb-8 sm:px-4 lg:px-6">
+    <div className="space-y-5 pb-5">
       <div className="rounded-[28px] border border-[#F3E4D4] bg-linear-to-r from-[#FFF7EC] via-white to-[#FFFDF8] p-4 shadow-sm sm:p-6">
         <h1 className="text-2xl font-bold text-[#4E342E] sm:text-3xl">
           Settings

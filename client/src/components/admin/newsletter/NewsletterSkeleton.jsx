@@ -6,8 +6,8 @@ const Skeleton = ({ className = "" }) => {
 
 const NewsletterSkeleton = () => {
   return (
-    <div className="pb-4">
-      <div className="mx-auto max-w-[90%]">
+    <div className="pb-5">
+      <div className="mx-auto">
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <Skeleton className="h-11 w-11 rounded-xl" />
@@ -51,7 +51,7 @@ const NewsletterSkeleton = () => {
             <Skeleton className="h-4 w-20" />
             <Skeleton className="ml-auto h-4 w-16" />
           </div>
-          
+
           <div>
             {Array.from({ length: 3 }).map((_, index) => (
               <SubscriberSkeletonRow key={index} />
@@ -66,16 +66,10 @@ const NewsletterSkeleton = () => {
   );
 };
 
-/* =========================================
-   SUBSCRIBER ROW SKELETON
-========================================= */
-
 const SubscriberSkeletonRow = () => {
   return (
     <div className="border-b border-[#F1E1D3] px-5 py-4 last:border-b-0">
-      {/* Desktop */}
       <div className="hidden items-center md:grid md:grid-cols-[2fr_1.1fr_1fr_1.1fr_80px] md:gap-4">
-        {/* Subscriber */}
         <div className="flex items-center gap-3">
           <Skeleton className="h-11 w-11 shrink-0 rounded-xl" />
 
@@ -85,23 +79,16 @@ const SubscriberSkeletonRow = () => {
           </div>
         </div>
 
-        {/* Type */}
         <Skeleton className="h-7 w-28 rounded-full" />
-
-        {/* Verification */}
         <Skeleton className="h-7 w-24 rounded-full" />
-
-        {/* Date */}
         <div className="flex items-center gap-2">
           <Skeleton className="h-4 w-4 rounded" />
           <Skeleton className="h-4 w-24" />
         </div>
 
-        {/* Action */}
         <Skeleton className="ml-auto h-10 w-10 rounded-xl" />
       </div>
 
-      {/* Mobile */}
       <div className="flex flex-col gap-4 md:hidden">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

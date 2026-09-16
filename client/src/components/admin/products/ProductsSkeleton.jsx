@@ -1,7 +1,6 @@
 const ProductsSkeleton = () => {
   return (
-    <div className="space-y-6 animate-pulse p-1">
-      {/* Header Skeleton */}
+    <div className="space-y-6 animate-pulse pb-5">
       <div className="rounded-[28px] border border-[#F3E4D4] bg-white p-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="space-y-2">
@@ -12,7 +11,6 @@ const ProductsSkeleton = () => {
         </div>
       </div>
 
-      {/* Stats Skeleton */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[1, 2, 3, 4].map((i) => (
           <div
@@ -31,7 +29,6 @@ const ProductsSkeleton = () => {
         ))}
       </div>
 
-      {/* Table/List Skeleton */}
       <div className="overflow-hidden rounded-3xl border border-[#F3E4D4] bg-white">
         <div className="border-b border-[#F3E4D4] p-5">
           <div className="flex flex-col gap-3 sm:flex-row">

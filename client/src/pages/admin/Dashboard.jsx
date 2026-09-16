@@ -43,7 +43,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-6 p-4">
+    <div className="space-y-6 pb-5">
       <WelcomeCard stats={dashboardData.data.welcomeCard} />
 
       <DashboardStats stats={dashboardData.data.dashboardStats} />

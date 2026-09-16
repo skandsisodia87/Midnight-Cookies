@@ -269,7 +269,7 @@ const Products = () => {
     statusFilter !== "all";
 
   return (
-    <div className="space-y-6 p-4">
+    <div className="space-y-6 pb-5">
       <ProductHeader
         onAddProduct={handleOpenCreate}
         totalCount={cookies.length}

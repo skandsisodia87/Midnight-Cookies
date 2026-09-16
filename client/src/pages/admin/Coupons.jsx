@@ -135,8 +135,8 @@ const Coupon = () => {
   };
 
   return (
-    <div className="">
-      <div className="mx-auto max-w-[90%]">
+    <>
+      <div className="mx-auto pb-5">
         <CouponHeader onCreate={openCreateModal} />
 
         <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -209,7 +209,7 @@ const Coupon = () => {
         message={`Are you sure you want to delete ${deleteCoupon?.code || "this coupon"}? This action cannot be undone.`}
         confirmLabel="Delete Coupon"
       />
-    </div>
+    </>
   );
 };
 

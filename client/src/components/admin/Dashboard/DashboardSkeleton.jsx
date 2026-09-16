@@ -1,6 +1,6 @@
 export default function DashboardSkeleton() {
   return (
-    <div className="space-y-6 px-4 sm:px-6 animate-pulse">
+    <div className="space-y-6 pb-5 animate-pulse">
       <div className="rounded-[2.5rem] bg-slate-200/80 shadow-xl p-6 sm:p-8">
         <div className="grid gap-6 lg:grid-cols-[1.7fr_1fr]">
           <div className="space-y-4">
