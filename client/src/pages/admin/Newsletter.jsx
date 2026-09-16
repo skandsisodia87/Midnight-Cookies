@@ -21,7 +21,11 @@ import NewsletterModal from "../../components/admin/newsletter/NewsletterModal";
 import DeleteDialog from "../../common/DeleteDialog";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import ErrorPage from "../../common/ErrorPage";
-import { getSubscribers, removeSubscriber } from "../../services/admin.service";
+import {
+  getSubscribers,
+  sendNewsletter,
+  removeSubscriber,
+} from "../../services/admin.service";
 import NewsletterSkeleton from "../../components/admin/newsletter/NewsletterSkeleton";
 import { toast } from "sonner";
 import constants from "../../common/constants";
@@ -52,6 +56,23 @@ const Newsletter = () => {
     queryFn: getSubscribers,
     staleTime: 1 * 60 * 1000,
     gcTime: 5 * 60 * 1000,
+  });
+
+  const { mutate: sendNewsletterMutation, isPending: isSending } = useMutation({
+    mutationFn: sendNewsletter,
+    onSuccess: (res) => {
+      toast.success(res?.message || "Newsletter sent successfully");
+      setNewsletter(emptyNewsletter);
+      setErrors({});
+      setIsNewsletterOpen(false);
+    },
+    onError: (error) => {
+      toast.error(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Failed to send newsletter",
+      );
+    },
   });
 
   const { mutate: deleteSubscriberMutation, isPending: isDeleting } =
@@ -167,11 +188,13 @@ const Newsletter = () => {
     if (!validateNewsletter()) {
       return;
     }
-    console.log("Newsletter Payload:", newsletter);
 
-    setNewsletter(emptyNewsletter);
-    setErrors({});
-    setIsNewsletterOpen(false);
+    sendNewsletterMutation({
+      audience: newsletter.audience,
+      subject: newsletter.subject.trim(),
+      previewText: newsletter.previewText.trim(),
+      content: newsletter.content.trim(),
+    });
   };
 
   const openNewsletterModal = () => {
@@ -285,6 +308,7 @@ const Newsletter = () => {
         onChange={handleNewsletterChange}
         errors={errors}
         subscribers={subscribers}
+        isSubmitting={isSending}
       />
 
       <DeleteDialog

@@ -5,7 +5,10 @@ import { FiPhone, FiVideo, FiMoreVertical } from "react-icons/fi";
 import AdminChatMessages from "./AdminChatMessages";
 import AdminChatInput from "./AdminChatInput";
 import useConversationSocket from "../../hooks/useConversationSocket";
-import { getConversationMessages } from "../../services/chat.service";
+import {
+  getConversationMessages,
+  markMessagesAsRead,
+} from "../../services/chat.service";
 
 const AdminChatWindow = ({ conversation, socket }) => {
   const typingTimeoutRef = useRef(null);
@@ -120,6 +123,7 @@ const AdminChatWindow = ({ conversation, socket }) => {
         if (!isMounted) return;
 
         const conversationMessages = response?.data || [];
+        await markMessagesAsRead(conversation._id);
 
         setMessages((prevMessages) => {
           const fetchedIds = new Set(conversationMessages.map((m) => m._id));

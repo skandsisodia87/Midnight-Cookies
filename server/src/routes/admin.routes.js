@@ -56,6 +56,7 @@ import {
 } from "../validations/coupon.validation.js";
 import {
   getSubscribers,
+  sendNewsletter,
   removeSubscriber,
 } from "../controllers/admin/newsletter.controller.js";
 import { getAnalytics } from "../controllers/admin/analytics.controller.js";
@@ -102,7 +103,6 @@ router.patch("/cookies/variants/:variantId/stock", updateVariantStock);
 router.delete("/cookies/:id", validateObjectId(), deleteCookie);
 router.post("/bulk/cookies", bulkCreateCookies);
 router.patch("/cookies/:id/soft-delete", softDeleteCookie);
-
 
 router
   .route("/categories")
@@ -155,6 +155,7 @@ router
   .delete(deleteCoupon);
 
 router.post("/newsletter", getSubscribers);
+router.post("/newsletter/send", sendNewsletter);
 router.delete("/newsletter/:id", validateObjectId(), removeSubscriber);
 
 router.get("/analytics", getAnalytics);

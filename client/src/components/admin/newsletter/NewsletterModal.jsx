@@ -12,6 +12,7 @@ const NewsletterModal = ({
   onChange,
   errors,
   subscribers,
+  isSubmitting = false,
 }) => {
   if (!isOpen) return null;
 
@@ -149,10 +150,11 @@ const NewsletterModal = ({
 
             <button
               type="submit"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#4E342E] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#3E2723]"
+              disabled={isSubmitting}
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#4E342E] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#3E2723] disabled:cursor-not-allowed disabled:opacity-70"
             >
               <FiSend size={16} />
-              Send Newsletter
+              {isSubmitting ? "Sending..." : "Send Newsletter"}
             </button>
           </div>
         </form>

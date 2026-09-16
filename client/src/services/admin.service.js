@@ -95,7 +95,10 @@ export const createDeliveryAgent = async (payload) => {
 };
 
 export const updateDeliveryAgent = async ({ agentId, payload }) => {
-  const response = await api.patch(`/admin/delivery-agents/${agentId}`, payload);
+  const response = await api.patch(
+    `/admin/delivery-agents/${agentId}`,
+    payload,
+  );
   return response.data;
 };
 
@@ -173,6 +176,11 @@ export const getSubscribers = async () => {
   return response.data.data;
 };
 
+export const sendNewsletter = async (payload) => {
+  const response = await api.post("/admin/newsletter/send", payload);
+  return response.data;
+};
+
 export const removeSubscriber = async (id) => {
   const response = await api.delete(`/admin/newsletter/${id}`);
   return response.data;
@@ -215,10 +223,12 @@ export const toggleAdminCookieFeatured = async (id) => {
 };
 
 export const updateAdminVariantStock = async ({ variantId, stock, change }) => {
-  const response = await api.patch(`/admin/cookies/variants/${variantId}/stock`, {
-    stock,
-    change,
-  });
+  const response = await api.patch(
+    `/admin/cookies/variants/${variantId}/stock`,
+    {
+      stock,
+      change,
+    },
+  );
   return response.data;
 };
-
